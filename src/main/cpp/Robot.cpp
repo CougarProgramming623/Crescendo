@@ -9,18 +9,20 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/geometry/Pose2d.h>
 #include "Util.h"
-#include "commands/TrajectoryCommand.h"
+//#include "commands/TrajectoryCommand.h"
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/RobotController.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/ParallelDeadlineGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
+#include <frc2/command/CommandPtr.h>
 #include "commands/WristToPosAuto.h"
 #include "commands/PivotToPosAuto.h"
+#include <frc/DriverStation.h>
 
 
-using ctre::phoenix::motorcontrol::ControlMode;
+//using ctre::phoenix::motorcontrol::ControlMode;
 using namespace pathplanner;
 
 Robot* Robot::s_Instance = nullptr;
@@ -61,40 +63,41 @@ void Robot::RobotInit() {
 void Robot::AutoButtons(){
 
   //BUTTONBOARD 2
-  m_TL          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TL));
-  m_TC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TC));
-  m_TR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TR));
-  m_ML          = frc2::JoystickButton(BUTTON_L_TWO(GRID_ML));
-  m_MC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_MC));
-  m_MR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_MR));
-  m_BL          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BL));
-  m_BC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BC));
-  m_BR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BR));
-  m_BigRed      = frc2::JoystickButton(BUTTON_L(BIG_RED));
+  m_TL = frc2::Trigger(BUTTON_L_TWO(GRID_TL));
+  // m_TL          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TL));
+  // m_TC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TC));
+  // m_TR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TR));
+  // m_ML          = frc2::JoystickButton(BUTTON_L_TWO(GRID_ML));
+  // m_MC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_MC));
+  // m_MR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_MR));
+  // m_BL          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BL));
+  // m_BC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BC));
+  // m_BR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BR));
+  m_BigRed      = frc2::Trigger(BUTTON_L(BIG_RED));
 
-  m_SingleSub   = frc2::JoystickButton(BUTTON_L(5));
-  m_DoubleSub = frc2::JoystickButton(BUTTON_L_TWO(13));
-  m_SingleSubCube = frc2::JoystickButton(BUTTON_L(7));
+  m_SingleSub   = frc2::Trigger(BUTTON_L(5));
+  m_DoubleSub = frc2::Trigger(BUTTON_L_TWO(13));
+  m_SingleSubCube = frc2::Trigger(BUTTON_L(7));
 
-  m_LeftGrid    = frc2::JoystickButton(BUTTON_L_TWO(LEFT_GRID));
-  m_CenterGrid  = frc2::JoystickButton(BUTTON_L_TWO(CENTER_GRID));
-  m_RightGrid   = frc2::JoystickButton(BUTTON_L_TWO(RIGHT_GRID));
+  m_LeftGrid    = frc2::Trigger(BUTTON_L_TWO(LEFT_GRID));
+  m_CenterGrid  = frc2::Trigger(BUTTON_L_TWO(CENTER_GRID));
+  m_RightGrid   = frc2::Trigger(BUTTON_L_TWO(RIGHT_GRID));
 
   // m_MidCone = frc2::JoystickButton(BUTTON_L_TWO(TRANSIT_MODE));
 	// m_MidCube = frc2::JoystickButton(BUTTON_L_TWO(GROUND_PICKUP_MODE));
-  m_PlacingMode = frc2::JoystickButton(BUTTON_L_TWO(PLACING_MODE));
-  m_GroundPickup = frc2::JoystickButton(BUTTON_L_TWO(GROUND_PICKUP_MODE));
+  m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(PLACING_MODE));
+  m_GroundPickup = frc2::Trigger(BUTTON_L_TWO(GROUND_PICKUP_MODE));
 
-  m_NavXReset = frc2::JoystickButton(BUTTON_L(8)); //PUT Define
-  GetArm().m_PlacingMode = frc2::JoystickButton(BUTTON_L_TWO(15));
-  m_AutoBalance = frc2::JoystickButton(BUTTON_L(3));
-   m_Print = frc2::JoystickButton(BUTTON_L(2));
+  m_NavXReset = frc2::Trigger(BUTTON_L(8)); //PUT Define
+  GetArm().m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(15));
+  m_AutoBalance = frc2::Trigger(BUTTON_L(3));
+   m_Print = frc2::Trigger(BUTTON_L(2));
 
-  m_AutoBalance.WhileHeld(new AutoBalance());
-  m_VisionPoseReset = frc2::JoystickButton([&] { return Robot::GetRobot()->GetButtonBoard().GetRawButton(6); }); //PUT Define
+  m_AutoBalance.WhileTrue(new AutoBalance());
+  m_VisionPoseReset = frc2::Trigger([&] { return Robot::GetRobot()->GetButtonBoard().GetRawButton(6); }); //PUT Define
  
   
-  // m_Print.WhileHeld(
+  // m_Print.whileTrue(
   //   new frc2::InstantCommand([&]{
   //     DebugOutF("StringDeg: " + std::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue()))));
   //     DebugOutF("PivotDeg: " + std::to_string(GetArm().PivotTicksToDegrees(GetArm().GetPivotMotor().GetSelectedSensorPosition())));
@@ -103,20 +106,20 @@ void Robot::AutoButtons(){
   // );
 
   
-  m_NavXReset.WhenPressed(
+  m_NavXReset.OnTrue(
     new frc2::InstantCommand([&]{
       DebugOutF("NavX Zero");
       zeroGyroscope();
   }));
   
-  // GetArm().m_PlacingMode.WhenPressed(new frc2::ParallelCommandGroup(
+  // GetArm().m_PlacingMode.OnTrue(new frc2::ParallelCommandGroup(
 	// 		PivotToPos(Robot::GetRobot()->GetArm().m_PivotMatrix[SelectedRow][SelectedColumn]), 
   //     WristToPos(Robot::GetRobot()->GetArm().m_WristMatrix[SelectedRow][SelectedColumn])
 	// ));
 
-  m_TR.WhenPressed(frc2::PrintCommand("Nothing"));
+  m_TR.OnTrue(frc2::PrintCommand("Nothing").ToPtr());
 
-GetArm().m_PlacingMode.WhenPressed(
+GetArm().m_PlacingMode.OnTrue(
       new frc2::InstantCommand([&]{
         if(m_ArmCommand != nullptr){
           m_ArmCommand->Cancel();
@@ -133,7 +136,7 @@ GetArm().m_PlacingMode.WhenPressed(
       })
   );
 
-  m_GroundPickup.WhenPressed(
+  m_GroundPickup.OnTrue(
     new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = 94.0;
@@ -146,7 +149,7 @@ GetArm().m_PlacingMode.WhenPressed(
     )
   );
 
-  m_SingleSub.WhenPressed(
+  m_SingleSub.OnTrue(
     new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = Robot::GetRobot()->GetArm().m_PivotMatrix[0][2];
@@ -159,7 +162,7 @@ GetArm().m_PlacingMode.WhenPressed(
     )
   );
 
-  m_DoubleSub.WhenPressed(
+  m_DoubleSub.OnTrue(
     new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = Robot::GetRobot()->GetArm().m_PivotMatrix[0][0];
@@ -172,7 +175,7 @@ GetArm().m_PlacingMode.WhenPressed(
     )
   );
 
-  m_SingleSubCube.WhenPressed(
+  m_SingleSubCube.OnTrue(
       new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = 72.0;
@@ -184,7 +187,7 @@ GetArm().m_PlacingMode.WhenPressed(
       frc2::PrintCommand("Command")
     ));
 
-  m_ML.WhenPressed(new frc2::InstantCommand([&]{
+  m_ML.OnTrue(new frc2::InstantCommand([&]{
     DebugOutF("m_ML");
     Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL / 1, PIVOT_DFLT_ACC / PIVOT_ACC_DIVISOR, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
     SelectedRow = 1;
@@ -196,7 +199,7 @@ GetArm().m_PlacingMode.WhenPressed(
   }));
 
 
-  m_BL.WhenPressed(new frc2::InstantCommand([&]{
+  m_BL.OnTrue(new frc2::InstantCommand([&]{
     DebugOutF("m_BL");
     SelectedRow = 2;
     SelectedColumn = std::abs(m_ColOffset - 0);
@@ -206,7 +209,7 @@ GetArm().m_PlacingMode.WhenPressed(
   }));
 
 
-  m_TC.WhenPressed(new frc2::InstantCommand([&]{
+  m_TC.OnTrue(new frc2::InstantCommand([&]{
     DebugOutF("m_TC");
     Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL / 1, PIVOT_DFLT_ACC / PIVOT_ACC_DIVISOR, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
     SelectedRow = 0;
@@ -217,7 +220,7 @@ GetArm().m_PlacingMode.WhenPressed(
   }));
 
 
-  m_MC.WhenPressed(new frc2::InstantCommand([&]{
+  m_MC.OnTrue(new frc2::InstantCommand([&]{
     DebugOutF("m_MC");
     SelectedRow = 1;
     SelectedColumn = std::abs(m_ColOffset - 1);
@@ -226,7 +229,7 @@ GetArm().m_PlacingMode.WhenPressed(
 		Robot::GetRobot()->GetDriveTrain().m_TransformedPose = TransformPose(SelectedPose);
   }));
 
-  m_BC.WhenPressed(new frc2::InstantCommand([&]{
+  m_BC.OnTrue(new frc2::InstantCommand([&]{
     DebugOutF("m_BC");
     SelectedRow = 2;
     SelectedColumn = std::abs(m_ColOffset - 1);
@@ -236,14 +239,14 @@ GetArm().m_PlacingMode.WhenPressed(
   }));
 
 
-  // m_TR.WhenPressed(new frc2::InstantCommand([&]{
+  // m_TR.OnTrue(new frc2::InstantCommand([&]{
   //   DebugOutF("m_TR - nothing");
   //   // frc::Pose2d SelectedPose = 
 	// 	// Robot::GetRobot()->GetDriveTrain().m_PoseMatrix[SelectedRow][SelectedColumn];
 	// 	// Robot::GetRobot()->GetDriveTrain().m_TransformedPose = TransformPose(SelectedPose);
   // }));
 
-  m_MR.WhenPressed(new frc2::InstantCommand([&]{
+  m_MR.OnTrue(new frc2::InstantCommand([&]{
 		DebugOutF("m_MR");
     Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL / 1, PIVOT_DFLT_ACC / PIVOT_ACC_DIVISOR, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
     SelectedRow = 1;
@@ -253,7 +256,7 @@ GetArm().m_PlacingMode.WhenPressed(
 		Robot::GetRobot()->GetDriveTrain().m_TransformedPose = TransformPose(SelectedPose).TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(180_deg)));
   }));
 
-  m_BR.WhenPressed(new frc2::InstantCommand([&]{
+  m_BR.OnTrue(new frc2::InstantCommand([&]{
 		DebugOutF("m_BR");
     SelectedRow = 2;
     SelectedColumn = std::abs(m_ColOffset - 2);
@@ -262,7 +265,7 @@ GetArm().m_PlacingMode.WhenPressed(
 		Robot::GetRobot()->GetDriveTrain().m_TransformedPose = TransformPose(SelectedPose);
   }));
 
-  m_BigRed.WhenPressed(
+  m_BigRed.OnTrue(
     new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = 92.0;
@@ -279,7 +282,7 @@ GetArm().m_PlacingMode.WhenPressed(
     )
 	);
 
-  m_LeftGrid.WhenPressed(new frc2::InstantCommand([&]{
+  m_LeftGrid.OnTrue(new frc2::InstantCommand([&]{
     DebugOutF("m_LeftGrid");
 		if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)) {
       Robot::GetRobot()->GetDriveTrain().m_SelectedGrid = 0;
@@ -287,11 +290,11 @@ GetArm().m_PlacingMode.WhenPressed(
 			Robot::GetRobot()->GetDriveTrain().m_SelectedGrid = 2;
 	}}));
 
-  m_CenterGrid.WhenPressed(new frc2::InstantCommand([&]{
+  m_CenterGrid.OnTrue(new frc2::InstantCommand([&]{
     Robot::GetRobot()->GetDriveTrain().m_SelectedGrid = 1;
   }));
 
-  m_RightGrid.WhenPressed(new frc2::InstantCommand([&]{
+  m_RightGrid.OnTrue(new frc2::InstantCommand([&]{
 		DebugOutF("m_RightGrid");
 		if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
 			Robot::GetRobot()->GetDriveTrain().m_SelectedGrid = 2;
@@ -299,7 +302,7 @@ GetArm().m_PlacingMode.WhenPressed(
 			Robot::GetRobot()->GetDriveTrain().m_SelectedGrid = 0;
 	}}));
 
-  m_VisionPoseReset.WhenPressed(
+  m_VisionPoseReset.OnTrue(
     new frc2::InstantCommand([&] {
       DebugOutF("Pose Resetting");
       if(COB_GET_ENTRY(m_Vision.FrontBack("tv")).GetInteger(0) == 1 && COB_GET_ENTRY(m_Vision.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){
@@ -352,7 +355,7 @@ frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
   Robot::GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());   
-  Robot::GetCOB().GetTable().GetEntry("/COB/matchTime").SetDouble(DriverStation::GetMatchTime());
+  Robot::GetCOB().GetTable().GetEntry("/COB/matchTime").SetDouble(frc::DriverStation::GetMatchTime().value());
   Robot::GetCOB().GetTable().GetEntry("/COB/ticks").SetDouble(m_COBTicks);
   Robot::GetCOB().GetTable().GetEntry("/COB/deltaX").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.X().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/deltaY").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.Y().value()));
@@ -367,7 +370,7 @@ void Robot::RobotPeriodic() {
 
   if(Robot::GetButtonBoard().GetRawButton(2)){
     DebugOutF("StringDeg: " + std::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue())-29000.0 - GetArm().WristDegreesToTicks(45))));
-    DebugOutF("PivotDeg: " + std::to_string(GetArm().PivotTicksToDegrees(GetArm().GetPivotMotor().GetSelectedSensorPosition())));
+    DebugOutF("PivotDeg: " + std::to_string(GetArm().PivotTicksToDegrees(GetArm().GetPivotMotor().GetPosition().GetValueAsDouble())));
   }
 
   if(Robot::GetButtonBoard().GetRawButton(4)){
@@ -443,73 +446,75 @@ void Robot::AutonomousInit() {
     // DebugOutF("Blue");
   //PathPlannerTrajectory traj = PathPlanner::loadPath(m_AutoPath, PathConstraints(4_mps, 1_mps_sq));
 
-  PathPlannerTrajectory traj = PathPlanner::loadPath("AutoBalanceExtra", PathConstraints(4_mps, 1.5_mps_sq));
+  // PathPlannerPath traj = PathPlannerPath::fromPathFile("AutoBalanceExtra", PathConstraints(4_mps, 1.5_mps_sq, 4_rad_per_s, 1.5_rad_per_s_sq));
 
-  // } else {
-  // //   DebugOutF("Red");
-  // //   PathPlannerTrajectory traj = PathPlanner::loadPath("TestBalanceRed", PathConstraints(4_mps, 1_mps_sq));
-  // // }
+  // // } else {
+  // // //   DebugOutF("Red");
+  // // //   PathPlannerTrajectory traj = PathPlanner::loadPath("TestBalanceRed", PathConstraints(4_mps, 1_mps_sq));
+  // // // }
 
-  //PathPlannerTrajectory::transformTrajectoryForAlliance(traj, frc::DriverStation::GetAlliance());
+  // //PathPlannerTrajectory::transformTrajectoryForAlliance(traj, frc::DriverStation::GetAlliance());
 
-  frc::Pose2d startingPose = frc::Pose2d(traj.getInitialState().pose.Translation(), frc::Rotation2d(units::degree_t(0)));
+  // frc::Pose2d startingPose = frc::Pose2d(traj.getInitialState().pose.Translation(), frc::Rotation2d(units::degree_t(0)));
 
-  GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
-    wpi::array<frc::SwerveModulePosition, 4>
-         (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
-    startingPose);
+  // GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
+  //   wpi::array<frc::SwerveModulePosition, 4>
+  //        (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
+  //   startingPose);
   
   
   // DebugOutF("InitialRotation: " + std::to_string(traj.getInitialHolonomicPose().Rotation().Degrees().value()));
   // DebugOutF("InitialY: " + std::to_string(traj.asWPILibTrajectory().InitialPose().Y().value()));
   // DebugOutF("InitialX: " + std::to_string(traj.asWPILibTrajectory().InitialPose().X().value()));
+  
+  //DEFINITELY LOOK - COMMENTING OUT AUTO FOR NOW TO FOCUS ON REIMPLEMENTING OTHER FUNCTIONALITY
   if(true/*COB_GET_ENTRY("/COB/autos").GetString("") == "Auto1"*/){
-    frc2::CommandScheduler::GetInstance().Schedule(
-      new frc2::SequentialCommandGroup(
-      frc2::ParallelRaceGroup(
-        frc2::WaitCommand(1.8_s),
-        PivotToPosAuto(-22.0), 
-        frc2::FunctionalCommand(
-          [&] {
-            GetArm().GetBottomIntakeMotor().EnableCurrentLimit(false);
-            GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, -1);
-          },
-          [&] {},
-          [&](bool e) { // onEnd
-            GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-          },
-          [&] { // isFinished
-          return false;
-          }
-        ),
-        WristToPosAuto(28.0)
-      ),
+  //   frc2::CommandScheduler::GetInstance().Schedule(
+  //     new frc2::SequentialCommandGroup(
+  //     frc2::ParallelRaceGroup(
+  //       frc2::WaitCommand(1.8_s),
+  //       PivotToPosAuto(-22.0), 
+  //       frc2::FunctionalCommand(
+  //         [&] {
+  //           GetArm().GetBottomIntakeMotor().EnableCurrentLimit(false);
+  //           GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, -1);
+  //         },
+  //         [&] {},
+  //         [&](bool e) { // onEnd
+  //           GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
+  //         },
+  //         [&] { // isFinished
+  //         return false;
+  //         }
+  //       ),
+  //       WristToPosAuto(28.0)
+  //     ),
 
-      frc2::ParallelRaceGroup(
-        frc2::FunctionalCommand(
-          [&] {
-            GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 1);
-          },
-          [&] {},
-          [&](bool e) { // onEnd
-            GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-            GetArm().GetBottomIntakeMotor().EnableCurrentLimit(true);
-          },
-          [&] { // isFinished
-          return false;
-          }
-        ),
-        frc2::WaitCommand(0.8_s)
-      ),
+  //     frc2::ParallelRaceGroup(
+  //       frc2::FunctionalCommand(
+  //         [&] {
+  //           GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 1);
+  //         },
+  //         [&] {},
+  //         [&](bool e) { // onEnd
+  //           GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
+  //           GetArm().GetBottomIntakeMotor().EnableCurrentLimit(true);
+  //         },
+  //         [&] { // isFinished
+  //         return false;
+  //         }
+  //       ),
+  //       frc2::WaitCommand(0.8_s)
+  //     ),
 
-    frc2::ParallelDeadlineGroup(
-        TrajectoryCommand(traj),
-      PivotToPosAuto(92.0), 
-      WristToPosAuto(120)
-    ),
-    AutoBalance()
+  //   frc2::ParallelDeadlineGroup(
+  //       //TrajectoryCommand(traj),
+  //     PivotToPosAuto(92.0), 
+  //     WristToPosAuto(120)
+  //   ),
+  //   AutoBalance()
     
-  ));
+  // ));
   //DebugOutF(GetDriveTrain().m_EventMap.find("\"Mark 1\""));
   // (GetDriveTrain().m_EventMap.at(std::string("Mark 1")).get()->Schedule());
   // } else if (COB_GET_ENTRY("/COB/autos").GetString("") == "Auto2"){

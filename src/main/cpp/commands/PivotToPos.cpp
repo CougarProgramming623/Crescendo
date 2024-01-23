@@ -18,13 +18,15 @@ void PivotToPos::Initialize() {
 }
 
 void PivotToPos::Execute() {
-	ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
+	ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
+	//ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
 	//DebugOutF(std::to_string(abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition())));
 }
 
 void PivotToPos::End(bool interrupted){
 	DebugOutF("Pivot finished");
-	ARM.GetPivotMotor().Set(ControlMode::PercentOutput, 0);
+	ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+	//ARM.GetPivotMotor().Set(ControlMode::PercentOutput, 0);
 }
 
 bool PivotToPos::IsFinished() {

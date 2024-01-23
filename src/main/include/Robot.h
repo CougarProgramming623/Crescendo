@@ -14,7 +14,8 @@
 
 #include <frc2/command/Command.h>
 
-#include <pathplanner/lib/PathPlannerPath.h>
+//#include <pathplanner/lib/PathPlannerPath.h>
+#include <pathplanner/lib/path/PathPlannerPath.h>
 #include "LED.h"
 #include "subsystems/DriveTrain.h"
 #include <AHRS.h>
@@ -35,9 +36,9 @@ class Robot : public frc::TimedRobot {
   Robot();
   static inline Robot* GetRobot() { return s_Instance; }
   inline Arm& GetArm() { return m_Arm; }
-  inline frc::Joystick& GetButtonBoard() { return m_ButtonBoard; }
-  inline frc::Joystick& GetButtonBoardTwo() { return m_ButtonBoardTwo; }
-  inline frc::Joystick& GetJoystick() { return m_Joystick; }
+  inline frc::GenericHID& GetButtonBoard() { return m_ButtonBoard; }
+  inline frc::GenericHID& GetButtonBoardTwo() { return m_ButtonBoardTwo; }
+  inline frc::GenericHID& GetJoystick() { return m_Joystick; }
 
   void RobotInit() override;
   void AutoButtons();
@@ -64,6 +65,9 @@ class Robot : public frc::TimedRobot {
   inline COB& GetCOB() { return m_COB; }
   inline Vision& GetVision() { return m_Vision; }
 
+  //motor control requests - LOOK, VERY IMPORTANT
+  controls::VoltageOut m_VoltageOutRequest{0_V};
+  controls::MotionMagicDutyCycle m_MotionMagicRequest{units::angle::turn_t(0)};
 
   double previousErrorX = 0;
   double previousErrorY = 0;
@@ -74,36 +78,36 @@ class Robot : public frc::TimedRobot {
   double previousValueY = 0;
   double previousValueT = 0;
 
-  frc2::Button m_TL;
-	frc2::Button m_TC;
-	frc2::Button m_TR;
-	frc2::Button m_ML;
-	frc2::Button m_MC;
-	frc2::Button m_MR;
-	frc2::Button m_BL;
-	frc2::Button m_BC;
-	frc2::Button m_BR;
+  frc2::Trigger m_TL;
+	frc2::Trigger m_TC;
+	frc2::Trigger m_TR;
+	frc2::Trigger m_ML;
+	frc2::Trigger m_MC;
+	frc2::Trigger m_MR;
+	frc2::Trigger m_BL;
+	frc2::Trigger m_BC;
+	frc2::Trigger m_BR;
 
-	frc2::Button m_LeftGrid;
-	frc2::Button m_CenterGrid;
-	frc2::Button m_RightGrid;
+	frc2::Trigger m_LeftGrid;
+	frc2::Trigger m_CenterGrid;
+	frc2::Trigger m_RightGrid;
 
-  frc2::Button m_BigRed;
-  frc2::Button m_GroundPickup;
+  frc2::Trigger m_BigRed;
+  frc2::Trigger m_GroundPickup;
 
-  frc2::Button m_SingleSub;
-  frc2::Button m_SingleSubCube;
-  frc2::Button m_DoubleSub;
+  frc2::Trigger m_SingleSub;
+  frc2::Trigger m_SingleSubCube;
+  frc2::Trigger m_DoubleSub;
 
-  frc2::Button m_MidCone;
-  frc2::Button m_MidCube;
-  frc2::Button m_PlacingMode;
+  frc2::Trigger m_MidCone;
+  frc2::Trigger m_MidCube;
+  frc2::Trigger m_PlacingMode;
 
-  frc2::Button m_NavXReset;
-  frc2::Button m_AutoBalance;
-  frc2::Button m_VisionPoseReset;
+  frc2::Trigger m_NavXReset;
+  frc2::Trigger m_AutoBalance;
+  frc2::Trigger m_VisionPoseReset;
 
-  frc2::Button m_Print;
+  frc2::Trigger m_Print;
   int m_COBTicks;
 
 
@@ -130,8 +134,8 @@ class Robot : public frc::TimedRobot {
   frc2::Command* m_autonomousCommand = nullptr;
 
 
-  frc2::Button m_LEDYellow;
-  frc2::Button m_LEDPurple;
+  frc2::Trigger m_LEDYellow;
+  frc2::Trigger m_LEDPurple;
   LED m_LED;
 
   Arm m_Arm;
@@ -142,11 +146,11 @@ class Robot : public frc::TimedRobot {
   Vision m_Vision;
 
   COB m_COB;
-  frc::Joystick m_ButtonBoard = frc::Joystick(0);
-  frc::Joystick m_ButtonBoardTwo = frc::Joystick(2);
+  frc::GenericHID m_ButtonBoard = frc::GenericHID(0);
+  frc::GenericHID m_ButtonBoardTwo = frc::GenericHID(2);
 
   std::string m_AutoPath;
 
-  MotionMagicTest m_MMT;
+  //MotionMagicTest m_MMT;
 
 };

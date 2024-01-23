@@ -50,7 +50,7 @@ class LED{
 
         frc::Color m_AllianceColor;
 
-        frc2::Button m_EyesYellow;
-        frc2::Button m_EyesPurple;
-        frc2::Button m_EyesWhite;
+        frc2::Trigger m_EyesYellow;
+        frc2::Trigger m_EyesPurple;
+        frc2::Trigger m_EyesWhite;
 };

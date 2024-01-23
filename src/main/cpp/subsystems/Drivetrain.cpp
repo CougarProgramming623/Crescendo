@@ -48,35 +48,37 @@ void DriveTrain::DriveInit(){
  
   //m_TestJoystickButton.WhenPressed(replace w vision command);
 
-  m_JoystickButtonTwo.ToggleWhenPressed(new AutoLock());
+  m_JoystickButtonTwo.ToggleOnTrue(new AutoLock());
 
   //m_ExtraJoystickButton.WhileHeld(new DriveToPosCommand());
 
-  m_NavXResetButton.WhenPressed(
+  m_NavXResetButton.OnTrue(
     new frc2::InstantCommand([&]{
       DebugOutF("NavX Zero");
       Robot::GetRobot()->zeroGyroscope();
   }));
 
-  m_JoystickOuttake.WhileHeld(
+  m_JoystickOuttake.WhileTrue(
     new frc2::InstantCommand([&]{
       if(Robot::GetRobot()->m_Intake.GetCurrentCommand() != nullptr){
         Robot::GetRobot()->m_Intake.GetCurrentCommand()->Cancel();
       }
       DebugOutF("Joystick Outtake");
-      Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, .8);
+      Robot::GetRobot()->GetArm().GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(0.8 * 12)));
+      //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, .8);
     }
   ));
 
-  m_JoystickOuttake.WhenReleased(
+  m_JoystickOuttake.OnFalse(
     new frc2::InstantCommand([&]{
-      Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
+      Robot::GetRobot()->GetArm().GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+      //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
       frc2::CommandScheduler::GetInstance().Schedule(new DynamicIntake());
     })
   );
 
 
-  m_AutoBalanceButton.ToggleWhenPressed(new AutoBalance());
+  m_AutoBalanceButton.ToggleOnTrue(new AutoBalance());
 
 
   m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
@@ -99,29 +101,29 @@ Passes module states to motors and updates odometry
 void DriveTrain::Periodic(){
 
   if((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE) == 0 && ((double) m_ModuleStates[0].angle.Radians() == 0)){
-    m_FrontLeftModule.m_SteerController.motor.Set(ControlMode::PercentOutput, 0);
-    m_FrontLeftModule.m_DriveController.motor.Set(ControlMode::PercentOutput, 0);
+    m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
   } else {
     m_FrontLeftModule.Set(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[0].angle.Radians());
   }
 
   if((m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[1].angle.Radians() == 0)){
-    m_FrontRightModule.m_SteerController.motor.Set(ControlMode::PercentOutput, 0);
-    m_FrontRightModule.m_DriveController.motor.Set(ControlMode::PercentOutput, 0);
+    m_FrontRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    m_FrontRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
   } else {
     m_FrontRightModule.Set(m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[1].angle.Radians());
   }
 
   if((m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[2].angle.Radians() == 0)){
-    m_BackLeftModule.m_SteerController.motor.Set(ControlMode::PercentOutput, 0);
-    m_BackLeftModule.m_DriveController.motor.Set(ControlMode::PercentOutput, 0);
+    m_BackLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    m_BackLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
   } else {
     m_BackLeftModule.Set(m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[2].angle.Radians());
   }
 
   if((m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[3].angle.Radians() == 0)){
-    m_BackRightModule.m_SteerController.motor.Set(ControlMode::PercentOutput, 0);
-    m_BackRightModule.m_DriveController.motor.Set(ControlMode::PercentOutput, 0);
+    m_BackRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    m_BackRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
   } else {
     m_BackRightModule.Set(m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[3].angle.Radians());
   }

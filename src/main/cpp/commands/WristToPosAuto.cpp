@@ -15,17 +15,14 @@ void WristToPosAuto::Initialize() {
 }
 
 void WristToPosAuto::Execute() {
-	ARM.GetWristMotor().SetSelectedSensorPosition((ARM.WristStringPotUnitsToTicks(ARM.GetStringPot().GetValue())));
-	ARM.GetWristMotor().Set(ControlMode::MotionMagic, ARM.WristDegreesToTicks(targetDegrees));
+	ARM.GetWristMotor().SetPosition(units::angle::turn_t(ARM.WristStringPotUnitsToTicks(ARM.GetStringPot().GetValue())));
+	ARM.GetWristMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
 	// DebugOutF("TargetDeg: " + std::to_string(targetDegrees));
 	// DebugOutF("TargetTicks: " + std::to_string(ARM.WristDegreesToTicks(targetDegrees)));
-	
-
-
 }
 
 void WristToPosAuto::End(bool interrupted){
-	ARM.GetWristMotor().Set(ControlMode::PercentOutput, 0);
+	ARM.GetWristMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
 }
 
 bool WristToPosAuto::IsFinished() {

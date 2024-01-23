@@ -1,15 +1,15 @@
-#pragma once
+// #pragma once
 
-#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+// #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
-using ctre::phoenix::motorcontrol::can::TalonSRX;
+// using namespace ctre::phoenix6;
 
-class MotionMagicTest {
-	public:
-		MotionMagicTest();
-		void MotionMagicTestInit();
+// class MotionMagicTest {
+// 	public:
+// 		MotionMagicTest();
+// 		void MotionMagicTestInit();
 
-	private:
+// 	private:
 
-	TalonSRX m_TestMotor;
-};
+// 	hardware::TalonFX m_TestMotor;
+// };

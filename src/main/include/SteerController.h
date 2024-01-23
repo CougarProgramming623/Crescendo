@@ -3,12 +3,12 @@
 #include "Util.h"
 
 #include <ctre/phoenix/motorcontrol/NeutralMode.h>
-#include <ctre/phoenix/motorcontrol/can/TalonFX.h>
+#include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/AnalogInput.h>
 
 
-using ctre::phoenix::motorcontrol::can::TalonFX;
-using ctre::phoenix::motorcontrol::ControlMode;
+using namespace ctre::phoenix6;
+//using ctre::phoenix::motorcontrol::ControlMode;
 
 class SteerController {
     public:
@@ -18,12 +18,12 @@ class SteerController {
         double GetStateAngle();
 
         void SetReferenceAngle(double referenceAngleRadians);
-
-        TalonFX motor;
-        ControlMode motorControlMode;
+        
+        hardware::TalonFX motor;
+        controls::PositionDutyCycle motorControlMode{units::angle::turn_t(0)};
         
         frc::AnalogInput encoder;
-
+        
         double angleOffsetDegrees;
         double referenceAngleRadians;
         double resetIteration;

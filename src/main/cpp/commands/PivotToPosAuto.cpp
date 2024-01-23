@@ -18,13 +18,17 @@ void PivotToPosAuto::Initialize() {
 }
 
 void PivotToPosAuto::Execute() {
-	ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
+	//DEFINITELY LOOK - the controlmode::motionmagic from last year took the target ticks as an input, but this year
+	//it takes in angle::turn_t as the units? - are those ticks?, and if so how do we input the ticks
+	ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
+	
+	//ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
 	//DebugOutF(std::to_string(abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition())));
 }
 
 void PivotToPosAuto::End(bool interrupted){
 	DebugOutF("Pivot finished");
-	ARM.GetPivotMotor().Set(ControlMode::PercentOutput, 0);
+	ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
 }
 
 bool PivotToPosAuto::IsFinished() {

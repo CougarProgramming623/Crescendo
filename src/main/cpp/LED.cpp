@@ -4,6 +4,7 @@
 #include "Robot.h"
 #include "frc/RobotBase.h"
 #include "frc/Timer.h"
+#include "frc/DriverStation.h"
 
 //set values
 const int kSTART_BL = 0;
@@ -24,8 +25,8 @@ frc::Color colorArray[] = {frc::Color::kRed, frc::Color::kYellow, frc::Color::kG
 frc::Color redWhiteArray[] = {frc::Color::kWhite, frc::Color::kRed};
 
 LED::LED()  :
-    m_EyesYellow(frc2::Button(BUTTON_L(15))),
-    m_EyesPurple(frc2::Button(BUTTON_L(16))),
+    m_EyesYellow(frc2::Trigger(BUTTON_L(15))),
+    m_EyesPurple(frc2::Trigger(BUTTON_L(16))),
     m_EyesWhite([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);})
 {}
 
@@ -38,7 +39,7 @@ void LED::Init(){
     SponsorBoardAllianceColor();
     EyesAllianceColor();
 
-    m_EyesYellow.WhenPressed(new frc2::InstantCommand([&]{
+    m_EyesYellow.OnTrue(new frc2::InstantCommand([&]{
             //DebugOutF("cone");
             EyesSolid(frc::Color::kYellow);
             SponsorBoardSolid(frc::Color::kYellow);
@@ -46,7 +47,7 @@ void LED::Init(){
         })
     );
 
-    m_EyesPurple.WhenPressed(new frc2::InstantCommand([&]{
+    m_EyesPurple.OnTrue(new frc2::InstantCommand([&]{
             //DebugOutF("cube");
             EyesSolid(frc::Color::kPurple);
             SponsorBoardSolid(frc::Color::kPurple);
@@ -54,7 +55,7 @@ void LED::Init(){
         })
     );
 
-    m_EyesWhite.WhenPressed(new frc2::InstantCommand([&]{
+    m_EyesWhite.OnTrue(new frc2::InstantCommand([&]{
             //DebugOutF("white");
             EyesSolid(frc::Color::kWhite);
             SponsorBoardSolid(frc::Color::kWhite);

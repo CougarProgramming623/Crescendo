@@ -30,8 +30,8 @@
 #include <frc2/command/SubsystemBase.h>
 #include "commands/DriveWithJoystick.h"
 #include "commands/AutoBalance.h"
-#include <./commands/TrajectoryCommand.h>
-#include <./commands/DriveToPosCommand.h>
+//#include <./commands/TrajectoryCommand.h>
+//#include <./commands/DriveToPosCommand.h>
 #include <frc/Timer.h>
 
 #include <frc/controller/PIDController.h>
@@ -39,16 +39,14 @@
 #include <frc/controller/HolonomicDriveController.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/kinematics/SwerveModulePosition.h>
-#include <pathplanner/lib/PathPlanner.h>
-#include <frc2/command/button/Button.h>
+#include <pathplanner/lib/path/PathPlannerPath.h>
+#include <frc2/command/button/Trigger.h>
 #include <pathplanner/lib/commands/FollowPathWithEvents.h>
 #include <frc2/command/PrintCommand.h>
 #include <frc2/command/Command.h>
 #include <unordered_map>
 
-
-
-using ctre::phoenix::motorcontrol::can::TalonFX;
+//using ctre::phoenix::motorcontrol::can::TalonFX;
 
 class DriveTrain : public frc2::SubsystemBase {
  public:
@@ -71,8 +69,8 @@ class DriveTrain : public frc2::SubsystemBase {
 
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
-  pathplanner::FollowPathWithEvents* TruePath();
-  pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
+  // pathplanner::FollowPathWithEvents* TruePath();
+  // pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
 
   inline bool GetIsBalancing() { return m_IsBalancing; }
   inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
@@ -113,7 +111,7 @@ class DriveTrain : public frc2::SubsystemBase {
   int m_VisionCounter;
   frc::Pose2d m_VisionRelative;
 
-    frc2::Button m_JoystickOuttake;
+    frc2::Trigger m_JoystickOuttake;
 
 
   private:
@@ -122,11 +120,11 @@ class DriveTrain : public frc2::SubsystemBase {
 
   frc::Timer m_Timer;
 
-  frc2::Button m_TestJoystickButton;
-  frc2::Button m_JoystickButtonTwo;
-  frc2::Button m_AutoBalanceButton;
-  frc2::Button m_NavXResetButton;
-  frc2::Button m_ExtraJoystickButton;
+  frc2::Trigger m_TestJoystickButton;
+  frc2::Trigger m_JoystickButtonTwo;
+  frc2::Trigger m_AutoBalanceButton;
+  frc2::Trigger m_NavXResetButton;
+  frc2::Trigger m_ExtraJoystickButton;
 
   bool m_IsBalancing;
 
@@ -138,8 +136,8 @@ class DriveTrain : public frc2::SubsystemBase {
 
   std::array<frc::SwerveModuleState, 4> m_ModuleStates;
   
-  frc2::PIDController m_xController;
-  frc2::PIDController m_yController;
+  frc::PIDController m_xController;
+  frc::PIDController m_yController;
   frc::ProfiledPIDController <units::radians> m_ThetaController;
   frc::HolonomicDriveController m_HolonomicController;
 
