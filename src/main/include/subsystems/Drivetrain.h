@@ -29,7 +29,7 @@
 #include "SwerveModule.h"
 #include <frc2/command/SubsystemBase.h>
 #include "commands/DriveWithJoystick.h"
-#include "commands/AutoBalance.h"
+#include "commands/DualMotorControl.h"
 //#include <./commands/TrajectoryCommand.h>
 //#include <./commands/DriveToPosCommand.h>
 #include <frc/Timer.h>
