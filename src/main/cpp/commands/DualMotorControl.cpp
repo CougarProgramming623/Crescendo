@@ -1,14 +1,28 @@
 #include "commands/DualMotorControl.h"
 #include "Robot.h"
 
-DualMotorControl::DualMotorControl() :
-    m_TestMotor1(TEST_MOTOR_1),
-    m_TestMotor2(TEST_MOTOR_2)
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <frc/Joystick.h>
+#include <frc/Servo.h>
+#include <frc2/command/button/Trigger.h>
+#include <frc/AnalogInput.h>
+#include <math.h>
+#include <ctre/phoenix6/TalonFX.hpp>
 
-{
-    //AddRequirements(&Robot::GetRobot()->GetDriveTrain());
-    DebugOutF("Constructed");
-}
+#include "Constants.h"
+#include "Util.h"
+#include <frc/Timer.h>
+#include <frc2/command/SubsystemBase.h>
+#include <frc2/command/ParallelCommandGroup.h>
+
+
+using namespace ctre::phoenix6;
+
+DualMotorControl::DualMotorControl()
+    //m_TestMotor1(TEST_MOTOR_1),
+    //m_TestMotor2(TEST_MOTOR_2)
+
+{}
 
 /*
 initialize values
@@ -25,7 +39,37 @@ void DualMotorControl::Execute() {
 
     Robot::GetRobot()->m_TL.OnTrue(
         new frc2::InstantCommand([&]{
-            m_TestMotor1.SetControl(Robot::GetRobot().m_VoltageOutRequest(2_V));
+            m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(3_V));
+        })
+    );
+
+    Robot::GetRobot()->m_TR.OnTrue(
+        new frc2::InstantCommand([&]{
+            m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(3_V));
+        })
+    );
+
+     Robot::GetRobot()->m_ML.OnTrue(
+        new frc2::InstantCommand([&]{
+            m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(2_V));
+        })
+    );
+
+    Robot::GetRobot()->m_MR.OnTrue(
+        new frc2::InstantCommand([&]{
+            m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(2_V));
+        })
+    );
+
+     Robot::GetRobot()->m_BL.OnTrue(
+        new frc2::InstantCommand([&]{
+            m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(1_V));
+        })
+    );
+
+    Robot::GetRobot()->m_BR.OnTrue(
+        new frc2::InstantCommand([&]{
+            m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(1_V));
         })
     );
 
