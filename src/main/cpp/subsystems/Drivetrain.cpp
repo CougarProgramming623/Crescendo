@@ -39,7 +39,9 @@ DriveTrain::DriveTrain()
       m_JoystickOuttake([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
       m_ExtraJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
       m_Timer(),
-      m_EventMap()
+      m_EventMap(),
+      m_TestMotor1(TEST_MOTOR_1),
+      m_TestMotor2(TEST_MOTOR_2)
 {}
 
 void DriveTrain::DriveInit(){

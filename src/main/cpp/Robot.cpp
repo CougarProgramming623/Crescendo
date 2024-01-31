@@ -119,7 +119,14 @@ void Robot::AutoButtons(){
 
   m_TR.OnTrue(frc2::PrintCommand("Nothing").ToPtr());
 
-GetArm().m_PlacingMode.OnTrue(
+
+  // m_AutoBalance.ToggleOnTrue(
+  //   new frc2::InstantCommand([&]{
+  //     new DualMotorControl();
+  //   })
+  // );
+
+  GetArm().m_PlacingMode.OnTrue(
       new frc2::InstantCommand([&]{
         if(m_ArmCommand != nullptr){
           m_ArmCommand->Cancel();

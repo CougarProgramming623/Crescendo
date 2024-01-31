@@ -41,7 +41,7 @@ void DynamicIntake::Execute() {
 	ARM.GetBottomIntakeMotor().GetConfigurator().Apply(bottomIntakeCurrentConfigs);
 	
 	//was using Robot::GetRobot()->m_VoltageOutRequest to access the voltage request, 
-	//change the below lines to work similar to arm.cpp intake buttons
+	//below lines were changed to work similar to arm.cpp intake buttons
 
 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)){
 		bottomIntakeCurrentConfigs.SupplyCurrentLimitEnable = true;

@@ -30,6 +30,6 @@ void PivotToPos::End(bool interrupted){
 }
 
 bool PivotToPos::IsFinished() {
-	return Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE) ;
+	return Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE);
 	//return abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition()) < 4000;
 }

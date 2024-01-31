@@ -17,17 +17,18 @@
 
 
 using namespace ctre::phoenix6;
+using ctre::phoenix::motorcontrol::NeutralMode;
 
-DualMotorControl::DualMotorControl()
-    //m_TestMotor1(TEST_MOTOR_1),
-    //m_TestMotor2(TEST_MOTOR_2)
-
-{}
+DualMotorControl::DualMotorControl() {
+    AddRequirements(&Robot::GetRobot()->GetDriveTrain());
+}
 
 /*
 initialize values
 */
 void DualMotorControl::Initialize() {
+    Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetNeutralMode(NeutralMode::Brake);
+    Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetNeutralMode(NeutralMode::Brake);
     //DebugOutF("Initialized");
     //balanced = false;
 }
@@ -39,37 +40,37 @@ void DualMotorControl::Execute() {
 
     Robot::GetRobot()->m_TL.OnTrue(
         new frc2::InstantCommand([&]{
-            m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(3_V));
+            Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(3_V));
         })
     );
 
     Robot::GetRobot()->m_TR.OnTrue(
         new frc2::InstantCommand([&]{
-            m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(3_V));
+            Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(3_V));
         })
     );
 
      Robot::GetRobot()->m_ML.OnTrue(
         new frc2::InstantCommand([&]{
-            m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(2_V));
+            Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(2_V));
         })
     );
 
     Robot::GetRobot()->m_MR.OnTrue(
         new frc2::InstantCommand([&]{
-            m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(2_V));
+            Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(2_V));
         })
     );
 
      Robot::GetRobot()->m_BL.OnTrue(
         new frc2::InstantCommand([&]{
-            m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(1_V));
+            Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(1_V));
         })
     );
 
     Robot::GetRobot()->m_BR.OnTrue(
         new frc2::InstantCommand([&]{
-            m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(1_V));
+            Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(1_V));
         })
     );
 
@@ -144,7 +145,8 @@ void DualMotorControl::Execute() {
 }
 
 void DualMotorControl::End(bool interrupted){
-    //DebugOutF("Finished");
+    Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
 }
 
 bool DualMotorControl::IsFinished(){
