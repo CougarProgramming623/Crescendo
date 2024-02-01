@@ -28,5 +28,8 @@ public:
   void End(bool interrupted) override;
   bool IsFinished() override;
 
+private:
+  double power1;
+  double power2;
   
 };

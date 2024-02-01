@@ -29,6 +29,8 @@ initialize values
 void DualMotorControl::Initialize() {
     Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetNeutralMode(NeutralMode::Brake);
     Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetNeutralMode(NeutralMode::Brake);
+    power1 = 2;
+    power2 = 2;
     //DebugOutF("Initialized");
     //balanced = false;
 }
@@ -38,39 +40,57 @@ function to perform the autobalance command
 */
 void DualMotorControl::Execute() {
 
+    Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(fmod(power1, 12.0))));
+    Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(fmod(power2, 12.0))));
+
+    DebugOutF("Power of wheel 1: " + std::to_string(fmod(power1, 12.0)));
+    DebugOutF("Power of wheel 2: " + std::to_string(fmod(power2, 12.0)));
+
+    Robot::GetRobot()->m_RightGrid.OnTrue(
+        new frc2::InstantCommand([&]{
+            power2 *= -1;
+        })
+    );
+
+    Robot::GetRobot()->m_LeftGrid.OnTrue(
+        new frc2::InstantCommand([&]{
+            power1 *= -1;
+        })
+    );
+
     Robot::GetRobot()->m_TL.OnTrue(
         new frc2::InstantCommand([&]{
-            Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(3_V));
+            power1 += 0.5;
         })
     );
 
     Robot::GetRobot()->m_TR.OnTrue(
         new frc2::InstantCommand([&]{
-            Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(3_V));
+            power2 += 0.5;
         })
     );
 
      Robot::GetRobot()->m_ML.OnTrue(
         new frc2::InstantCommand([&]{
-            Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(2_V));
+            power1 = 0;
         })
     );
 
     Robot::GetRobot()->m_MR.OnTrue(
         new frc2::InstantCommand([&]{
-            Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(2_V));
+            power2 = 0;
         })
     );
 
      Robot::GetRobot()->m_BL.OnTrue(
         new frc2::InstantCommand([&]{
-            Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(1_V));
+            power1 -= 0.5;
         })
     );
 
     Robot::GetRobot()->m_BR.OnTrue(
         new frc2::InstantCommand([&]{
-            Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(1_V));
+            power2 -= 0.5;
         })
     );
 
