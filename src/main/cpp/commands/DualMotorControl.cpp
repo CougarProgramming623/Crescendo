@@ -8,6 +8,7 @@
 #include <frc/AnalogInput.h>
 #include <math.h>
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix/motorcontrol/NeutralMode.h>
 
 #include "Constants.h"
 #include "Util.h"
