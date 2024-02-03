@@ -198,7 +198,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define BIG_RED 22
 
 //BUTTONBOARD 2
-#define GRID_TL 2
+#define GRID_TL 13
 #define GRID_TC 7 
 #define GRID_TR 12
 #define GRID_ML 3 

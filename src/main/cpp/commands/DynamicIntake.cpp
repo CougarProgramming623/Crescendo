@@ -64,6 +64,6 @@ void DynamicIntake::End(bool interrupted){
 
 bool DynamicIntake::IsFinished() {
 	return !Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON) &&
-		   !Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON) &&
-		   !Robot::GetRobot()->GetJoyStick().GetRawButton(4);
+		   !Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON);
+		   //!Robot::GetRobot()->GetJoyStick().GetRawButton(4);
 }

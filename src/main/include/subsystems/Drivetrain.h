@@ -113,7 +113,7 @@ class DriveTrain : public frc2::SubsystemBase {
   int m_VisionCounter;
   frc::Pose2d m_VisionRelative;
 
-    frc2::Trigger m_JoystickOuttake;
+    //frc2::Trigger m_JoystickOuttake;
 
 
   private:
@@ -122,11 +122,11 @@ class DriveTrain : public frc2::SubsystemBase {
 
   frc::Timer m_Timer;
 
-  frc2::Trigger m_TestJoystickButton;
-  frc2::Trigger m_JoystickButtonTwo;
-  frc2::Trigger m_DuaLMotorControlButton;
-  frc2::Trigger m_NavXResetButton;
-  frc2::Trigger m_ExtraJoystickButton;
+  //frc2::Trigger m_TestJoystickButton;
+  //frc2::Trigger m_JoystickButtonTwo;
+  //frc2::Trigger m_DuaLMotorControlButton;
+  //frc2::Trigger m_NavXResetButton;
+  //frc2::Trigger m_ExtraJoystickButton;
 
   bool m_IsBalancing;
 

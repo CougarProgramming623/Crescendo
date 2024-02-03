@@ -32,12 +32,12 @@ DriveTrain::DriveTrain()
       m_yController(.7, .4, 0.3),
       m_ThetaController(14, 25, 0.02, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
       m_HolonomicController(m_xController, m_yController, m_ThetaController),
-      m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
-      m_JoystickButtonTwo([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
-      m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
-      m_DuaLMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
-      m_JoystickOuttake([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
-      m_ExtraJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
+      //m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
+      //m_JoystickButtonTwo([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
+      //m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
+      //m_DuaLMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
+      //m_JoystickOuttake([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
+      //m_ExtraJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
       m_Timer(),
       m_EventMap(),
       m_TestMotor1(TEST_MOTOR_1),
@@ -50,15 +50,15 @@ void DriveTrain::DriveInit(){
  
   //m_TestJoystickButton.WhenPressed(replace w vision command);
 
-  m_JoystickButtonTwo.ToggleOnTrue(new AutoLock());
+  //m_JoystickButtonTwo.ToggleOnTrue(new AutoLock());
 
   //m_ExtraJoystickButton.WhileHeld(new DriveToPosCommand());
 
-  m_NavXResetButton.OnTrue(
-    new frc2::InstantCommand([&]{
-      DebugOutF("NavX Zero");
-      Robot::GetRobot()->zeroGyroscope();
-  }));
+  // m_NavXResetButton.OnTrue(
+  //   new frc2::InstantCommand([&]{
+  //     DebugOutF("NavX Zero");
+  //     Robot::GetRobot()->zeroGyroscope();
+  // }));
 
   // m_JoystickOuttake.WhileTrue(
   //   new frc2::InstantCommand([&]{
@@ -80,7 +80,7 @@ void DriveTrain::DriveInit(){
   // );
 
 
-  m_DuaLMotorControlButton.ToggleOnTrue(new DualMotorControl());
+  //m_DuaLMotorControlButton.ToggleOnTrue(new DualMotorControl());
 
 
   // m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});

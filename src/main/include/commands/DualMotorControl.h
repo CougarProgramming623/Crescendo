@@ -29,6 +29,7 @@ public:
   bool IsFinished() override;
 
 private:
+  frc2::InstantCommand* m_MotorCommand;
   double power1;
   double power2;
   
