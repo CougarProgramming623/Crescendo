@@ -35,13 +35,11 @@ DriveTrain::DriveTrain()
       m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
       m_JoystickButtonTwo([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
       m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
-      m_DuaLMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
+      m_DualMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
       m_JoystickOuttake([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
       m_ExtraJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
       m_Timer(),
-      m_EventMap(),
-      m_TestMotor1(TEST_MOTOR_1),
-      m_TestMotor2(TEST_MOTOR_2)
+      m_EventMap()
 {}
 
 void DriveTrain::DriveInit(){
@@ -80,7 +78,7 @@ void DriveTrain::DriveInit(){
   );
 
 
-  m_DuaLMotorControlButton.ToggleOnTrue(new DualMotorControl());
+  //m_DualMotorControlButton.ToggleOnTrue(new DualMotorControl());
 
 
   m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});

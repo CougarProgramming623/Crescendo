@@ -92,8 +92,6 @@ class DriveTrain : public frc2::SubsystemBase {
   SwerveModule m_FrontRightModule;
   SwerveModule m_BackLeftModule;
   SwerveModule m_BackRightModule;
-  hardware::TalonFX m_TestMotor1;
-  hardware::TalonFX m_TestMotor2;
 
   //theoretical maximum angular velocity - can be replaced with measure amount
   const units::radians_per_second_t kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = units::radians_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI / std::sqrt(Pow((DRIVETRAIN_TRACKWIDTH_METERS / 2), 2) + Pow((DRIVETRAIN_WHEELBASE_METERS / 2), 2)));
@@ -124,7 +122,7 @@ class DriveTrain : public frc2::SubsystemBase {
 
   frc2::Trigger m_TestJoystickButton;
   frc2::Trigger m_JoystickButtonTwo;
-  frc2::Trigger m_DuaLMotorControlButton;
+  frc2::Trigger m_DualMotorControlButton;
   frc2::Trigger m_NavXResetButton;
   frc2::Trigger m_ExtraJoystickButton;
 

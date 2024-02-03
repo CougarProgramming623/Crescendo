@@ -141,8 +141,6 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 //motor and sensor IDs
 #define WRIST_MOTOR 39
 #define PIVOT_MOTOR 30
-#define TEST_MOTOR_1 31
-#define TEST_MOTOR_2 52
 
 #define TOP_INTAKE_MOTOR -1 //check
 #define BOTTOM_INTAKE_MOTOR 15
