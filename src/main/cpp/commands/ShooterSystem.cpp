@@ -10,8 +10,6 @@ public:
         dustPanMotor = new frc::Spark(2);
         feederMotor = new frc::Spark(3);
         angleMotor = new frc::Spark(4);
-
-        // Initialize joystick
         joystick = new frc::Joystick(0);
     }
 
