@@ -1,15 +1,17 @@
 #include <frc/TimedRobot.h>
-#include <frc/Spark.h>
+#include "ctre/Phoenix.h"
 #include <frc/Joystick.h>
 
 class Robot : public frc::TimedRobot {
 public:
     void RobotInit() {
-        flywheel1 = new frc::Spark(0);
-        flywheel2 = new frc::Spark(1);
-        dustPanMotor = new frc::Spark(2);
-        feederMotor = new frc::Spark(3);
-        angleMotor = new frc::Spark(4);
+        flywheel1 = new ctre::phoenix::motorcontrol::can::WPI_TalonFX(0);
+        flywheel2 = new ctre::phoenix::motorcontrol::can::WPI_TalonFX(1);
+        dustPanMotor = new ctre::phoenix::motorcontrol::can::WPI_TalonFX(2);
+        feederMotor = new ctre::phoenix::motorcontrol::can::WPI_TalonFX(3);
+        angleMotor = new ctre::phoenix::motorcontrol::can::WPI_TalonFX(4);
+
+        // Initialize joystick
         joystick = new frc::Joystick(0);
     }
 
@@ -46,11 +48,11 @@ public:
     }
 
 private:
-    frc::Spark* flywheel1;
-    frc::Spark* flywheel2;
-    frc::Spark* dustPanMotor;
-    frc::Spark* feederMotor;
-    frc::Spark* angleMotor;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX* flywheel1;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX* flywheel2;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX* dustPanMotor;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX* feederMotor;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX* angleMotor;
     frc::Joystick* joystick;
 };
 
