@@ -24,7 +24,6 @@
 #include "COB.h"
 #include "Vision.h"
 #include "subsystems/Arm.h"
-#include "subsystems/MotionMagicTest.h"
 #include "LED.h"
 #include <frc/geometry/Pose2d.h>
 #include "./subsystems/Intake.h"
@@ -41,7 +40,6 @@ class Robot : public frc::TimedRobot {
 
   void RobotInit() override;
   void AutoButtons();
-  frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
   void RobotPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;

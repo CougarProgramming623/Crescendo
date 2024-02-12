@@ -46,6 +46,8 @@
 #include <frc2/command/Command.h>
 #include <unordered_map>
 
+#include <frc/drive/DifferentialDrive.h>
+
 //using ctre::phoenix::motorcontrol::can::TalonFX;
 
 class DriveTrain : public frc2::SubsystemBase {
@@ -64,7 +66,7 @@ class DriveTrain : public frc2::SubsystemBase {
   bool m_DriveToPoseFlag = false;
 
   inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
-  inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return &m_Odometry; }
+  inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return & m_Odometry; }
   inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
 
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
@@ -75,8 +77,29 @@ class DriveTrain : public frc2::SubsystemBase {
   inline bool GetIsBalancing() { return m_IsBalancing; }
   inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
 
+  inline Pose2d getPose() {
+    return m_Odometry.GetEstimatedPosition();//::Odometry<frc::ChassisSpeeds, frc::SwerveModulePosition>::GetPose();
+  }
+
+  inline void resetPose(Pose2d pose) {
+    m_Odometry.ResetPosition(frc::Rotation2d(units::degree_t(Robot::GetRobot()->GetNavX().GetYaw())), m_ModulePositions, pose);
+  }
+  //Robot::GetRobot()->GetNavX().GetYaw()
+
+  inline ChassisSpeeds getRobotRelativeSpeeds() {
+    return /*Robot::GetRobot()->GetDriveTrain().BaseDrive(*/frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+            units::meters_per_second_t(1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
+            units::meters_per_second_t(-1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
+            units::radians_per_second_t(/*outputT*/1 * Robot::GetRobot()->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
+            frc::Rotation2d(units::radian_t(/*Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)*/1)));
+  }
+
+  // inline void driveRobotRelative(ChassisSpeeds speeds) {
+  //   Robot::GetRobot()->GetDriveTrain().motorcontrol.Set(speeds);
+  // }
+
   frc2::FunctionalCommand AutoBalanceCommand();
-  void AutoBalanceFunction();
+  void AutoBalanceFunction(); 
 
   //TrajectoryCommand DriveToPos(frc::Pose2d target);
 
