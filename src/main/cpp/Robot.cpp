@@ -20,6 +20,7 @@
 #include "commands/WristToPosAuto.h"
 #include "commands/PivotToPosAuto.h"
 #include <frc/DriverStation.h>
+#include <pathplanner/lib/commands/PathPlannerAuto.h>
 
 
 //using ctre::phoenix::motorcontrol::ControlMode;

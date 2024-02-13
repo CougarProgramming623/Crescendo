@@ -1,8 +1,6 @@
 #pragma once
-
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/geometry/Rotation2d.h>
-
 
 //copied includes
 #include <frc/geometry/Transform2d.h>
@@ -52,34 +50,7 @@
 
 //using ctre::phoenix::motorcontrol::can::TalonFX;
 
-class DriveTrain : public frc2::SubsystemBase {
- public:
-  DriveTrain();
-  void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
-  void DriveInit();
-  void BreakMode(bool on);
-  void Periodic() override;
-
-  frc::Translation2d m_FrontLeftLocation;
-  frc::Translation2d m_FrontRightLocation;
-  frc::Translation2d m_BackLeftLocation;
-  frc::Translation2d m_BackRightLocation;
-  
-  bool m_DriveToPoseFlag = false;
-
-  inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
-  inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return & m_Odometry; }
-  inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
-
-  inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
-
-  // pathplanner::FollowPathWithEvents* TruePath();
-  // pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
-
-  inline bool GetIsBalancing() { return m_IsBalancing; }
-  inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
-
-  inline Pose2d getPose() {
+inline Pose2d getPose() {
     return m_Odometry.GetEstimatedPosition();//::Odometry<frc::ChassisSpeeds, frc::SwerveModulePosition>::GetPose();
   }
 
@@ -96,17 +67,6 @@ class DriveTrain : public frc2::SubsystemBase {
             frc::Rotation2d(units::radian_t(/*Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)*/1)));
   }
 
-  // inline void driveRobotRelative(ChassisSpeeds speeds) {
-  //   Robot::GetRobot()->GetDriveTrain().motorcontrol.Set(speeds);
-  // }
-
-  frc2::FunctionalCommand AutoBalanceCommand();
-  void AutoBalanceFunction(); 
-
-  //TrajectoryCommand DriveToPos(frc::Pose2d target);
-
-
-//how fast the robot should be able to drive
   const units::meters_per_second_t kMAX_VELOCITY_METERS_PER_SECOND = units::meters_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI);
 
   std::array<frc::SwerveModulePosition, 4> m_ModulePositions;
