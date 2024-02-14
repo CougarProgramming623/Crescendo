@@ -189,7 +189,7 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	
 	//from percent output to voltage out ): - DEFINITELY LOOK, changed the if statements to just change the value of the voltage,
 	//and set the control statement outside of the if-statement just to make it a little neater
-	m_BottomIntake.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(m_BottomIntakeVoltage)));
+	m_BottomIntake.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power);
 
 
 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) m_BottomIntakeVoltage = 12 * power; /*m_BottomIntake.Set(ControlMode::PercentOutput, power);*/
@@ -199,7 +199,7 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	},[&](bool e) { // onEnd
 		m_Pivot.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
 		m_Wrist.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-		m_BottomIntake.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+		m_BottomIntake.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
 	},
 	[&] { // isFinished
 		return !Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE);

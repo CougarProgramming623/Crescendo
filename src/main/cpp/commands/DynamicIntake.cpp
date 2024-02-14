@@ -1,6 +1,8 @@
 #include "./commands/DynamicIntake.h"
 #include "Robot.h"
 
+using namespace ctre::phoenix::motorcontrol;
+
 
 #define ARM Robot::GetRobot()->GetArm()
 
@@ -37,28 +39,24 @@ void DynamicIntake::Execute() {
 
 	double power = -.7; //default power for cone
 	//current limiter configuration obj
-	configs::CurrentLimitsConfigs bottomIntakeCurrentConfigs{};
-	ARM.GetBottomIntakeMotor().GetConfigurator().Apply(bottomIntakeCurrentConfigs);
 	
 	//was using Robot::GetRobot()->m_VoltageOutRequest to access the voltage request, 
 	//below lines were changed to work similar to arm.cpp intake buttons
 
 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)){
-		bottomIntakeCurrentConfigs.SupplyCurrentLimitEnable = true;
-		ARM.GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(power * 12)));
+		ARM.GetBottomIntakeMotor().EnableCurrentLimit(true);
+		ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power);
 		//ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, power);
 	} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)){
-		bottomIntakeCurrentConfigs.SupplyCurrentLimitEnable = false;
-		//not sure what happens when you negate the voltage, im assuming another method must be called to inverse the output of the recieved voltage
-		ARM.GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(-power * 12)));
-		//ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, -power);
+		ARM.GetBottomIntakeMotor().EnableCurrentLimit(false);
+		ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -power);
 	} else 
-		bottomIntakeCurrentConfigs.SupplyCurrentLimitEnable = true;
+		ARM.GetBottomIntakeMotor().EnableCurrentLimit(true);
 
 }
 
 void DynamicIntake::End(bool interrupted){
-	ARM.GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+	ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
 	// ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
 }
 
