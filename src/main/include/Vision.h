@@ -23,6 +23,10 @@ class Vision {
         Pose2d GetPoseRed();
         Pose2d GetFieldPose();
 
+        std::shared_ptr<nt::NetworkTable> GetLimeLight() {
+  return nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+}
+
         std::string FrontBack(std::string key);
         units::angle::degree_t ShooterAngle(Pose2d pose, double ID);
         units::angle::degree_t VisionRobotYaw(Pose2d pose, double ID);

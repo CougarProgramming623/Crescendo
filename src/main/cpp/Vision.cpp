@@ -176,3 +176,7 @@ units::angle::degree_t Vision::ShooterAngle(Pose2d pose, double ID) {
   double distance = sqrt(pow(IDMap[0][(int)ID - 1], 2) + pow(IDMap[1][(int)ID - 1], 2));
   double height = IDMap[2][(int)ID - 1] - robotHeight;
 }
+
+/*std::shared_ptr<nt::NetworkTable> GetLimeLight() {
+  return nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+}*/
