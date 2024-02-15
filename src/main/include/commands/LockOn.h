@@ -10,7 +10,7 @@ class LockOn : public frc2::CommandHelper<frc2::Command, LockOn> {
   explicit LockOn();
 
   void Initialize() override;
-  void Execute() override;
+  //void Execute() override;
   //double Deadfix(double in, double deadband);
 
   //frc::Rotation2d m_GoalTheta;

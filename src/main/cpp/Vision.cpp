@@ -8,9 +8,10 @@
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableValue.h"
-// #include "wpi/span.h"
+//#include "wpi/span.h"
 //#include <LimelightHelpers.h>
 #include <frc/geometry/Rotation2d.h>
+#include <ntcore.h>
 
 using namespace frc;
 
@@ -164,14 +165,14 @@ std::string Vision::FrontBack(std::string key){
 }
 
 units::angle::degree_t Vision::VisionRobotYaw(Pose2d pose, double ID) {
-  double x = IDMap[0][(int)ID - 1] - pose.X();
-  double y = IDMap[1][(int)ID - 1] - pose.Y();
+  double x = IDMap[0][(int)ID - 1] - pose.X().value();
+  double y = IDMap[1][(int)ID - 1] - pose.Y().value();
   return units::angle::degree_t(atan(x / y));
 }
 
 units::angle::degree_t Vision::ShooterAngle(Pose2d pose, double ID) {
-  double x = IDMap[0][(int)ID - 1] - pose.X();
-  double y = IDMap[1][(int)ID - 1] - pose.Y();
+  double x = IDMap[0][(int)ID - 1] - pose.X().value();
+  double y = IDMap[1][(int)ID - 1] - pose.Y().value();
   double distance = sqrt(pow(IDMap[0][(int)ID - 1], 2) + pow(IDMap[1][(int)ID - 1], 2));
   double height = IDMap[2][(int)ID - 1] - robotHeight;
 }
