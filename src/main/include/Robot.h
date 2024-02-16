@@ -28,6 +28,9 @@
 #include <frc/geometry/Pose2d.h>
 #include "./subsystems/Intake.h"
 
+#include <pathplanner/lib/auto/NamedCommands.h>
+#include <memory>
+
 
 class Robot : public frc::TimedRobot {
  public:
