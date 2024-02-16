@@ -66,14 +66,14 @@ void DriveTrain::DriveInit(){
         Robot::GetRobot()->m_Intake.GetCurrentCommand()->Cancel();
       }
       DebugOutF("Joystick Outtake");
-      Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.8);
+      //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.8);
       //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, .8);
     }
   ));
 
   m_JoystickOuttake.OnFalse(
     new frc2::InstantCommand([&]{
-      Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+      //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
       //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
       frc2::CommandScheduler::GetInstance().Schedule(new DynamicIntake());
     })

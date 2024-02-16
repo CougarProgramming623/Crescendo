@@ -43,20 +43,20 @@ void DynamicIntake::Execute() {
 	//was using Robot::GetRobot()->m_VoltageOutRequest to access the voltage request, 
 	//below lines were changed to work similar to arm.cpp intake buttons
 
-	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)){
-		ARM.GetBottomIntakeMotor().EnableCurrentLimit(true);
-		ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power);
+	//if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)){
+		//ARM.GetBottomIntakeMotor().EnableCurrentLimit(true);
+		//ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power);
 		//ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, power);
-	} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)){
-		ARM.GetBottomIntakeMotor().EnableCurrentLimit(false);
-		ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -power);
-	} else 
-		ARM.GetBottomIntakeMotor().EnableCurrentLimit(true);
+	//} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)){
+		//ARM.GetBottomIntakeMotor().EnableCurrentLimit(false);
+		//ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -power);
+	//} else 
+		//ARM.GetBottomIntakeMotor().EnableCurrentLimit(true);
 
 }
 
 void DynamicIntake::End(bool interrupted){
-	ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+	//ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
 	// ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
 }
 
