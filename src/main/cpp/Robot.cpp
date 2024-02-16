@@ -91,7 +91,7 @@ void Robot::AutoButtons(){
   m_NavXReset = frc2::Trigger(BUTTON_L(8)); //PUT Define
   GetArm().m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(15));
   m_AutoBalance = frc2::Trigger(BUTTON_L(3));
-   m_Print = frc2::Trigger(BUTTON_L(2));
+  m_Print = frc2::Trigger(BUTTON_L(2));
 
   //m_AutoBalance.WhileTrue(new DualMotorControl());
   m_VisionPoseReset = frc2::Trigger([&] { return Robot::GetRobot()->GetButtonBoard().GetRawButton(6); }); //PUT Define

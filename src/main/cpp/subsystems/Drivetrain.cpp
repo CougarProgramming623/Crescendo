@@ -8,7 +8,7 @@
 #include <frc/Timer.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/ParallelCommandGroup.h>
-#include "./commands/AutoLock.h"
+#include "./commands/LockOn.h"
 #include "./commands/DynamicIntake.h"
 
 //Constructor
@@ -48,7 +48,9 @@ void DriveTrain::DriveInit(){
  
   //m_TestJoystickButton.WhenPressed(replace w vision command);
 
-  m_JoystickButtonTwo.ToggleOnTrue(new AutoLock());
+  //m_JoystickButtonTwo.ToggleOnTrue(new AutoLock());
+  m_JoystickButtonTwo.ToggleOnTrue(new LockOn());
+
 
   //m_ExtraJoystickButton.WhileHeld(new DriveToPosCommand());
 

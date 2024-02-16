@@ -9,16 +9,34 @@ LockOn::LockOn() {
 
 void LockOn::Initialize(){}
 
+//joystick deadzone -> if input is below deadband, set input to zero
+double LockOn::Deadfix(double in, double deadband) {
+    if(abs(in) < deadband) {
+        return 0;
+    }
+    return in;
+}
+
+//if the limelight detects a target, robot theta and (LATER) shooter locks onto april tag
 void LockOn::Execute() {    
     Robot* r = Robot::GetRobot();
-    if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("<tv>",0.0) ==  1) 
-        m_GoalTheta = Robot::GetRobot()->GetVision().VisionRobotYaw(Robot::GetRobot()->GetVision().GetFieldPose(), (Robot::GetRobot()->GetVision().GetLimeLight()->GetNumberArray("<tid>",std::vector<double>(6))[0]));
+    if(m_LimelightTable->GetNumber("<tv>",0.0) == 1) {
+        m_GoalTheta = r->GetVision().VisionRobotYaw(r->GetVision().GetFieldPose(), m_LimelightTable->GetNumberArray("<tid>",std::vector<double>(6))[0]);
+    }
+    
+    //print statements
     DebugOutF(std::to_string(m_GoalTheta.Degrees().value()));
     DebugOutF("Act: " + std::to_string(r->GetAngle()));
     DebugOutF(std::to_string(fmod(360 + 90 - r->GetNavX().GetAngle(), 360)));
-    
 
-    //speeds.omega = -speeds.omega;
+    frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+            units::meters_per_second_t(-Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
+            units::meters_per_second_t(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.02) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
+            units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), frc::Pose2d(0_m, 0_m, m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega() * .45),
+            frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360))))
+    );
+
+    speeds.omega = -speeds.omega;
     
-    //r->GetDriveTrain().BaseDrive(speeds);
+    r->GetDriveTrain().BaseDrive(speeds);
 }
