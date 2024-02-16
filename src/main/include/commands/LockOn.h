@@ -16,6 +16,7 @@ class LockOn : public frc2::CommandHelper<frc2::Command, LockOn> {
   double Deadfix(double in, double deadband);
 
   frc::Rotation2d m_GoalTheta;
+  int m_AprilTagID;
  
  private:
   std::shared_ptr<nt::NetworkTable> m_LimelightTable = Robot::GetRobot()->GetVision().GetLimeLight();
