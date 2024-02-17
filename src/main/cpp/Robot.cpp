@@ -20,6 +20,8 @@
 #include "commands/WristToPosAuto.h"
 #include "commands/PivotToPosAuto.h"
 #include <frc/DriverStation.h>
+#include "commands/LockOn.h"
+
 
 
 //using ctre::phoenix::motorcontrol::ControlMode;
@@ -40,10 +42,10 @@ void Robot::RobotInit() {
   GetNavX().ZeroYaw();
   GetNavX().SetAngleAdjustment(0);
   s_Instance = this;
-  m_DriveTrain.DriveInit();
-  m_Vision.VisionInit(); //Make one
+  //m_DriveTrain.DriveInit();
+  m_Vision.VisionInit();
   m_LED.Init();
-  m_Arm.Init();
+  //m_Arm.Init();
   
   AutoButtons();
   m_LED.Init();
@@ -393,6 +395,8 @@ void Robot::RobotPeriodic() {
   m_LED.EyesAllianceColor();
   m_LED.EndGame();
   m_LED.SetData();
+
+  LockOn();
   //m_LED.SponsorBoardRainbow();
   //m_LED.LowBattery();
 
