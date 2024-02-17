@@ -37,7 +37,7 @@ class Robot : public frc::TimedRobot {
   inline Arm& GetArm() { return m_Arm; }
   inline frc::GenericHID& GetButtonBoard() { return m_ButtonBoard; }
   inline frc::GenericHID& GetButtonBoardTwo() { return m_ButtonBoardTwo; }
-  inline frc::GenericHID& GetJoystick() { return m_Joystick; }
+  //inline frc::GenericHID& GetJoystick() { return m_Joystick; }
 
   void RobotInit() override;
   void AutoButtons();
@@ -57,7 +57,7 @@ class Robot : public frc::TimedRobot {
   inline double getPitch() {return m_NavX.GetPitch();}
 
   inline DriveTrain& GetDriveTrain() { return m_DriveTrain; }
-  inline frc::Joystick& GetJoyStick() { return m_Joystick; }
+  //inline frc::Joystick& GetJoyStick() { return m_Joystick; }
 
   double GetAngle() {return fmod(360 - GetNavX().GetYaw(), 360); }
   
@@ -66,6 +66,7 @@ class Robot : public frc::TimedRobot {
 
   //motor control requests - LOOK, VERY IMPORTANT
   controls::VoltageOut m_VoltageOutRequest{0_V};
+  controls::DutyCycleOut m_DutyCycleOutRequest{0};
   controls::MotionMagicDutyCycle m_MotionMagicRequest{units::angle::turn_t(0)};
 
   double previousErrorX = 0;
@@ -126,7 +127,7 @@ class Robot : public frc::TimedRobot {
 
   AHRS m_NavX;
 
-  frc::Joystick m_Joystick = frc::Joystick(1);
+  //frc::Joystick m_Joystick = frc::Joystick(1);
 
   // Have it null by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.

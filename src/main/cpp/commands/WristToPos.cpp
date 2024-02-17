@@ -10,13 +10,13 @@ WristToPos::WristToPos() {
 }
 
 void WristToPos::Initialize() {
-	ARM.GetWristMotor().SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
+	//ARM.GetWristMotor().SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
 	targetDegrees = Robot::GetRobot()->GetArm().m_WristPos;
 }
 
 void WristToPos::Execute() {
-	ARM.GetWristMotor().SetPosition(units::angle::turn_t(ARM.WristStringPotUnitsToTicks(ARM.GetStringPot().GetValue())));
-	ARM.GetWristMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
+	// ARM.GetWristMotor().SetPosition(units::angle::turn_t(ARM.WristStringPotUnitsToTicks(ARM.GetStringPot().GetValue())));
+	// ARM.GetWristMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
 	//ARM.GetWristMotor().SetSelectedSensorPosition((ARM.WristStringPotUnitsToTicks(ARM.GetStringPot().GetValue())));
 	//ARM.GetWristMotor().Set(ControlMode::MotionMagic, ARM.WristDegreesToTicks(targetDegrees));
 	// DebugOutF("TargetDeg: " + std::to_string(targetDegrees));
@@ -24,7 +24,7 @@ void WristToPos::Execute() {
 }
 
 void WristToPos::End(bool interrupted){
-	ARM.GetWristMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+	//ARM.GetWristMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
 	//ARM.GetWristMotor().Set(ControlMode::PercentOutput, 0);
 }
 

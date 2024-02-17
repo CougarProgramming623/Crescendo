@@ -82,21 +82,9 @@
 //         })
 //     );
 
-//      Robot::GetRobot()->m_BL.OnTrue(
-//         new frc2::InstantCommand([&]{
-//             power1 -= 0.5;
-//         })
-//     );
-
-//     Robot::GetRobot()->m_BR.OnTrue(
-//         new frc2::InstantCommand([&]{
-//             power2 -= 0.5;
-//         })
-//     );
-
-//     // double angle = Robot::GetRobot()->GetNavX().GetPitch() + 0.05;
-//     // if(angle > -15 && angle < 15) (balanced = true);
-//     // Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/balanced").SetBoolean(balanced);
+    // double angle = Robot::GetRobot()->GetNavX().GetPitch() + 0.05;
+    // if(angle > -15 && angle < 15) (balanced = true);
+    // Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/balanced").SetBoolean(balanced);
 
 //     // double kPy = 0.01;//0.00005;
 //     // double kIy = 0;//0.0000001;

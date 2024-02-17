@@ -64,10 +64,10 @@ class DriveTrain : public frc2::SubsystemBase {
   bool m_DriveToPoseFlag = false;
 
   inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
-  inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return &m_Odometry; }
+  //inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return &m_Odometry; }
   inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
 
-  inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
+  //inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
   // pathplanner::FollowPathWithEvents* TruePath();
   // pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
@@ -84,14 +84,16 @@ class DriveTrain : public frc2::SubsystemBase {
 //how fast the robot should be able to drive
   const units::meters_per_second_t kMAX_VELOCITY_METERS_PER_SECOND = units::meters_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI);
 
-  std::array<frc::SwerveModulePosition, 4> m_ModulePositions;
+  //std::array<frc::SwerveModulePosition, 4> m_ModulePositions;
 
   const double kMAX_VOLTAGE = 12.0; //FIX
   
-  SwerveModule m_FrontLeftModule;
-  SwerveModule m_FrontRightModule;
-  SwerveModule m_BackLeftModule;
-  SwerveModule m_BackRightModule;
+  // SwerveModule m_FrontLeftModule;
+  // SwerveModule m_FrontRightModule;
+  // SwerveModule m_BackLeftModule;
+  // SwerveModule m_BackRightModule;
+  //hardware::TalonFX m_TestMotor1;
+  //hardware::TalonFX m_TestMotor2;
 
   //theoretical maximum angular velocity - can be replaced with measure amount
   const units::radians_per_second_t kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = units::radians_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI / std::sqrt(Pow((DRIVETRAIN_TRACKWIDTH_METERS / 2), 2) + Pow((DRIVETRAIN_WHEELBASE_METERS / 2), 2)));
@@ -111,7 +113,7 @@ class DriveTrain : public frc2::SubsystemBase {
   int m_VisionCounter;
   frc::Pose2d m_VisionRelative;
 
-    frc2::Trigger m_JoystickOuttake;
+    //frc2::Trigger m_JoystickOuttake;
 
 
   private:
@@ -120,16 +122,16 @@ class DriveTrain : public frc2::SubsystemBase {
 
   frc::Timer m_Timer;
 
-  frc2::Trigger m_TestJoystickButton;
-  frc2::Trigger m_JoystickButtonTwo;
-  frc2::Trigger m_DualMotorControlButton;
-  frc2::Trigger m_NavXResetButton;
-  frc2::Trigger m_ExtraJoystickButton;
+  //frc2::Trigger m_TestJoystickButton;
+  //frc2::Trigger m_JoystickButtonTwo;
+  //frc2::Trigger m_DuaLMotorControlButton;
+  //frc2::Trigger m_NavXResetButton;
+  //frc2::Trigger m_ExtraJoystickButton;
 
   bool m_IsBalancing;
 
   frc::SwerveDriveKinematics<4> m_Kinematics;
-  frc::SwerveDrivePoseEstimator<4> m_Odometry;
+  //frc::SwerveDrivePoseEstimator<4> m_Odometry;
   
   frc::Rotation2d m_Rotation;             
   frc::ChassisSpeeds m_ChassisSpeeds;
