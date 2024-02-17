@@ -1,7 +1,5 @@
 #pragma once
 
-#define DRIVETRAIN
-
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc/SerialPort.h>
@@ -56,12 +54,12 @@
 
 #include <frc/drive/DifferentialDrive.h>
 
-#include "COB.h"
-#include "Vision.h"
-#include "subsystems/Arm.h"
-#include "LED.h"
+// #include "COB.h"
+// #include "Vision.h"
+// #include "subsystems/Arm.h"
+// #include "LED.h"
 
-#include <Robot.h>
+// #include <Robot.h>
 //#include <memory>
 
 using namespace frc;
@@ -89,28 +87,17 @@ class DriveTrain : public frc2::SubsystemBase {
 
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
+  Pose2d getPose();
+  void resetPose(Pose2d pose);
+  ChassisSpeeds getRobotRelativeSpeeds();
+
   // pathplanner::FollowPathWithEvents* TruePath();
   // pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
 
   inline bool GetIsBalancing() { return m_IsBalancing; }
   inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
 
-  inline Pose2d getPose() {
-    return m_Odometry.GetEstimatedPosition();//::Odometry<frc::ChassisSpeeds, frc::SwerveModulePosition>::GetPose();
-  }
-
-  inline void resetPose(Pose2d pose) {
-    m_Odometry.ResetPosition(Rotation2d(units::degree_t(Robot::GetRobot()->GetNavX().GetYaw())), m_ModulePositions, pose);
-  }
-  //Robot::GetRobot()->GetNavX().GetYaw()
-
-  inline ChassisSpeeds getRobotRelativeSpeeds() {
-    return /*Robot::GetRobot()->GetDriveTrain().BaseDrive(*/ChassisSpeeds::FromFieldRelativeSpeeds(
-            units::meters_per_second_t(1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
-            units::meters_per_second_t(-1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
-            units::radians_per_second_t(/*outputT*/1 * Robot::GetRobot()->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
-            frc::Rotation2d(units::radian_t(/*Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)*/1)));
-  }
+  
 
   // inline void driveRobotRelative(ChassisSpeeds speeds) {
   //   Robot::GetRobot()->GetDriveTrain().motorcontrol.Set(speeds);

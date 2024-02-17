@@ -4,8 +4,6 @@
 
 #pragma once
 
-#define ROBOT
-
 #include <optional>
 
 #include <frc/TimedRobot.h>

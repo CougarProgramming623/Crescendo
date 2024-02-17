@@ -197,6 +197,23 @@ void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
   m_ModuleStates = {fl, fr, bl, br};
 }
 
+Pose2d DriveTrain::getPose() {
+  return m_Odometry.GetEstimatedPosition();//::Odometry<frc::ChassisSpeeds, frc::SwerveModulePosition>::GetPose();
+}
+
+void DriveTrain::resetPose(Pose2d pose) {
+  m_Odometry.ResetPosition(Rotation2d(units::degree_t(Robot::GetRobot()->GetNavX().GetYaw())), m_ModulePositions, pose);
+}
+//Robot::GetRobot()->GetNavX().GetYaw()
+
+ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
+  return /*Robot::GetRobot()->GetDriveTrain().BaseDrive(*/ChassisSpeeds::FromFieldRelativeSpeeds(
+          units::meters_per_second_t(1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
+          units::meters_per_second_t(-1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
+          units::radians_per_second_t(/*outputT*/1 * Robot::GetRobot()->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
+          frc::Rotation2d(units::radian_t(/*Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)*/1)));
+}
+
 //Sets breakmode
 void DriveTrain::BreakMode(bool on){
   m_FrontLeftModule.BreakMode(on);
