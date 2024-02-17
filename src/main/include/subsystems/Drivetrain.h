@@ -1,5 +1,11 @@
 #pragma once
 
+#define DRIVETRAIN
+
+#include <frc/TimedRobot.h>
+#include <frc2/command/CommandPtr.h>
+#include <frc/SerialPort.h>
+
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/geometry/Rotation2d.h>
 
@@ -50,6 +56,16 @@
 
 #include <frc/drive/DifferentialDrive.h>
 
+#include "COB.h"
+#include "Vision.h"
+#include "subsystems/Arm.h"
+#include "LED.h"
+
+#include <Robot.h>
+//#include <memory>
+
+using namespace frc;
+
 //using ctre::phoenix::motorcontrol::can::TalonFX;
 
 class DriveTrain : public frc2::SubsystemBase {
@@ -84,12 +100,12 @@ class DriveTrain : public frc2::SubsystemBase {
   }
 
   inline void resetPose(Pose2d pose) {
-    m_Odometry.ResetPosition(frc::Rotation2d(units::degree_t(Robot::GetRobot()->GetNavX().GetYaw())), m_ModulePositions, pose);
+    m_Odometry.ResetPosition(Rotation2d(units::degree_t(Robot::GetRobot()->GetNavX().GetYaw())), m_ModulePositions, pose);
   }
   //Robot::GetRobot()->GetNavX().GetYaw()
 
   inline ChassisSpeeds getRobotRelativeSpeeds() {
-    return /*Robot::GetRobot()->GetDriveTrain().BaseDrive(*/frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+    return /*Robot::GetRobot()->GetDriveTrain().BaseDrive(*/ChassisSpeeds::FromFieldRelativeSpeeds(
             units::meters_per_second_t(1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
             units::meters_per_second_t(-1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
             units::radians_per_second_t(/*outputT*/1 * Robot::GetRobot()->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation

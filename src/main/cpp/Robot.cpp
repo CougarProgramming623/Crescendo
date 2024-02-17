@@ -22,11 +22,11 @@
 #include <frc/DriverStation.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
 #include <commands/AutoLock.h>
-#include <commands/DriveToPosCommand.h>
-#include <commands/DualMotorControl.h>
-#include <commands/PivotToPosAuto.h>
-#include <commands/TrajectoryCommand.h>
-#include <commands/WristToPosAuto.h>
+//#include <commands/DriveToPosCommand.h>
+//#include <commands/DualMotorControl.h>
+//#include <commands/PivotToPosAuto.h>
+//#include <commands/TrajectoryCommand.h>
+//#include <commands/WristToPosAuto.h>
 
 
 //using ctre::phoenix::motorcontrol::ControlMode;
@@ -42,16 +42,17 @@ m_LED()
   s_Instance = this;
 
     NamedCommands::registerCommand("autoLock", std::move(AutoLock().ToPtr())); 
-    NamedCommands::registerCommand("driveToPosCommand", std::move(DriveToPosCommand().ToPtr())); 
+    //NamedCommands::registerCommand("driveToPosCommand", std::move(DriveToPosCommand().ToPtr())); 
     NamedCommands::registerCommand("driveWithJoystick", std::move(DriveWithJoystick().ToPtr()));
-    NamedCommands::registerCommand("dualMotorControl", std::move(DualMotorControl().ToPtr()));
+    //NamedCommands::registerCommand("dualMotorControl", std::move(DualMotorControl().ToPtr()));
     NamedCommands::registerCommand("dynamicIntake", std::move(DynamicIntake().ToPtr())); 
     NamedCommands::registerCommand("pivotToPos", std::move(PivotToPos().ToPtr())); 
-    NamedCommands::registerCommand("pivotToPosAuto", std::move(PivotToPosAuto().ToPtr()));
-    NamedCommands::registerCommand("trajectoryCommand", std::move(TrajectoryCommand().ToPtr()));
+    //NamedCommands::registerCommand("pivotToPosAuto", std::move(PivotToPosAuto().ToPtr()));
+    //NamedCommands::registerCommand("trajectoryCommand", std::move(TrajectoryCommand().ToPtr()));
     NamedCommands::registerCommand("wristToPos", std::move(WristToPos().ToPtr())); 
-    NamedCommands::registerCommand("wristToPosAuto", std::move(WristToPosAuto().ToPtr())); 
+    //NamedCommands::registerCommand("wristToPosAuto", std::move(WristToPosAuto().ToPtr())); 
 }
+
 
 void Robot::RobotInit() {
 
@@ -342,6 +343,14 @@ void Robot::AutoButtons(){
       }
     })
   );
+}
+
+frc2::CommandPtr Robot::getAutonomousCommand() {
+// Load the path you want to follow using its name in the GUI
+auto path = PathPlannerPath::fromPathFile("TestAuto");
+
+// Create a path following command using AutoBuilder. This will also trigger event markers.
+return AutoBuilder::followPath(path);
 }
 
 frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly

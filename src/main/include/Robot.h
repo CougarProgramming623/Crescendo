@@ -4,6 +4,8 @@
 
 #pragma once
 
+#define ROBOT
+
 #include <optional>
 
 #include <frc/TimedRobot.h>
@@ -64,6 +66,9 @@ class Robot : public frc::TimedRobot {
   
   inline COB& GetCOB() { return m_COB; }
   inline Vision& GetVision() { return m_Vision; }
+
+  frc2::CommandPtr getAutonomousCommand();
+  frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
 
   //motor control requests - LOOK, VERY IMPORTANT
   controls::VoltageOut m_VoltageOutRequest{0_V};
