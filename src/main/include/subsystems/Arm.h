@@ -41,7 +41,6 @@ using namespace ctre::phoenix6;
 class Arm : public frc2::SubsystemBase {
 
 	public:
-
 	Arm();
 	void Init();
 	void SetButtons();

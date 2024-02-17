@@ -29,7 +29,7 @@
 #include "SwerveModule.h"
 #include <frc2/command/SubsystemBase.h>
 #include "commands/DriveWithJoystick.h"
-#include "commands/DualMotorControl.h"
+#include "commands/Shooter.h"
 //#include <./commands/TrajectoryCommand.h>
 //#include <./commands/DriveToPosCommand.h>
 #include <frc/Timer.h>
@@ -51,21 +51,23 @@
 class DriveTrain : public frc2::SubsystemBase {
  public:
   DriveTrain();
+  hardware::TalonFX m_ShooterMotor1;
+	//hardware::TalonFX m_ShooterMotor2;
   void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
   void DriveInit();
   void BreakMode(bool on);
   void Periodic() override;
 
-  frc::Translation2d m_FrontLeftLocation;
-  frc::Translation2d m_FrontRightLocation;
-  frc::Translation2d m_BackLeftLocation;
-  frc::Translation2d m_BackRightLocation;
+  //frc::Translation2d m_FrontLeftLocation;
+  //frc::Translation2d m_FrontRightLocation;
+  //frc::Translation2d m_BackLeftLocation;
+  //frc::Translation2d m_BackRightLocation;
   
   bool m_DriveToPoseFlag = false;
 
-  inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
+  //inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
   //inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return &m_Odometry; }
-  inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
+  //inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
 
   //inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
@@ -130,18 +132,18 @@ class DriveTrain : public frc2::SubsystemBase {
 
   bool m_IsBalancing;
 
-  frc::SwerveDriveKinematics<4> m_Kinematics;
+  //frc::SwerveDriveKinematics<4> m_Kinematics;
   //frc::SwerveDrivePoseEstimator<4> m_Odometry;
   
-  frc::Rotation2d m_Rotation;             
+  //frc::Rotation2d m_Rotation;             
   frc::ChassisSpeeds m_ChassisSpeeds;
 
   std::array<frc::SwerveModuleState, 4> m_ModuleStates;
   
-  frc::PIDController m_xController;
-  frc::PIDController m_yController;
-  frc::ProfiledPIDController <units::radians> m_ThetaController;
-  frc::HolonomicDriveController m_HolonomicController;
+  //frc::PIDController m_xController;
+  //frc::PIDController m_yController;
+  //frc::ProfiledPIDController <units::radians> m_ThetaController;
+  //frc::HolonomicDriveController m_HolonomicController;
 
   
 };

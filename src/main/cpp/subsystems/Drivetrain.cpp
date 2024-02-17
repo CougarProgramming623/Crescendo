@@ -13,12 +13,14 @@
 
 //Constructor
 DriveTrain::DriveTrain()
-    : m_FrontLeftLocation(units::meter_t (DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (-DRIVETRAIN_WHEELBASE_METERS / 2.0)),
-      m_FrontRightLocation(units::meter_t (DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
-      m_BackLeftLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (-DRIVETRAIN_WHEELBASE_METERS / 2.0)),
-      m_BackRightLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
-      m_Kinematics(m_FrontLeftLocation, m_FrontRightLocation, m_BackLeftLocation, m_BackRightLocation),
-      m_Rotation(0_rad),
+    : //m_FrontLeftLocation(units::meter_t (DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (-DRIVETRAIN_WHEELBASE_METERS / 2.0)),
+      //m_FrontRightLocation(units::meter_t (DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
+      //m_BackLeftLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (-DRIVETRAIN_WHEELBASE_METERS / 2.0)),
+      //m_BackRightLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
+      //m_Kinematics(m_FrontLeftLocation, m_FrontRightLocation, m_BackLeftLocation, m_BackRightLocation),
+      //m_Rotation(0_rad),
+      m_ShooterMotor1(TEST_MOTOR_1),
+			//m_ShooterMotor2(TEST_MOTOR_2),
       //m_ModulePositions( wpi::array<frc::SwerveModulePosition, 4>
       //  (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())),
       // m_Odometry(m_Kinematics, m_Rotation, ( wpi::array<frc::SwerveModulePosition, 4>
@@ -27,11 +29,11 @@ DriveTrain::DriveTrain()
       //m_FrontRightModule(FRONT_RIGHT_MODULE_DRIVE_MOTOR, FRONT_RIGHT_MODULE_STEER_MOTOR, FRONT_RIGHT_MODULE_ENCODER_PORT, FRONT_RIGHT_MODULE_STEER_OFFSET),
       //m_BackLeftModule(BACK_LEFT_MODULE_DRIVE_MOTOR, BACK_LEFT_MODULE_STEER_MOTOR, BACK_LEFT_MODULE_ENCODER_PORT, BACK_LEFT_MODULE_STEER_OFFSET),
       //m_BackRightModule(BACK_RIGHT_MODULE_DRIVE_MOTOR, BACK_RIGHT_MODULE_STEER_MOTOR, BACK_RIGHT_MODULE_ENCODER_PORT, BACK_RIGHT_MODULE_STEER_OFFSET),
-      m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s}, 
-      m_xController(.7, .4, 0.3),
-      m_yController(.7, .4, 0.3),
-      m_ThetaController(14, 25, 0.02, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
-      m_HolonomicController(m_xController, m_yController, m_ThetaController),
+      //m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s}, 
+      //m_xController(.7, .4, 0.3),
+      //m_yController(.7, .4, 0.3),
+      //m_ThetaController(14, 25, 0.02, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
+      //m_HolonomicController(m_xController, m_yController, m_ThetaController),
       //m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
       //m_JoystickButtonTwo([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
       //m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
@@ -43,8 +45,8 @@ DriveTrain::DriveTrain()
 {}
 
 void DriveTrain::DriveInit(){
-  m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
-  SetDefaultCommand(DriveWithJoystick());
+  //m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
+  //SetDefaultCommand(DriveWithJoystick());
  
   //m_TestJoystickButton.WhenPressed(replace w vision command);
 
@@ -162,8 +164,8 @@ void DriveTrain::Periodic(){
 //Converts chassis speed object and updates module states
 void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
   m_ChassisSpeeds = chassisSpeeds;
-  auto [fl, fr, bl, br] = m_Kinematics.ToSwerveModuleStates(m_ChassisSpeeds);
-  m_ModuleStates = {fl, fr, bl, br};
+  //auto [fl, fr, bl, br] = m_Kinematics.ToSwerveModuleStates(m_ChassisSpeeds);
+  //m_ModuleStates = {fl, fr, bl, br};
 }
 
 //Sets breakmode

@@ -6,7 +6,7 @@
 #include <frc/geometry/Transform2d.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/WaitCommand.h>
-//#include "./commands/DriveToPosCommand.h"
+ //#include "./commands/DriveToPosCommand.h"
 #include "Constants.h"
 //#include <ctre/phoenix6/configs/Configs.hpp>
 
@@ -19,14 +19,15 @@ using namespace ctre::phoenix6;
 
 
 
-Arm::Arm() : //m_Pivot(PIVOT_MOTOR),
+Arm::Arm() :
+			//m_Pivot(PIVOT_MOTOR),
 			 //m_Wrist(WRIST_MOTOR),
 			//  m_TopIntake(TOP_INTAKE_MOTOR),
 			 //m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
 
 			 //BUTTONBOARD 1
-			 m_Override(BUTTON_L(ARM_OVERRIDE)),
-			 m_Override2(BUTTON_L(ARM_OVERRIDE_2)),
+			 //m_Override(BUTTON_L(ARM_OVERRIDE)),
+			 //m_Override2(BUTTON_L(ARM_OVERRIDE_2)),
 
 			 m_ConeMode(BUTTON_L(CONE_MODE)),  
 			 m_CubeMode(BUTTON_L(CUBE_MODE)),

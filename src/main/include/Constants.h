@@ -183,6 +183,8 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 //BUTTONBOARD 0
 #define CONE_MODE 15 //left
 #define CUBE_MODE 16 //right
+#define TEST_MOTOR_1 33
+//#define TEST_MOTOR_2 52
 
 #define PIVOT_CONTROL 1 
 #define WRIST_CONTROL 0 
@@ -196,7 +198,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define BIG_RED 22
 
 //BUTTONBOARD 2
-#define GRID_TL 2
+#define GRID_TL 13
 #define GRID_TC 7 
 #define GRID_TR 12
 #define GRID_ML 3 
