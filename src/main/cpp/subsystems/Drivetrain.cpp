@@ -19,14 +19,14 @@ DriveTrain::DriveTrain()
       m_BackRightLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
       m_Kinematics(m_FrontLeftLocation, m_FrontRightLocation, m_BackLeftLocation, m_BackRightLocation),
       m_Rotation(0_rad),
-      //m_ModulePositions( wpi::array<frc::SwerveModulePosition, 4>
+      // m_ModulePositions(wpi::array<frc::SwerveModulePosition, 4>
       //  (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())),
-      // m_Odometry(m_Kinematics, m_Rotation, ( wpi::array<frc::SwerveModulePosition, 4>
-      //    (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())), frc::Pose2d(0_m, 0_m, 0_rad)),
-      //m_FrontLeftModule(FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_ENCODER_PORT, FRONT_LEFT_MODULE_STEER_OFFSET),
-      //m_FrontRightModule(FRONT_RIGHT_MODULE_DRIVE_MOTOR, FRONT_RIGHT_MODULE_STEER_MOTOR, FRONT_RIGHT_MODULE_ENCODER_PORT, FRONT_RIGHT_MODULE_STEER_OFFSET),
-      //m_BackLeftModule(BACK_LEFT_MODULE_DRIVE_MOTOR, BACK_LEFT_MODULE_STEER_MOTOR, BACK_LEFT_MODULE_ENCODER_PORT, BACK_LEFT_MODULE_STEER_OFFSET),
-      //m_BackRightModule(BACK_RIGHT_MODULE_DRIVE_MOTOR, BACK_RIGHT_MODULE_STEER_MOTOR, BACK_RIGHT_MODULE_ENCODER_PORT, BACK_RIGHT_MODULE_STEER_OFFSET),
+      m_Odometry(m_Kinematics, m_Rotation, ( wpi::array<frc::SwerveModulePosition, 4>
+         (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())), frc::Pose2d(0_m, 0_m, 0_rad)),
+      m_FrontLeftModule(FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_ENCODER_PORT, FRONT_LEFT_MODULE_STEER_OFFSET),
+      m_FrontRightModule(FRONT_RIGHT_MODULE_DRIVE_MOTOR, FRONT_RIGHT_MODULE_STEER_MOTOR, FRONT_RIGHT_MODULE_ENCODER_PORT, FRONT_RIGHT_MODULE_STEER_OFFSET),
+      m_BackLeftModule(BACK_LEFT_MODULE_DRIVE_MOTOR, BACK_LEFT_MODULE_STEER_MOTOR, BACK_LEFT_MODULE_ENCODER_PORT, BACK_LEFT_MODULE_STEER_OFFSET),
+      m_BackRightModule(BACK_RIGHT_MODULE_DRIVE_MOTOR, BACK_RIGHT_MODULE_STEER_MOTOR, BACK_RIGHT_MODULE_ENCODER_PORT, BACK_RIGHT_MODULE_STEER_OFFSET),
       m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s}, 
       m_xController(.7, .4, 0.3),
       m_yController(.7, .4, 0.3),
@@ -83,15 +83,15 @@ void DriveTrain::DriveInit(){
   //m_DuaLMotorControlButton.ToggleOnTrue(new DualMotorControl());
 
 
-  // m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
-  // m_FrontRightModule.m_DriveController.motor.SetInverted(false); //true for O12
-  // m_FrontRightModule.m_SteerController.motor.SetInverted(false); 
-  // m_BackRightModule.m_DriveController.motor.SetInverted(false);
-  // m_BackRightModule.m_SteerController.motor.SetInverted(false);
-  // m_FrontLeftModule.m_DriveController.motor.SetInverted(false);
-  // m_FrontLeftModule.m_SteerController.motor.SetInverted(false);
-  // m_BackLeftModule.m_DriveController.motor.SetInverted(false);
-  // m_BackLeftModule.m_SteerController.motor.SetInverted(false);
+  m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
+  m_FrontRightModule.m_DriveController.motor.SetInverted(false); //true for O12
+  m_FrontRightModule.m_SteerController.motor.SetInverted(false); 
+  m_BackRightModule.m_DriveController.motor.SetInverted(false);
+  m_BackRightModule.m_SteerController.motor.SetInverted(false);
+  m_FrontLeftModule.m_DriveController.motor.SetInverted(false);
+  m_FrontLeftModule.m_SteerController.motor.SetInverted(false);
+  m_BackLeftModule.m_DriveController.motor.SetInverted(false);
+  m_BackLeftModule.m_SteerController.motor.SetInverted(false);
 
 
 }
@@ -102,37 +102,37 @@ Passes module states to motors and updates odometry
 */
 void DriveTrain::Periodic(){
 
-  // if((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE) == 0 && ((double) m_ModuleStates[0].angle.Radians() == 0)){
-  //   m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-  //   m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-  // } else {
-  //   m_FrontLeftModule.Set(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[0].angle.Radians());
-  // }
+  if((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE) == 0 && ((double) m_ModuleStates[0].angle.Radians() == 0)){
+    m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+  } else {
+    m_FrontLeftModule.Set(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[0].angle.Radians());
+  }
 
-  // if((m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[1].angle.Radians() == 0)){
-  //   m_FrontRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-  //   m_FrontRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-  // } else {
-  //   m_FrontRightModule.Set(m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[1].angle.Radians());
-  // }
+  if((m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[1].angle.Radians() == 0)){
+    m_FrontRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    m_FrontRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+  } else {
+    m_FrontRightModule.Set(m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[1].angle.Radians());
+  }
 
-  // if((m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[2].angle.Radians() == 0)){
-  //   m_BackLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-  //   m_BackLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-  // } else {
-  //   m_BackLeftModule.Set(m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[2].angle.Radians());
-  // }
+  if((m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[2].angle.Radians() == 0)){
+    m_BackLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    m_BackLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+  } else {
+    m_BackLeftModule.Set(m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[2].angle.Radians());
+  }
 
-  // if((m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[3].angle.Radians() == 0)){
-  //   m_BackRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-  //   m_BackRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-  // } else {
-  //   m_BackRightModule.Set(m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[3].angle.Radians());
-  // }
+  if((m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[3].angle.Radians() == 0)){
+    m_BackRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    m_BackRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+  } else {
+    m_BackRightModule.Set(m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[3].angle.Radians());
+  }
 
-  // m_Rotation = frc::Rotation2d(units::radian_t(Deg2Rad(Robot::GetRobot()->GetAngle())));
+  m_Rotation = frc::Rotation2d(units::radian_t(Deg2Rad(Robot::GetRobot()->GetAngle())));
 
-  // m_ModulePositions = wpi::array<frc::SwerveModulePosition, 4>(m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition());
+  m_ModulePositions = wpi::array<frc::SwerveModulePosition, 4>(m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition());
 
 
   //m_VisionRelative = Robot::GetRobot()->GetVision().GetPoseBlue().RelativeTo(m_Odometry.GetEstimatedPosition());
@@ -143,23 +143,23 @@ void DriveTrain::Periodic(){
   // DebugOutF("visionX: " + std::to_string(Robot::GetRobot()->GetVision().GetPoseBlue().X().value()));
   // DebugOutF("visionY: " + std::to_string(Robot::GetRobot()->GetVision().GetPoseBlue().Y().value()));
   // DebugOutF("visionTheta: " + std::to_string(Robot::GetRobot()->GetVision().GetPoseBlue().Rotation().Degrees().value()));
-  if(COB_GET_ENTRY(GET_VISION.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){ // FIX uncomment when we have both limelights back
-  // if(COB_GET_ENTRY("/limelight/botpose").GetDoubleArray(std::span<double>()).size() != 0){ //Works with one limelight
-    if((m_DriveToPoseFlag != true || m_VisionCounter == 25) && !Robot::GetRobot()->m_AutoFlag)
-    {
-      if(
-        std::abs(m_VisionRelative.X().value()) < 1 &&
-        std::abs(m_VisionRelative.Y().value()) < 1 &&
-        std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) 
-        {
-          //m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetPoseBlue().Translation(), m_Rotation), m_Timer.GetFPGATimestamp()
-          //- units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
-          //DebugOutF("Vision Update");
-          m_VisionCounter = 0;
-        } 
-    } else { m_VisionCounter++; }
-    //m_Odometry.Update(m_Rotation, m_ModulePositions);
-  }
+  // if(COB_GET_ENTRY(GET_VISION.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){ // FIX uncomment when we have both limelights back
+  // // if(COB_GET_ENTRY("/limelight/botpose").GetDoubleArray(std::span<double>()).size() != 0){ //Works with one limelight
+  //   if((m_DriveToPoseFlag != true || m_VisionCounter == 25) && !Robot::GetRobot()->m_AutoFlag)
+  //   {
+  //     if(
+  //       std::abs(m_VisionRelative.X().value()) < 1 &&
+  //       std::abs(m_VisionRelative.Y().value()) < 1 &&
+  //       std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) 
+  //       {
+  //         m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetPoseBlue().Translation(), m_Rotation), m_Timer.GetFPGATimestamp()
+  //         - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
+  //         DebugOutF("Vision Update");
+  //         m_VisionCounter = 0;
+  //       } 
+  //   } else { m_VisionCounter++; }
+  //   m_Odometry.Update(m_Rotation, m_ModulePositions);
+  // }
 }
 //Converts chassis speed object and updates module states
 void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
@@ -170,8 +170,8 @@ void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
 
 //Sets breakmode
 void DriveTrain::BreakMode(bool on){
-  // m_FrontLeftModule.BreakMode(on);
-  // m_FrontRightModule.BreakMode(on);
-  // m_BackLeftModule.BreakMode(on);
-  // m_BackRightModule.BreakMode(on);
+  m_FrontLeftModule.BreakMode(on);
+  m_FrontRightModule.BreakMode(on);
+  m_BackLeftModule.BreakMode(on);
+  m_BackRightModule.BreakMode(on);
 }
