@@ -23,16 +23,17 @@ using ctre::phoenix::motorcontrol::NeutralMode;
 
 Shooter::Shooter() 
     {
-        AddRequirements(&Robot::GetRobot()->GetDriveTrain());
     }
 /*
 initialize values
 */
 void Shooter::Initialize() {
+    //Motors are initialized in drivetrain because the drivetrain class is not called multiple times so there is no need for a default constructor
     Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetNeutralMode(NeutralMode::Brake);
-    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetNeutralMode(NeutralMode::Brake);
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetNeutralMode(NeutralMode::Brake);
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetInverted(true);
     power1 = 0.2;
-    //power2 = 0.2;
+    power2 = 0.2;
     //DebugOutF("Initialized");
     //balanced = false;
 }
@@ -42,9 +43,9 @@ function to perform the autobalance command
 */
 void Shooter::Execute() {
     power1 = Robot::GetRobot()->GetButtonBoard().GetRawAxis(0);
-    //power2 = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
+    power2 = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
     Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
-    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));
          Robot::GetRobot()->m_ML.ToggleOnTrue(
         new frc2::InstantCommand([&]{
             power1 = 0;
@@ -177,7 +178,7 @@ void Shooter::Execute() {
 
 void Shooter::End(bool interrupted){
     Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-   // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
 }
 
 bool Shooter::IsFinished(){

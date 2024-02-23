@@ -11,6 +11,8 @@
 #include "./commands/AutoLock.h"
 #include "./commands/DynamicIntake.h"
 
+using namespace ctre::phoenix6;
+
 //Constructor
 DriveTrain::DriveTrain()
     : //m_FrontLeftLocation(units::meter_t (DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (-DRIVETRAIN_WHEELBASE_METERS / 2.0)),
@@ -19,8 +21,10 @@ DriveTrain::DriveTrain()
       //m_BackRightLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
       //m_Kinematics(m_FrontLeftLocation, m_FrontRightLocation, m_BackLeftLocation, m_BackRightLocation),
       //m_Rotation(0_rad),
-      m_ShooterMotor1(TEST_MOTOR_1),
-			//m_ShooterMotor2(TEST_MOTOR_2),
+      m_ShooterMotor1(SHOOTER_MOTOR_1),
+			m_ShooterMotor2(SHOOTER_MOTOR_2),
+      m_DustpanAngle(DUSTPAN_ANGLE),
+      m_PivotShooter(SHOOTER_PIVOT),
       //m_ModulePositions( wpi::array<frc::SwerveModulePosition, 4>
       //  (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())),
       // m_Odometry(m_Kinematics, m_Rotation, ( wpi::array<frc::SwerveModulePosition, 4>
@@ -143,35 +147,35 @@ void DriveTrain::Periodic(){
   // DebugOutF("visionX: " + std::to_string(Robot::GetRobot()->GetVision().GetPoseBlue().X().value()));
   // DebugOutF("visionY: " + std::to_string(Robot::GetRobot()->GetVision().GetPoseBlue().Y().value()));
   // DebugOutF("visionTheta: " + std::to_string(Robot::GetRobot()->GetVision().GetPoseBlue().Rotation().Degrees().value()));
-  if(COB_GET_ENTRY(GET_VISION.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){ // FIX uncomment when we have both limelights back
+  //if(COB_GET_ENTRY(GET_VISION.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){ // FIX uncomment when we have both limelights back
   // if(COB_GET_ENTRY("/limelight/botpose").GetDoubleArray(std::span<double>()).size() != 0){ //Works with one limelight
-    if((m_DriveToPoseFlag != true || m_VisionCounter == 25) && !Robot::GetRobot()->m_AutoFlag)
-    {
-      if(
-        std::abs(m_VisionRelative.X().value()) < 1 &&
-        std::abs(m_VisionRelative.Y().value()) < 1 &&
-        std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) 
-        {
+    //if((m_DriveToPoseFlag != true || m_VisionCounter == 25) && !Robot::GetRobot()->m_AutoFlag)
+    //{
+      //if(
+       // std::abs(m_VisionRelative.X().value()) < 1 &&
+        //std::abs(m_VisionRelative.Y().value()) < 1 &&
+        //std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) 
+       // {
           //m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetPoseBlue().Translation(), m_Rotation), m_Timer.GetFPGATimestamp()
           //- units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
           //DebugOutF("Vision Update");
           m_VisionCounter = 0;
-        } 
-    } else { m_VisionCounter++; }
+        //} 
+   // } else { m_VisionCounter++; }
     //m_Odometry.Update(m_Rotation, m_ModulePositions);
-  }
-}
+  //}
+//}
 //Converts chassis speed object and updates module states
-void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
-  m_ChassisSpeeds = chassisSpeeds;
+//void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
+  //m_ChassisSpeeds = chassisSpeeds;
   //auto [fl, fr, bl, br] = m_Kinematics.ToSwerveModuleStates(m_ChassisSpeeds);
   //m_ModuleStates = {fl, fr, bl, br};
-}
+//}
 
 //Sets breakmode
-void DriveTrain::BreakMode(bool on){
+//void DriveTrain::BreakMode(bool on){
   // m_FrontLeftModule.BreakMode(on);
   // m_FrontRightModule.BreakMode(on);
   // m_BackLeftModule.BreakMode(on);
   // m_BackRightModule.BreakMode(on);
-}
+//}

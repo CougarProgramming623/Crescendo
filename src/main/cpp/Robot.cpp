@@ -41,6 +41,7 @@ void Robot::RobotInit() {
   s_Instance = this;
   DebugOutF("initalizing drivetrain w/ motors");
   m_DriveTrain.DriveInit();
+  
   DebugOutF("initalizing motors finished");
   m_Vision.VisionInit(); //Make one
   m_LED.Init();

@@ -183,8 +183,10 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 //BUTTONBOARD 0
 #define CONE_MODE 15 //left
 #define CUBE_MODE 16 //right
-#define TEST_MOTOR_1 33
-//#define TEST_MOTOR_2 52
+#define SHOOTER_MOTOR_1 33
+#define SHOOTER_MOTOR_2 52
+#define DUSTPAN_ANGLE -1
+#define SHOOTER_PIVOT -1
 
 #define PIVOT_CONTROL 1 
 #define WRIST_CONTROL 0 

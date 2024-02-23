@@ -21,8 +21,7 @@ using namespace ctre::phoenix6;
 class Shooter : public frc2::CommandHelper<frc2::Command, Shooter> {
     
 public:
-  explicit Shooter();
-
+  Shooter();
   void Initialize() override;
   void Execute() override;
   void End(bool interrupted) override;

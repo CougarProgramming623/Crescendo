@@ -63,6 +63,7 @@ class Robot : public frc::TimedRobot {
   
   inline COB& GetCOB() { return m_COB; }
   inline Vision& GetVision() { return m_Vision; }
+  inline Shooter& GetShooter() { return m_Shooter; }
 
   //motor control requests - LOOK, VERY IMPORTANT
   controls::VoltageOut m_VoltageOutRequest{0_V};
@@ -141,7 +142,8 @@ class Robot : public frc::TimedRobot {
   Arm m_Arm;
 
   frc::Timer m_AutoTimer;
-  DriveTrain m_DriveTrain;
+  DriveTrain m_DriveTrain;//Drivetrain "Master" object to access all instances(objects) of the drivetrain class
+  Shooter m_Shooter;//Shooter "Master" object to access all instances(objects) of the shooter class
 
   Vision m_Vision;
 
