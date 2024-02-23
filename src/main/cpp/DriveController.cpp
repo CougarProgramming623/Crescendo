@@ -1,5 +1,6 @@
 #include "DriveController.h"
 #include "Constants.h"
+#include "Robot.h"
 //using ctre::phoenix::motorcontrol::ControlMode;
 using ctre::phoenix::motorcontrol::NeutralMode;
 
@@ -16,8 +17,8 @@ DriveController::DriveController(int ID)
 }
 
 //Set drive voltage
-void  DriveController::SetReferenceVoltage(double voltage){
-    //motor.Set(ControlMode::PercentOutput, voltage / nominalVoltage);
+void DriveController::SetReferenceVoltage(double voltage){
+    motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(voltage / nominalVoltage));
 }   
 
 //Get module velocity in meters per second

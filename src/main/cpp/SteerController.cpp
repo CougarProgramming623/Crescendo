@@ -26,17 +26,20 @@ double SteerController::GetStateAngle(){ //gets the current angle of the motor
 //Moves the module to the correct angle
 void SteerController::SetReferenceAngle(double referenceAngleRadians){
     double currentAngleRadians = motor.GetPosition().GetValueAsDouble() * STEER_ENCODER_POSITION_CONSTANT;
+    DebugOutF("motor position in ticks" + std::to_string(motor.GetPosition().GetValueAsDouble()));
 
-    // if(motor.GetSelectedSensorVelocity() * STEER_ENCODER_VELOCITY_CONSTANT < ENCODER_RESET_MAX_ANGULAR_VELOCITY) {
-    //     if(++resetIteration >= ENCODER_RESET_ITERATIONS) {
-    //         resetIteration = 0;
-    //         double absoluteAngle = Deg2Rad(360-(fmod(((encoder.GetVoltage() * ENCODER_VOLTAGE_TO_DEGREE) + (360-angleOffsetDegrees)), 360))) / STEER_ENCODER_POSITION_CONSTANT;
-    //         motor.SetSelectedSensorPosition(absoluteAngle / STEER_ENCODER_POSITION_CONSTANT);
-    //         currentAngleRadians = absoluteAngle;
-    //     }
-    // } else{ 
-    //     resetIteration = 0;
-    // }
+    if(motor.GetVelocity().GetValueAsDouble() * STEER_ENCODER_VELOCITY_CONSTANT < ENCODER_RESET_MAX_ANGULAR_VELOCITY) {
+        if(++resetIteration >= ENCODER_RESET_ITERATIONS) {
+            resetIteration = 0;
+            double absoluteAngle = Deg2Rad(360-(fmod(((encoder.GetVoltage() * ENCODER_VOLTAGE_TO_DEGREE) + (360-angleOffsetDegrees)), 360))) / STEER_ENCODER_POSITION_CONSTANT;
+            // DebugOutF(std::to_string(absoluteAngle));
+            // motor.SetSelectedSensorPosition(absoluteAngle / STEER_ENCODER_POSITION_CONSTANT);
+            motor.SetPosition(units::angle::turn_t(absoluteAngle / STEER_ENCODER_POSITION_CONSTANT));
+            currentAngleRadians = absoluteAngle;
+        }
+    } else{ 
+        resetIteration = 0;
+    }
 
     double currentAngleRadiansMod = fmod(currentAngleRadians, (2.0 * M_PI));
     if(currentAngleRadiansMod < 0.0) {

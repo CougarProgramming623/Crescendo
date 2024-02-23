@@ -6,5 +6,7 @@
 
 class Intake : public frc2::SubsystemBase {
     public:
-    Intake(){};
+    Intake(){
+        DebugOutF("intake constructor");
+    };
 };

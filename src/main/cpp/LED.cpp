@@ -28,7 +28,9 @@ LED::LED()  :
     m_EyesYellow(frc2::Trigger(BUTTON_L(15))),
     m_EyesPurple(frc2::Trigger(BUTTON_L(16))),
     m_EyesWhite([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);})
-{}
+{
+    DebugOutF("LED constructor");
+}
 
 void LED::Init(){
     DebugOutF("LED Init");

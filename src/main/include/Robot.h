@@ -65,7 +65,8 @@ class Robot : public frc::TimedRobot {
   inline Vision& GetVision() { return m_Vision; }
 
   //motor control requests - LOOK, VERY IMPORTANT
-  controls::VoltageOut m_VoltageOutRequest{0_V};
+  //controls::VoltageOut m_VoltageOutRequest{0_V};
+  controls::DutyCycleOut m_DutyCycleRequest{0};
   controls::MotionMagicDutyCycle m_MotionMagicRequest{units::angle::turn_t(0)};
 
   double previousErrorX = 0;

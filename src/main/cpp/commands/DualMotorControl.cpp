@@ -40,8 +40,8 @@
 // */
 // void DualMotorControl::Execute() {
 
-//     Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(fmod(power1, 12.0))));
-//     Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(fmod(power2, 12.0))));
+//     Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(fmod(power1, 12.0)));
+//     Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(fmod(power2, 12.0)));
 
 //     DebugOutF("Power of wheel 1: " + std::to_string(fmod(power1, 12.0)));
 //     DebugOutF("Power of wheel 2: " + std::to_string(fmod(power2, 12.0)));
@@ -165,8 +165,8 @@
 // }
 
 // void DualMotorControl::End(bool interrupted){
-//     Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-//     Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+//     Robot::GetRobot()->GetDriveTrain().m_TestMotor1.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+//     Robot::GetRobot()->GetDriveTrain().m_TestMotor2.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
 // }
 
 // bool DualMotorControl::IsFinished(){
