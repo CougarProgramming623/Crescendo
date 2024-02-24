@@ -44,7 +44,7 @@ DriveTrain::DriveTrain()
 
 void DriveTrain::DriveInit(){
   m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
-  SetDefaultCommand(LockOn());
+  SetDefaultCommand(DriveWithJoystick());
  
   //m_TestJoystickButton.WhenPressed(replace w vision command);
 

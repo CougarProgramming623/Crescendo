@@ -25,7 +25,7 @@ Arm::Arm() :// m_Pivot(PIVOT_MOTOR),
 			 //m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
 
 			 //BUTTONBOARD 1
-			 m_Override(BUTTON_L(ARM_OVERRIDE)),
+			 //m_Override(BUTTON_L(ARM_OVERRIDE)),
 			 m_Override2(BUTTON_L(ARM_OVERRIDE_2)),
 
 			 m_ConeMode(BUTTON_L(CONE_MODE)),  
@@ -103,7 +103,7 @@ void Arm::Init()
 
 void Arm::SetButtons()
 {
-	m_Override.OnTrue(ManualControls());
+	//m_Override.OnTrue(ManualControls());
 
 	m_IntakeButton.OnTrue(DynamicIntake().ToPtr());
 	m_OuttakeButton.OnTrue(DynamicIntake().ToPtr());

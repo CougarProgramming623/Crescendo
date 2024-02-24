@@ -6,14 +6,15 @@
 #include "subsystems/Drivetrain.h"
 
 
-class SysIdCommand {
+class SysIdCommand : public frc2::CommandHelper<frc2::Command, SysIdCommand> {
     public:
      SysIdCommand();
 
+     void Initialize() override;
+     void Execute() override;
      frc2::CommandPtr GetAutonomousCommand();
 
     private:
      void ConfigureBindings();
      frc2::Trigger m_SysId;
-     DriveTrain m_DriveTrain;
 };

@@ -376,7 +376,7 @@ void Robot::RobotPeriodic() {
 
 
   if(Robot::GetButtonBoard().GetRawButton(2)){
-    DebugOutF("StringDeg: " + std::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue())-29000.0 - GetArm().WristDegreesToTicks(45))));
+    //DebugOutF("StringDeg: " + std::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue())-29000.0 - GetArm().WristDegreesToTicks(45))));
     //DebugOutF("PivotDeg: " + std::to_string(GetArm().PivotTicksToDegrees(GetArm().GetPivotMotor().GetPosition().GetValueAsDouble())));
   }
 
@@ -424,8 +424,6 @@ void Robot::DisabledInit() {
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-
-  
 }
 
 void Robot::DisabledPeriodic() {}
@@ -437,7 +435,7 @@ void Robot::DisabledPeriodic() {}
 void Robot::AutonomousInit() {
   
   m_AutoFlag = true;
-  DebugOutF("Auto init");
+  DebugOutF("AutonomousInit");
 
   frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
@@ -448,12 +446,16 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
+
+  // SysIdCommand().Schedule();
+  // frc2::CommandScheduler().Run();
+
   m_AutoCommand = m_Routine.GetAutonomousCommand();
 
   if(m_AutoCommand) {
     m_AutoCommand->Schedule();
   }
-  
+
   //PathPlannerTrajectory traj;
 
   //Load trajectory

@@ -122,7 +122,7 @@ class DriveTrain : public frc2::SubsystemBase {
   int m_VisionCounter;
   frc::Pose2d m_VisionRelative;
 
-    frc2::Trigger m_JoystickOuttake;
+  frc2::Trigger m_JoystickOuttake;
 
 
   private:

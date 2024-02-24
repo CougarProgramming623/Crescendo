@@ -75,7 +75,7 @@ class Arm : public frc2::SubsystemBase {
 	inline frc2::Trigger& GetConeModeButton() {return m_ConeMode; }
 	inline frc2::Trigger& GetIntakeButton() {return m_IntakeButton; }
 	inline frc2::Trigger& GetOuttakeButton() {return m_OuttakeButton; }
-	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
+	//inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
 
 
 	double m_PivotMatrix[3][3] = {
@@ -111,13 +111,13 @@ class Arm : public frc2::SubsystemBase {
 	// units::voltage::volt_t m_WristVoltage;
 
 	//pot
-	frc::AnalogInput m_StringPot{STRINGPOT};
+	//frc::AnalogInput m_StringPot{STRINGPOT};
 
 	//triggers
 	frc2::Trigger m_TransitMode;
 	frc2::Trigger m_GroundPickupMode;
 
-	frc2::Trigger m_Override;
+	//frc2::Trigger m_Override;
 	frc2::Trigger m_Override2;
 
 	frc2::Trigger m_ConeMode;
