@@ -19,8 +19,8 @@ DriveTrain::DriveTrain()
       m_BackRightLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
       m_Kinematics(m_FrontLeftLocation, m_FrontRightLocation, m_BackLeftLocation, m_BackRightLocation),
       m_Rotation(0_rad),
-      m_ModulePositions( wpi::array<frc::SwerveModulePosition, 4>
-         (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())),
+      // m_ModulePositions( wpi::array<frc::SwerveModulePosition, 4>
+      //    (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())),
       m_Odometry(m_Kinematics, m_Rotation, ( wpi::array<frc::SwerveModulePosition, 4>
          (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())), frc::Pose2d(0_m, 0_m, 0_rad)),
       m_FrontLeftModule(FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_ENCODER_PORT, FRONT_LEFT_MODULE_STEER_OFFSET),
@@ -44,12 +44,15 @@ DriveTrain::DriveTrain()
 
 void DriveTrain::DriveInit(){
   m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
-  SetDefaultCommand(DriveWithJoystick());
+  SetDefaultCommand(LockOn());
  
   //m_TestJoystickButton.WhenPressed(replace w vision command);
 
   //m_JoystickButtonTwo.ToggleOnTrue(new AutoLock());
-  m_JoystickButtonTwo.ToggleOnTrue(new LockOn());
+  
+  // m_JoystickButtonTwo.ToggleOnTrue(
+  //   new LockOn()
+  // );
 
 
   //m_ExtraJoystickButton.WhileHeld(new DriveToPosCommand());

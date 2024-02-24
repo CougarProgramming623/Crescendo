@@ -4,6 +4,7 @@
 #include "./subsystems/Drivetrain.h"
 
 LockOn::LockOn() {
+    DebugOutF("inside LOCKON!!!");
     AddRequirements(&Robot::GetRobot()->GetDriveTrain());
 }
 
@@ -20,15 +21,18 @@ double LockOn::Deadfix(double in, double deadband) {
 //if the limelight detects a target, robot theta and (LATER) shooter locks onto april tag
 void LockOn::Execute() {    
     Robot* r = Robot::GetRobot();
-    if(m_LimelightTable->GetNumber("<tv>",0.0) == 1) {
-        m_AprilTagID = m_LimelightTable->GetNumber("tid", 0);
-        m_GoalTheta = r->GetVision().VisionRobotYaw(r->GetVision().GetFieldPose(), m_LimelightTable->GetNumberArray("<tid>",std::vector<double>(6))[0]);
+    if(m_LimelightTable->GetNumber("tv", 0.0) == 1) {
+        DebugOutF("robot has found april tag");
+        m_AprilTagID = m_LimelightTable->GetNumber("tid", 0.0);
+        m_GoalTheta = r->GetVision().VisionRobotYaw(r->GetVision().GetFieldPose(), m_LimelightTable->GetNumberArray("tid",std::vector<double>(6))[0]);
     }
     
     //print statements
-    DebugOutF("Robot Angle" + std::to_string(fmod(360 + 90 - r->GetNavX().GetAngle(), 360)));
-    DebugOutF("April Tag ID" + std::to_string(m_AprilTagID));
-    DebugOutF("Vision Theta" + std::to_string(m_GoalTheta.Degrees().value()));
+    DebugOutF("Robot Angle: " + std::to_string(fmod(360 + 90 - r->GetNavX().GetAngle(), 360)));
+    DebugOutF("April Tag ID: " + std::to_string(m_AprilTagID));
+    DebugOutF("Target Robot Angle: " + std::to_string(m_GoalTheta.Degrees().value()));
+    DebugOutF("Shooter Angle: " + std::to_string(r->GetVision().ShooterAngle(r->GetVision().GetFieldPose(), m_LimelightTable->GetNumberArray("tid",std::vector<double>(6))[0]).value()));
+    //DebugOutF("Bot Pose: " + std::to_string(r->GetVision().GetFieldPose()));
     //DebugOutF("Act: " + std::to_string(r->GetAngle()));
     //DebugOutF(std::to_string(fmod(360 + 90 - r->GetNavX().GetAngle(), 360)));
 

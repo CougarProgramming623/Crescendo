@@ -19,6 +19,7 @@
 #include <frc2/command/CommandPtr.h>
 #include "commands/WristToPosAuto.h"
 #include "commands/PivotToPosAuto.h"
+#include "commands/LockOn.h"
 #include <frc/DriverStation.h>
 
 
@@ -93,7 +94,6 @@ void Robot::AutoButtons(){
   m_AutoBalance = frc2::Trigger(BUTTON_L(3));
   m_Print = frc2::Trigger(BUTTON_L(2));
 
-  //m_AutoBalance.WhileTrue(new DualMotorControl());
   m_VisionPoseReset = frc2::Trigger([&] { return Robot::GetRobot()->GetButtonBoard().GetRawButton(6); }); //PUT Define
  
   
@@ -105,7 +105,7 @@ void Robot::AutoButtons(){
   //   })
   // );
 
-  
+
   m_NavXReset.OnTrue(
     new frc2::InstantCommand([&]{
       DebugOutF("NavX Zero");

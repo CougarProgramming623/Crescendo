@@ -115,9 +115,7 @@ class DriveTrain : public frc2::SubsystemBase {
 
 
   private:
-
- 
-
+  
   frc::Timer m_Timer;
 
   frc2::Trigger m_TestJoystickButton;

@@ -167,6 +167,7 @@ std::string Vision::FrontBack(std::string key){
 units::angle::degree_t Vision::VisionRobotYaw(Pose2d pose, double ID) {
   double x = IDMap[0][(int)ID - 1] - pose.X().value();
   double y = IDMap[1][(int)ID - 1] - pose.Y().value();
+  DebugOutF("x: " + std::to_string(x) + "and y: " + std::to_string(y));
   return units::angle::degree_t(atan(x / y));
 }
 
