@@ -178,3 +178,11 @@ void DriveTrain::BreakMode(bool on){
   m_BackLeftModule.BreakMode(on);
   m_BackRightModule.BreakMode(on);
 }
+
+frc2::CommandPtr DriveTrain::SysIdQuasistatic(frc2::sysid::Direction direction) {
+  return m_SysIdRoutine.Quasistatic(direction);
+}
+
+frc2::CommandPtr DriveTrain::SysIdDynamic(frc2::sysid::Direction direction) {
+  return m_SysIdRoutine.Dynamic(direction);
+}

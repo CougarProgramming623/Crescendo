@@ -7,8 +7,11 @@
 #include <frc/geometry/Rotation2d.h>
 
 
-//copied includes
+//for sysid
 #include <frc2/command/sysid/SysIdRoutine.h>
+#include <frc/RobotController.h>
+
+//copied includes
 #include <frc/geometry/Transform2d.h>
 #include <frc/geometry/Translation2d.h>
 #include <frc/geometry/Rotation2d.h>
@@ -124,7 +127,7 @@ class DriveTrain : public frc2::SubsystemBase {
 
   private:
 
-  frc2::sysid::SysIdRoutine m_sysIdRoutine{
+  frc2::sysid::SysIdRoutine m_SysIdRoutine{
     frc2::sysid::Config{std::nullopt, std::nullopt, std::nullopt, std::nullopt},
       frc2::sysid::Mechanism{
           [this](units::volt_t driveVoltage) {
@@ -135,19 +138,19 @@ class DriveTrain : public frc2::SubsystemBase {
           },
           [this](frc::sysid::SysIdRoutineLog* log) {
             log->Motor("drive-frontleft")
-                .voltage(m_FrontLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValue() * frc::RobotController::GetBatteryVoltage())
+                .voltage(units::voltage::volt_t(m_FrontLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
                 .position(units::meter_t{m_FrontLeftModule.GetPosition().distance()})
                 .velocity(units::meters_per_second_t{m_FrontLeftModule.GetDriveVelocity()});
             log->Motor("drive-frontright")
-                .voltage(m_FrontRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValue() * frc::RobotController::GetBatteryVoltage())
+                .voltage(units::voltage::volt_t(m_FrontRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
                 .position(units::meter_t{m_FrontRightModule.GetPosition().distance()})
                 .velocity(units::meters_per_second_t{m_FrontRightModule.GetDriveVelocity()});
             log->Motor("drive-backleft")
-                .voltage(m_BackLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValue() * frc::RobotController::GetBatteryVoltage())
+                .voltage(units::voltage::volt_t(m_BackLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
                 .position(units::meter_t{m_BackLeftModule.GetPosition().distance()})
                 .velocity(units::meters_per_second_t{m_BackLeftModule.GetDriveVelocity()});
             log->Motor("drive-backright")
-                .voltage(m_BackRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValue() * frc::RobotController::GetBatteryVoltage())
+                .voltage(units::voltage::volt_t(m_BackRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
                 .position(units::meter_t{m_BackRightModule.GetPosition().distance()})
                 .velocity(units::meters_per_second_t{m_BackRightModule.GetDriveVelocity()});
           },
