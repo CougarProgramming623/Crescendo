@@ -14,9 +14,11 @@ class DriveController {
         DriveController(int ID);
 
         void SetReferenceVoltage(double voltage);
-        void GetReferenceVoltage(double voltage);
+        //void GetReferenceVoltage(double voltage);
 
         double GetStateVelocity();
+
+        inline hardware::TalonFX& GetMotor() { return motor; }
 
         void BreakMode(bool on);
         hardware::TalonFX motor;

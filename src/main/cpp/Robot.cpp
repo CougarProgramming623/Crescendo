@@ -434,7 +434,8 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() {  
+void Robot::AutonomousInit() {
+  
   m_AutoFlag = true;
   DebugOutF("Auto init");
 
@@ -446,6 +447,13 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
+  m_AutoCommand = m_Routine.GetAutonomousCommand();
+
+  if(m_AutoCommand) {
+    m_AutoCommand->Schedule();
+  }
+  
   //PathPlannerTrajectory traj;
 
   //Load trajectory

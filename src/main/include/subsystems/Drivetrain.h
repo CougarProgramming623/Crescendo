@@ -1,10 +1,14 @@
 #pragma once
 
+//allows us to use sysid::Direction - the direction for the motor during a sysid routine
+#include <functional>
+
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/geometry/Rotation2d.h>
 
 
 //copied includes
+#include <frc2/command/sysid/SysIdRoutine.h>
 #include <frc/geometry/Transform2d.h>
 #include <frc/geometry/Translation2d.h>
 #include <frc/geometry/Rotation2d.h>
@@ -63,6 +67,10 @@ class DriveTrain : public frc2::SubsystemBase {
   
   bool m_DriveToPoseFlag = false;
 
+  frc2::CommandPtr ArcadeDriveCommand(std::function<double()> forward, std::function<double()> rotation);
+  frc2::CommandPtr SysIdQuasistatic(frc2::sysid::Direction direction);
+  frc2::CommandPtr SysIdDynamic(frc2::sysid::Direction direction);
+
   inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
   inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return &m_Odometry; }
   inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
@@ -115,6 +123,37 @@ class DriveTrain : public frc2::SubsystemBase {
 
 
   private:
+
+  frc2::sysid::SysIdRoutine m_sysIdRoutine{
+    frc2::sysid::Config{std::nullopt, std::nullopt, std::nullopt, std::nullopt},
+      frc2::sysid::Mechanism{
+          [this](units::volt_t driveVoltage) {
+            m_FrontLeftModule.m_DriveController.SetReferenceVoltage(driveVoltage.value());
+            m_FrontRightModule.m_DriveController.SetReferenceVoltage(driveVoltage.value());
+            m_BackLeftModule.m_DriveController.SetReferenceVoltage(driveVoltage.value());
+            m_BackRightModule.m_DriveController.SetReferenceVoltage(driveVoltage.value());
+          },
+          [this](frc::sysid::SysIdRoutineLog* log) {
+            log->Motor("drive-frontleft")
+                .voltage(m_FrontLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValue() * frc::RobotController::GetBatteryVoltage())
+                .position(units::meter_t{m_FrontLeftModule.GetPosition().distance()})
+                .velocity(units::meters_per_second_t{m_FrontLeftModule.GetDriveVelocity()});
+            log->Motor("drive-frontright")
+                .voltage(m_FrontRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValue() * frc::RobotController::GetBatteryVoltage())
+                .position(units::meter_t{m_FrontRightModule.GetPosition().distance()})
+                .velocity(units::meters_per_second_t{m_FrontRightModule.GetDriveVelocity()});
+            log->Motor("drive-backleft")
+                .voltage(m_BackLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValue() * frc::RobotController::GetBatteryVoltage())
+                .position(units::meter_t{m_BackLeftModule.GetPosition().distance()})
+                .velocity(units::meters_per_second_t{m_BackLeftModule.GetDriveVelocity()});
+            log->Motor("drive-backright")
+                .voltage(m_BackRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValue() * frc::RobotController::GetBatteryVoltage())
+                .position(units::meter_t{m_BackRightModule.GetPosition().distance()})
+                .velocity(units::meters_per_second_t{m_BackRightModule.GetDriveVelocity()});
+          },
+          this
+      }
+  };
   
   frc::Timer m_Timer;
 

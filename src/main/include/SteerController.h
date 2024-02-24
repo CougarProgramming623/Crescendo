@@ -17,6 +17,8 @@ class SteerController {
         double GetReferenceAngle();
         double GetStateAngle();
 
+        inline hardware::TalonFX& GetMotor() { return motor; }
+
         void SetReferenceAngle(double referenceAngleRadians);
         
         hardware::TalonFX motor;

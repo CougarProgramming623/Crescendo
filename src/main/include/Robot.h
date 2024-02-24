@@ -28,6 +28,7 @@
 #include "LED.h"
 #include <frc/geometry/Pose2d.h>
 #include "./subsystems/Intake.h"
+#include "commands/SysIdCommand.h"
 
 
 class Robot : public frc::TimedRobot {
@@ -107,6 +108,7 @@ class Robot : public frc::TimedRobot {
   frc2::Trigger m_VisionPoseReset;
 
   frc2::Trigger m_Print;
+
   int m_COBTicks;
 
 
@@ -119,6 +121,9 @@ class Robot : public frc::TimedRobot {
   int m_ColOffset;
 
  private:
+
+  std::optional<frc2::CommandPtr> m_AutoCommand;
+  SysIdCommand m_Routine;
 
   frc2::ParallelCommandGroup* m_ArmCommand;
 
