@@ -81,8 +81,8 @@
     #define FRONT_RIGHT_MODULE_STEER_OFFSET -182.8//-181.2//-180.1//-181.9 //-178.47//JJ-179 //-180.97 //-178.47
     #define FRONT_RIGHT_MODULE_ENCODER_PORT 1
 
-    #define BACK_LEFT_MODULE_DRIVE_MOTOR 52
-    #define BACK_LEFT_MODULE_STEER_MOTOR 59
+    #define BACK_LEFT_MODULE_DRIVE_MOTOR 32
+    #define BACK_LEFT_MODULE_STEER_MOTOR 35
     #define BACK_LEFT_MODULE_STEER_OFFSET -208.4//-146.9//-238.0//-146.9//-200.9//-164.0 //-161.51//-178.25// -180.43
     #define BACK_LEFT_MODULE_ENCODER_PORT 3
 
@@ -185,6 +185,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define CUBE_MODE 16 //right
 #define SHOOTER_MOTOR_1 33
 #define SHOOTER_MOTOR_2 52
+#define SERVO_RUN 15
 #define DUSTPAN_ANGLE -1
 #define SHOOTER_PIVOT -1
 

@@ -30,5 +30,6 @@ public:
 private:
   double power1;
   double power2;
+  double set;
   
 };

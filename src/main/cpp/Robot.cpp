@@ -87,6 +87,7 @@ void Robot::AutoButtons(){
   // m_MidCone = frc2::Trigger(BUTTON_L_TWO(TRANSIT_MODE));
 	// m_MidCube = frc2::Trigger(BUTTON_L_TWO(GROUND_PICKUP_MODE));
   m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(PLACING_MODE));
+  m_ServoRun = frc2::Trigger(BUTTON_L(15));
   m_GroundPickup = frc2::Trigger(BUTTON_L_TWO(GROUND_PICKUP_MODE));
 
   m_NavXReset = frc2::Trigger(BUTTON_L(8)); //PUT Define
@@ -215,6 +216,11 @@ void Robot::AutoButtons(){
 	// 	  Robot::GetRobot()->GetDriveTrain().m_PoseMatrix[SelectedRow][SelectedColumn];
 	// 	Robot::GetRobot()->GetDriveTrain().m_TransformedPose = TransformPose(SelectedPose);
   // }));
+      m_BigRed.OnTrue(new frc2::InstantCommand([&]{
+            DebugOutF("lunch");            
+            
+        })
+    );
 
 
   // m_TC.OnTrue(new frc2::InstantCommand([&]{
