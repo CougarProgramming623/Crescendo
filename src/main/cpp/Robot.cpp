@@ -64,7 +64,7 @@ void Robot::RobotInit() {
 void Robot::AutoButtons(){
 
   //BUTTONBOARD 2
-  m_TL = frc2::Trigger(BUTTON_L_TWO(GRID_TL));
+  // m_TL = frc2::Trigger(BUTTON_L_TWO(GRID_TL));
   // m_TL          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TL));
   // m_TC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TC));
   // m_TR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TR));
@@ -313,7 +313,7 @@ void Robot::AutoButtons(){
     new frc2::InstantCommand([&] {
       DebugOutF("Pose Resetting");
       if(COB_GET_ENTRY(m_Vision.FrontBack("tv")).GetInteger(0) == 1 && COB_GET_ENTRY(m_Vision.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){
-        frc::Pose2d startingPose = frc::Pose2d(m_Vision.GetPoseBlue().Translation(), units::radian_t(Deg2Rad(GetAngle())));
+        frc::Pose2d startingPose = frc::Pose2d(m_Vision.GetFieldPose().Translation(), units::radian_t(Deg2Rad(GetAngle())));
         GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
         wpi::array<frc::SwerveModulePosition, 4>
               (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
@@ -438,7 +438,7 @@ void Robot::AutonomousInit() {
   m_AutoFlag = true;
   DebugOutF("Auto init");
 
-  frc2::CommandScheduler::GetInstance().CancelAll();
+  // frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
   GetNavX().SetAngleAdjustment(0);
   GetDriveTrain().BreakMode(true);
@@ -605,18 +605,20 @@ void Robot::AutonomousInit() {
   }
 }
 void Robot::AutonomousPeriodic() {
-
     // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
     // DebugOutF("Y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
     // DebugOutF("Deg: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-  
 }
 
 void Robot::TeleopInit() {
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Cancel();
+  }
+
   m_AutoFlag = false;
   frc2::CommandScheduler::GetInstance().Schedule(new frc2::InstantCommand([&] {
       if(COB_GET_ENTRY(m_Vision.FrontBack("tv")).GetInteger(0) == 1 && COB_GET_ENTRY(m_Vision.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){
-        frc::Pose2d startingPose = frc::Pose2d(m_Vision.GetPoseBlue().Translation(), units::radian_t(Deg2Rad(GetAngle())));
+        frc::Pose2d startingPose = frc::Pose2d(m_Vision.GetFieldPose().Translation(), units::radian_t(Deg2Rad(GetAngle())));
         GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
         wpi::array<frc::SwerveModulePosition, 4>
               (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 

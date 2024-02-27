@@ -24,14 +24,15 @@ void LockOn::Execute() {
     if(m_LimelightTable->GetNumber("tv", 0.0) == 1) {
         DebugOutF("robot has found april tag");
         m_AprilTagID = m_LimelightTable->GetNumber("tid", 0.0);
-        m_GoalTheta = r->GetVision().VisionRobotYaw(r->GetVision().GetFieldPose(), m_LimelightTable->GetNumberArray("tid",std::vector<double>(6))[0]);
+        r->GetVision().CalcPose();
+        m_GoalTheta = r->GetVision().VisionRobotYaw(m_AprilTagID);
     }
     
     //print statements
     DebugOutF("Robot Angle: " + std::to_string(fmod(360 + 90 - r->GetNavX().GetAngle(), 360)));
     DebugOutF("April Tag ID: " + std::to_string(m_AprilTagID));
     DebugOutF("Target Robot Angle: " + std::to_string(m_GoalTheta.Degrees().value()));
-    DebugOutF("Shooter Angle: " + std::to_string(r->GetVision().ShooterAngle(r->GetVision().GetFieldPose(), m_LimelightTable->GetNumberArray("tid",std::vector<double>(6))[0]).value()));
+    DebugOutF("Shooter Angle: " + std::to_string(r->GetVision().ShooterAngle(m_AprilTagID).value()));
     //DebugOutF("Bot Pose: " + std::to_string(r->GetVision().GetFieldPose()));
     //DebugOutF("Act: " + std::to_string(r->GetAngle()));
     //DebugOutF(std::to_string(fmod(360 + 90 - r->GetNavX().GetAngle(), 360)));

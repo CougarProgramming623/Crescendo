@@ -19,15 +19,13 @@ class Vision {
         void CalcPose();
         void PushID();
         
-        Pose2d GetPoseBlue();
-        Pose2d GetPoseRed();
         Pose2d GetFieldPose();
 
         std::shared_ptr<nt::NetworkTable> GetLimeLight() { return nt::NetworkTableInstance::GetDefault().GetTable("limelight-front"); }
 
         std::string FrontBack(std::string key);
-        units::angle::degree_t ShooterAngle(Pose2d pose, double ID);
-        units::angle::degree_t VisionRobotYaw(Pose2d pose, double ID);
+        units::angle::degree_t ShooterAngle(double ID);
+        units::angle::degree_t VisionRobotYaw(double ID);
 
         const double IDMap[3][16] = {
         {593.68, 637.21, 652.73, 652.73, 578.77, 72.5, -1.5, -1.5, 14.02, 57.02, 468.69, 468.69, 441.74, 209.48, 182.73, 182.73},//x
@@ -44,6 +42,6 @@ class Vision {
         Pose2d m_AbsolutePose;
         Pose2d m_TempPose;
 
-        const Pose2d kBlueOrigin = Pose2d(units::meter_t(-8.397494), units::meter_t(-3.978656), units::radian_t(0));
-        const Pose2d kRedOrigin = Pose2d(units::meter_t(8.12816), units::meter_t(-4.00812), units::radian_t(0));
+        // const Pose2d kBlueOrigin = Pose2d(units::meter_t(-8.397494), units::meter_t(-3.978656), units::radian_t(0));
+        // const Pose2d kRedOrigin = Pose2d(units::meter_t(8.12816), units::meter_t(-4.00812), units::radian_t(0));
 };
