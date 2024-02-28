@@ -44,9 +44,9 @@ function to perform the autobalance command
 */
 void Shooter::Execute() {
     //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetAngle(180);
-    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
-    set = 0;
-    // power2 = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
+    set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
+    DebugOutF("Lets see if it actually works");
+     Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));
 
