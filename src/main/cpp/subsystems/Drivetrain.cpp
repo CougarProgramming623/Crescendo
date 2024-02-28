@@ -9,7 +9,6 @@
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include "./commands/LockOn.h"
-#include "./commands/DynamicIntake.h"
 
 //Constructor
 DriveTrain::DriveTrain()
@@ -35,7 +34,7 @@ DriveTrain::DriveTrain()
       m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
       m_JoystickButtonTwo([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
       m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
-      m_DualMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
+      m_ExtraButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
       m_JoystickOuttake([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
       m_ExtraJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
       m_Timer(),
@@ -45,15 +44,10 @@ DriveTrain::DriveTrain()
 void DriveTrain::DriveInit(){
   m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
   SetDefaultCommand(DriveWithJoystick());
- 
-  //m_TestJoystickButton.WhenPressed(replace w vision command);
-
-  //m_JoystickButtonTwo.ToggleOnTrue(new AutoLock());
   
-  // m_JoystickButtonTwo.ToggleOnTrue(
-  //   new LockOn()
-  // );
-
+  m_JoystickButtonTwo.ToggleOnTrue(
+    new LockOn()
+  );
 
   //m_ExtraJoystickButton.WhileHeld(new DriveToPosCommand());
 
@@ -73,17 +67,6 @@ void DriveTrain::DriveInit(){
       //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, .8);
     }
   ));
-
-  m_JoystickOuttake.OnFalse(
-    new frc2::InstantCommand([&]{
-      //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
-      //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-      frc2::CommandScheduler::GetInstance().Schedule(new DynamicIntake());
-    })
-  );
-
-
-  //m_DualMotorControlButton.ToggleOnTrue(new DualMotorControl());
 
 
   m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
@@ -173,16 +156,18 @@ void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
 
 //Sets breakmode
 void DriveTrain::BreakMode(bool on){
-  m_FrontLeftModule.BreakMode(on);
-  m_FrontRightModule.BreakMode(on);
-  m_BackLeftModule.BreakMode(on);
-  m_BackRightModule.BreakMode(on);
+  // m_FrontLeftModule.BreakMode(on);
+  // m_FrontRightModule.BreakMode(on);
+  // m_BackLeftModule.BreakMode(on);
+  // m_BackRightModule.BreakMode(on);
 }
 
 frc2::CommandPtr DriveTrain::SysIdQuasistatic(frc2::sysid::Direction direction) {
+  DebugOutF("inside quasistatic");
   return m_SysIdRoutine.Quasistatic(direction);
 }
 
 frc2::CommandPtr DriveTrain::SysIdDynamic(frc2::sysid::Direction direction) {
+  DebugOutF("inside dynamic");
   return m_SysIdRoutine.Dynamic(direction);
 }

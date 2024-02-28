@@ -36,7 +36,6 @@
 #include "SwerveModule.h"
 #include <frc2/command/SubsystemBase.h>
 #include "commands/DriveWithJoystick.h"
-#include "commands/DualMotorControl.h"
 //#include <./commands/TrajectoryCommand.h>
 //#include <./commands/DriveToPosCommand.h>
 #include <frc/Timer.h>
@@ -70,7 +69,6 @@ class DriveTrain : public frc2::SubsystemBase {
   
   bool m_DriveToPoseFlag = false;
 
-  frc2::CommandPtr ArcadeDriveCommand(std::function<double()> forward, std::function<double()> rotation);
   frc2::CommandPtr SysIdQuasistatic(frc2::sysid::Direction direction);
   frc2::CommandPtr SysIdDynamic(frc2::sysid::Direction direction);
 
@@ -137,22 +135,22 @@ class DriveTrain : public frc2::SubsystemBase {
             m_BackRightModule.m_DriveController.SetReferenceVoltage(driveVoltage.value());
           },
           [this](frc::sysid::SysIdRoutineLog* log) {
-            log->Motor("drive-frontleft")
-                .voltage(units::voltage::volt_t(m_FrontLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
-                .position(units::meter_t{m_FrontLeftModule.GetPosition().distance()})
-                .velocity(units::meters_per_second_t{m_FrontLeftModule.GetDriveVelocity()});
-            log->Motor("drive-frontright")
-                .voltage(units::voltage::volt_t(m_FrontRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
-                .position(units::meter_t{m_FrontRightModule.GetPosition().distance()})
-                .velocity(units::meters_per_second_t{m_FrontRightModule.GetDriveVelocity()});
+            // log->Motor("drive-frontleft")
+            //     .voltage(units::voltage::volt_t(m_FrontLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
+            //     .position(units::meter_t{m_FrontLeftModule.GetPosition().distance()})
+            //     .velocity(units::meters_per_second_t{m_FrontLeftModule.GetDriveVelocity()});
+            // log->Motor("drive-frontright")
+            //     .voltage(units::voltage::volt_t(m_FrontRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
+            //     .position(units::meter_t{m_FrontRightModule.GetPosition().distance()})
+            //     .velocity(units::meters_per_second_t{m_FrontRightModule.GetDriveVelocity()});
             log->Motor("drive-backleft")
                 .voltage(units::voltage::volt_t(m_BackLeftModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
                 .position(units::meter_t{m_BackLeftModule.GetPosition().distance()})
                 .velocity(units::meters_per_second_t{m_BackLeftModule.GetDriveVelocity()});
-            log->Motor("drive-backright")
-                .voltage(units::voltage::volt_t(m_BackRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
-                .position(units::meter_t{m_BackRightModule.GetPosition().distance()})
-                .velocity(units::meters_per_second_t{m_BackRightModule.GetDriveVelocity()});
+            // log->Motor("drive-backright")
+            //     .voltage(units::voltage::volt_t(m_BackRightModule.m_DriveController.GetMotor().GetMotorVoltage().GetValueAsDouble() * frc::RobotController::GetBatteryVoltage().value()))
+            //     .position(units::meter_t{m_BackRightModule.GetPosition().distance()})
+            //     .velocity(units::meters_per_second_t{m_BackRightModule.GetDriveVelocity()});
           },
           this
       }
@@ -162,7 +160,7 @@ class DriveTrain : public frc2::SubsystemBase {
 
   frc2::Trigger m_TestJoystickButton;
   frc2::Trigger m_JoystickButtonTwo;
-  frc2::Trigger m_DualMotorControlButton;
+  frc2::Trigger m_ExtraButton;
   frc2::Trigger m_NavXResetButton;
   frc2::Trigger m_ExtraJoystickButton;
 

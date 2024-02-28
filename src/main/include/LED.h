@@ -1,56 +1,56 @@
-#pragma once
+// #pragma once
 
-#include <frc/AddressableLED.h>
-#include <frc/util/Color.h>
-#include <frc2/command/InstantCommand.h>
-#include <frc2/command/button/JoystickButton.h>
+// #include <frc/AddressableLED.h>
+// #include <frc/util/Color.h>
+// #include <frc2/command/InstantCommand.h>
+// #include <frc2/command/button/JoystickButton.h>
 
-//#include "Util.h"
+// //#include "Util.h"
 
-class LED{
+// class LED{
     
-    public:
+//     public:
     
-        LED();
-        void Init();
+//         LED();
+//         void Init();
+// // 
+//         void LowBattery();
 
-        void LowBattery();
+//         void SetData();
 
-        void SetData();
+//         void EndGame();
 
-        void EndGame();
+//         void SponsorBoardAllianceColor();
+//         void SponsorBoardSolid(frc::Color allianceColor);
+//         void SponsorBoardSolid(int R, int G, int B);
 
-        void SponsorBoardAllianceColor();
-        void SponsorBoardSolid(frc::Color allianceColor);
-        void SponsorBoardSolid(int R, int G, int B);
+//         void SponsorBoardRainbow();
 
-        void SponsorBoardRainbow();
+//         void SponsorBoardFlash(frc::Color allianceColor);     
+//         void SponsorBoardFlash(int R, int G, int B);     
 
-        void SponsorBoardFlash(frc::Color allianceColor);     
-        void SponsorBoardFlash(int R, int G, int B);     
+//         void EyesAllianceColor();
+//         void EyesSolidYellow(frc::Color);
+//         void EyesSolidPurple(frc::Color);
+//         void EyesSolid(frc::Color allianceColor);
+//         void EyesSolid(int R, int G, int B);
 
-        void EyesAllianceColor();
-        void EyesSolidYellow(frc::Color);
-        void EyesSolidPurple(frc::Color);
-        void EyesSolid(frc::Color allianceColor);
-        void EyesSolid(int R, int G, int B);
+//         void EyesAngry();
+//         void EyesSleepy();
+//         void EyeRoll();
 
-        void EyesAngry();
-        void EyesSleepy();
-        void EyeRoll();
-
-        bool m_IsTele;
+//         bool m_IsTele;
 
 
-    private:
+//     private:
 
-        frc::AddressableLED m_AddressableLED{9};
-        std::array <frc::AddressableLED::LEDData, 180> m_LEDBuffer;
-        int m_IterationTracker;
+//         frc::AddressableLED m_AddressableLED{9};
+//         std::array <frc::AddressableLED::LEDData, 180> m_LEDBuffer;
+//         int m_IterationTracker;
 
-        frc::Color m_AllianceColor;
+//         frc::Color m_AllianceColor;
 
-        frc2::Trigger m_EyesYellow;
-        frc2::Trigger m_EyesPurple;
-        frc2::Trigger m_EyesWhite;
-};
+//         frc2::Trigger m_EyesYellow;
+//         frc2::Trigger m_EyesPurple;
+//         frc2::Trigger m_EyesWhite;
+// };

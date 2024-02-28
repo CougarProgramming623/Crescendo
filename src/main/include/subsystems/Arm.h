@@ -31,7 +31,6 @@
 //#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 #include "./commands/PivotToPos.h"
-#include "./commands/DynamicIntake.h"
 #include "./commands/WristToPos.h"
 
 using namespace ctre::phoenix6;

@@ -17,8 +17,6 @@
 #include <frc2/command/ParallelDeadlineGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/CommandPtr.h>
-#include "commands/WristToPosAuto.h"
-#include "commands/PivotToPosAuto.h"
 #include "commands/LockOn.h"
 #include <frc/DriverStation.h>
 
@@ -30,8 +28,7 @@ Robot* Robot::s_Instance = nullptr;
 
 Robot::Robot() :
 m_NavX(frc::SerialPort::Port(2), AHRS::SerialDataType(0), uint8_t(66)),
-m_Intake(),
-m_LED()
+m_Intake()
 {
   s_Instance = this;
 }
@@ -43,11 +40,10 @@ void Robot::RobotInit() {
   s_Instance = this;
   m_DriveTrain.DriveInit();
   m_Vision.VisionInit(); //Make one
-  m_LED.Init();
+  // m_LED.Init();
   m_Arm.Init();
   
   AutoButtons();
-  m_LED.Init();
   
   m_COBTicks = 0;
   m_AutoPath = "";
@@ -80,6 +76,7 @@ void Robot::AutoButtons(){
   GetArm().m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(15));
   m_AutoBalance = frc2::Trigger(BUTTON_L(3));
   m_Print = frc2::Trigger(BUTTON_L(2));
+  m_SysId = frc2::Trigger(BUTTON_L(1));
 
   m_VisionPoseReset = frc2::Trigger([&] { return Robot::GetRobot()->GetButtonBoard().GetRawButton(6); }); //PUT Define
 
@@ -105,7 +102,31 @@ void Robot::AutoButtons(){
       }
     })
   );
+
+
+
+  (frc2::Trigger(BUTTON_L(8)) && Robot::GetRobot()->m_SysId).WhileTrue(
+      Robot::GetRobot()->GetDriveTrain().SysIdQuasistatic(frc2::sysid::Direction::kForward)
+      // new frc2::InstantCommand([&] { GetDriveTrain().m_FrontRightModule.m_DriveController.GetMotor().SetPosition(units::angle::turn_t(0)); })
+  );
+
+  (frc2::Trigger(BUTTON_L(6)) && Robot::GetRobot()->m_SysId).WhileTrue(
+      Robot::GetRobot()->GetDriveTrain().SysIdQuasistatic(frc2::sysid::Direction::kReverse)
+      // new frc2::InstantCommand([&] { GetDriveTrain().m_FrontRightModule.m_DriveController.GetMotor().SetPosition(units::angle::turn_t(1500)); })
+  );
+
+  (frc2::Trigger(BUTTON_L(7)) && Robot::GetRobot()->m_SysId).WhileTrue(
+      Robot::GetRobot()->GetDriveTrain().SysIdDynamic(frc2::sysid::Direction::kForward)
+      // new frc2::InstantCommand([&] { GetDriveTrain().m_FrontRightModule.m_DriveController.GetMotor().SetPosition(units::angle::turn_t(500)); })
+  );
+
+  (frc2::Trigger(BUTTON_L(5)) && Robot::GetRobot()->m_SysId).WhileTrue(
+      Robot::GetRobot()->GetDriveTrain().SysIdDynamic(frc2::sysid::Direction::kReverse)
+      // new frc2::InstantCommand([&] { GetDriveTrain().m_FrontRightModule.m_DriveController.GetMotor().SetPosition(units::angle::turn_t(1000)); })
+  );
 }
+
+
 
 frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
 	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
@@ -155,24 +176,26 @@ void Robot::RobotPeriodic() {
   m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
   // DebugOutF("Row: " + std::to_string(SelectedRow) + " , Col: " + std::to_string(SelectedColumn));
 
-
-  if(Robot::GetButtonBoard().GetRawButton(2)){
-    //to be changed later
-  }
-
   if(Robot::GetButtonBoard().GetRawButton(4)){
-    DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
-    DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
-    DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
-    DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
+    // DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
+    // DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
+    // DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
+    // DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
+    DebugOutF("front right drive position: " + std::to_string(GetDriveTrain().m_FrontRightModule.m_DriveController.GetMotor().GetPosition().GetValueAsDouble()));
   }
+
+  // if(m_SysId.Get()) {
+  //   Robot::GetRobot()->GetDriveTrain().SysIdQuasistatic(frc2::sysid::Direction::kForward);
+  // }
+
+  // m_Routine.ConfigureBindings();
 
   //LED
-  m_LED.SponsorBoardAllianceColor();
-  //m_LED.LowBattery();
-  m_LED.EyesAllianceColor();
-  m_LED.EndGame();
-  m_LED.SetData();
+  // m_LED.SponsorBoardAllianceColor();
+  // m_LED.LowBattery();
+  // m_LED.EyesAllianceColor();
+  // m_LED.EndGame();
+  // m_LED.SetData();
   //m_LED.SponsorBoardRainbow();
   //m_LED.LowBattery();
 
@@ -199,11 +222,11 @@ void Robot::RobotPeriodic() {
  * robot is disabled.
  */
 void Robot::DisabledInit() {
-  GetDriveTrain().BreakMode(true);
-  GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().BreakMode(true);
+  // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 }
 
 void Robot::DisabledPeriodic() {}
@@ -217,24 +240,24 @@ void Robot::AutonomousInit() {
   m_AutoFlag = true;
   DebugOutF("AutonomousInit");
 
-  frc2::CommandScheduler::GetInstance().CancelAll();
+  // frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
   GetNavX().SetAngleAdjustment(0);
-  GetDriveTrain().BreakMode(true);
-  GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().BreakMode(true);
+  // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
 
   // SysIdCommand().Schedule();
   // frc2::CommandScheduler().Run();
 
-  m_AutoCommand = m_Routine.GetAutonomousCommand();
+  // m_AutoCommand = m_Routine.GetAutonomousCommand();
 
-  if(m_AutoCommand) {
-    m_AutoCommand->Schedule();
-  }
+  // if(m_AutoCommand) {
+  //   m_AutoCommand->Schedule();
+  // }
 
   //PathPlannerTrajectory traj;
 
@@ -403,6 +426,10 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
+  if(m_AutoCommand) {
+    m_AutoCommand->Cancel();
+  }
+
   m_AutoFlag = false;
   frc2::CommandScheduler::GetInstance().Schedule(new frc2::InstantCommand([&] {
       if(COB_GET_ENTRY(m_Vision.FrontBack("tv")).GetInteger(0) == 1 && COB_GET_ENTRY(m_Vision.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){
@@ -418,13 +445,13 @@ void Robot::TeleopInit() {
     })
   );
   // m_MMT.MotionMagicTestInit();
-  m_LED.m_IsTele = true;  // used for LED Timer
+  // m_LED.m_IsTele = true;  // used for LED Timer
   //GetNavX().ZeroYaw();
-  m_DriveTrain.BreakMode(true);
-  GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // m_DriveTrain.BreakMode(true);
+  // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetNavX().SetAngleAdjustment(0);
    
   // frc::Pose2d startingPose = frc::Pose2d(units::meter_t(2.54), units::meter_t(1.75), frc::Rotation2d(units::degree_t(0)));

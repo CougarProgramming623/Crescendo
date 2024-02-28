@@ -105,9 +105,6 @@ void Arm::SetButtons()
 {
 	//m_Override.OnTrue(ManualControls());
 
-	m_IntakeButton.OnTrue(DynamicIntake().ToPtr());
-	m_OuttakeButton.OnTrue(DynamicIntake().ToPtr());
-
 	m_GroundPickupMode.OnTrue(new frc2::InstantCommand([&]{
 		//Robot::GetRobot()->GetArm().m_PivotPos = 98.0;
       	//Robot::GetRobot()->GetArm().m_WristPos = 3.0;

@@ -3,18 +3,13 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/Trigger.h>
 
-#include "subsystems/Drivetrain.h"
 
-
-class SysIdCommand : public frc2::CommandHelper<frc2::Command, SysIdCommand> {
+class SysIdCommand {
     public:
      SysIdCommand();
-
-     void Initialize() override;
-     void Execute() override;
      frc2::CommandPtr GetAutonomousCommand();
+     void ConfigureBindings();
 
     private:
-     void ConfigureBindings();
      frc2::Trigger m_SysId;
 };

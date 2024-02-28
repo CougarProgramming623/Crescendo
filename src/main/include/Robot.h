@@ -15,7 +15,6 @@
 #include <frc2/command/Command.h>
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
-#include "LED.h"
 #include "subsystems/DriveTrain.h"
 #include <AHRS.h>
 #include <frc/Joystick.h>
@@ -24,11 +23,10 @@
 #include "COB.h"
 #include "Vision.h"
 #include "subsystems/Arm.h"
-#include "subsystems/MotionMagicTest.h"
 #include "LED.h"
 #include <frc/geometry/Pose2d.h>
 #include "./subsystems/Intake.h"
-#include "commands/SysIdCommand.h"
+#include "SysIdCommand.h"
 
 
 class Robot : public frc::TimedRobot {
@@ -108,6 +106,8 @@ class Robot : public frc::TimedRobot {
   frc2::Trigger m_VisionPoseReset;
 
   frc2::Trigger m_Print;
+  frc2::Trigger m_SysId;
+  
 
   int m_COBTicks;
 
@@ -123,7 +123,6 @@ class Robot : public frc::TimedRobot {
  private:
 
   std::optional<frc2::CommandPtr> m_AutoCommand;
-  SysIdCommand m_Routine;
 
   frc2::ParallelCommandGroup* m_ArmCommand;
 
@@ -140,7 +139,10 @@ class Robot : public frc::TimedRobot {
 
   frc2::Trigger m_LEDYellow;
   frc2::Trigger m_LEDPurple;
-  LED m_LED;
+  
+  // LED m_LED;
+
+  // SysIdCommand m_Routine;
 
   Arm m_Arm;
 
