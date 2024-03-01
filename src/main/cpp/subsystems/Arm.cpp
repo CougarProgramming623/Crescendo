@@ -6,6 +6,7 @@
 #include <frc/geometry/Transform2d.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/WaitCommand.h>
+#include <frc/Servo.h>
  //#include "./commands/DriveToPosCommand.h"
 #include "Constants.h"
 //#include <ctre/phoenix6/configs/Configs.hpp>
@@ -26,8 +27,8 @@ Arm::Arm() :
 			 //m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
 
 			 //BUTTONBOARD 1
-			 //m_Override(BUTTON_L(ARM_OVERRIDE)),
-			 //m_Override2(BUTTON_L(ARM_OVERRIDE_2)),
+			 m_Override(BUTTON_L(ARM_OVERRIDE)),
+			 m_Override2(BUTTON_L(ARM_OVERRIDE_2)),
 
 			 m_ConeMode(BUTTON_L(CONE_MODE)),  
 			 m_CubeMode(BUTTON_L(CUBE_MODE)),
@@ -160,6 +161,8 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	return new frc2::FunctionalCommand([&] { // onInit
 		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 	}, [&] { // onExecute
+			Robot::GetRobot()->GetShooter().Execute();
+
 		// m_Pivot.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2 * 12.0)));
 		// m_Wrist.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2 * 12.0)));
 

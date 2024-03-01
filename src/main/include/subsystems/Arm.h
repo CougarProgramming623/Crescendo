@@ -90,7 +90,7 @@ class Arm : public frc2::SubsystemBase {
 
 	double m_WristPos;
 	double m_PivotPos;
-
+	//double set;
 	private:
 	
 	//motors
