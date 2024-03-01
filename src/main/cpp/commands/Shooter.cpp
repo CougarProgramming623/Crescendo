@@ -43,10 +43,12 @@ pushes the balanced status and the pitch to the network tables and utilizes PID 
 function to perform the autobalance command
 */
 void Shooter::Execute() {
+    	    Robot::GetRobot()->m_BigRed.OnTrue(new frc2::InstantCommand([&]{
+                Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.55);
+                DebugOutF("Idk if this really works");
+        })
+    );
     //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetAngle(180);
-    set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
-    DebugOutF("Lets see if it actually works");
-    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));
 
