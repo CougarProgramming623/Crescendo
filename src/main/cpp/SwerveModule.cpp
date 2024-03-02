@@ -36,8 +36,11 @@ void SwerveModule::Set(double driveVoltage, double steerAngle){
     if(steerAngle < 0.0){
         steerAngle += (2.0 * M_PI);
     }
+    // DebugOutF("target steer angle radians after mod 2pi: " + std::to_string(steerAngle));
+    // DebugOutF("current steer angle radians after mod 2pi: " + std::to_string(GetSteerAngle()));
 
     double difference = steerAngle - GetSteerAngle();
+    // DebugOutF("difference in steer angle radians: " + std::to_string(difference));
 
     if(difference >= M_PI) {
         steerAngle -= (2.0 * M_PI);
@@ -57,6 +60,8 @@ void SwerveModule::Set(double driveVoltage, double steerAngle){
     if(steerAngle < 0.0) {
         steerAngle += (2.0 * M_PI);
     }
+
+    // DebugOutF("final steer angle radians: " + std::to_string(steerAngle));
 
     m_SteerController.SetReferenceAngle(steerAngle);
     m_DriveController.SetReferenceVoltage(driveVoltage);

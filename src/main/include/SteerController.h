@@ -20,6 +20,7 @@ class SteerController {
         void SetReferenceAngle(double referenceAngleRadians);
         
         hardware::TalonFX motor;
+        // configs::FeedbackConfigs ratio;
         controls::PositionDutyCycle motorControlMode{units::angle::turn_t(0)};
         
         frc::AnalogInput encoder;

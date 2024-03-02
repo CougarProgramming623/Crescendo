@@ -21,11 +21,15 @@ void DriveWithJoystick::Execute() {
     Robot* r = Robot::GetRobot();
     //DebugOutF(std::to_string(fmod(360 + 90 - r->GetNavX().GetAngle(), 360)));
     frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-            units::meters_per_second_t(-Deadfix(r->GetJoyStick().GetRawAxis(1), 0.03) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
-            units::meters_per_second_t(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.03) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
-            units::radians_per_second_t(Deadfix(r->GetJoyStick().GetRawAxis(2), 0.02) * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND),
-            frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360))))
+        units::meters_per_second_t(-Deadfix(r->GetJoyStick().GetRawAxis(1), 0.03) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
+        units::meters_per_second_t(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.03) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
+        units::radians_per_second_t(Deadfix(r->GetJoyStick().GetRawAxis(2), 0.02) * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND),
+        frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360))))
     );
+
+    // DebugOutF("1, or x" + std::to_string(r->GetJoystick().GetRawAxis(1)));
+    // DebugOutF("0, or y" + std::to_string(r->GetJoystick().GetRawAxis(0)));
+    // DebugOutF("2, or z" + std::to_string(r->GetJoystick().GetRawAxis(2)));
 
     // if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
     //     speeds.vx = -speeds.vx;

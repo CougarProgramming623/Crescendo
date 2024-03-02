@@ -19,8 +19,6 @@ DriveTrain::DriveTrain()
       m_BackRightLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
       m_Kinematics(m_FrontLeftLocation, m_FrontRightLocation, m_BackLeftLocation, m_BackRightLocation),
       m_Rotation(0_rad),
-      // m_ModulePositions( wpi::array<frc::SwerveModulePosition, 4>
-      //    (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())),
       m_Odometry(m_Kinematics, m_Rotation, ( wpi::array<frc::SwerveModulePosition, 4>
          (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())), frc::Pose2d(0_m, 0_m, 0_rad)),
       m_FrontLeftModule(FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_ENCODER_PORT, FRONT_LEFT_MODULE_STEER_OFFSET),
@@ -40,10 +38,13 @@ DriveTrain::DriveTrain()
       m_ExtraJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
       m_Timer(),
       m_EventMap()
-{}
+{
+  
+}
 
 void DriveTrain::DriveInit(){
   m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
+  m_ModulePositions = wpi::array<frc::SwerveModulePosition, 4>(m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition());
   SetDefaultCommand(DriveWithJoystick());
  
   //m_TestJoystickButton.WhenPressed(replace w vision command);
@@ -99,12 +100,11 @@ Is called periodically
 Passes module states to motors and updates odometry
 */
 void DriveTrain::Periodic(){
-
-  if((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE) == 0 && ((double) m_ModuleStates[0].angle.Radians() == 0)){
+  if((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[0].angle.Radians() == 0)){
     m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
     m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
   } else {
-    //DebugOutF(std::to_string((double)m_ModuleStates[0].angle.Radians()));
+    // DebugOutF("front left module radians" + std::to_string((double)m_ModuleStates[0].angle.Radians()));
     m_FrontLeftModule.Set(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[0].angle.Radians());
   }
 
@@ -129,10 +129,18 @@ void DriveTrain::Periodic(){
     m_BackRightModule.Set(m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[3].angle.Radians());
   }
 
-  m_Rotation = frc::Rotation2d(units::radian_t(Deg2Rad(Robot::GetRobot()->GetAngle())));
+  // DebugOutF("BL steer voltage: " + std::to_string(m_BackLeftModule.m_SteerController.motor.GetMotorVoltage().GetValueAsDouble()));
+  // DebugOutF("BR steer voltage: " + std::to_string(m_BackRightModule.m_SteerController.motor.GetMotorVoltage().GetValueAsDouble()));
+  // DebugOutF("FL steer voltage: " + std::to_string(m_FrontLeftModule.m_SteerController.motor.GetMotorVoltage().GetValueAsDouble()));
+  // DebugOutF("FR steer voltage: " + std::to_string(m_FrontRightModule.m_SteerController.motor.GetMotorVoltage().GetValueAsDouble()));
+  // DebugOutF("BL drive voltage: " + std::to_string(m_BackLeftModule.m_DriveController.motor.GetMotorVoltage().GetValueAsDouble()));
+  // DebugOutF("BR drive voltage: " + std::to_string(m_BackRightModule.m_DriveController.motor.GetMotorVoltage().GetValueAsDouble()));
+  // DebugOutF("FL drive voltage: " + std::to_string(m_FrontLeftModule.m_DriveController.motor.GetMotorVoltage().GetValueAsDouble()));
+  // DebugOutF("FR drive voltage: " + std::to_string(m_FrontRightModule.m_DriveController.motor.GetMotorVoltage().GetValueAsDouble()));
 
   m_ModulePositions = wpi::array<frc::SwerveModulePosition, 4>(m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition());
-
+  
+  m_Rotation = frc::Rotation2d(units::radian_t(Deg2Rad(Robot::GetRobot()->GetAngle())));
 
   m_VisionRelative = Robot::GetRobot()->GetVision().GetPoseBlue().RelativeTo(m_Odometry.GetEstimatedPosition());
   // DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));
