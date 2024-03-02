@@ -13,6 +13,8 @@ class SwerveModule {
 
         double GetSteerAngle();
 
+        double GetSteerSensorVoltage();
+
         frc::SwerveModulePosition GetPosition();
 
         void Set(double driveVoltage, double steerAngle);

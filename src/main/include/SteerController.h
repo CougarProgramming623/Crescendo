@@ -24,7 +24,7 @@ class SteerController {
         
         frc::AnalogInput encoder;
         
-        double angleOffsetDegrees;
+        double angleOffsetVoltage;
         double referenceAngleRadians;
         double resetIteration;
 

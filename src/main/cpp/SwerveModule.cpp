@@ -20,6 +20,10 @@ double SwerveModule::GetSteerAngle(){
     return m_SteerController.GetStateAngle();
 }
 
+double SwerveModule::GetSteerSensorVoltage(){
+    return m_SteerController.encoder.GetVoltage();
+}
+
 //Set break mode of the drive motor
 void SwerveModule::BreakMode(bool on){
     m_DriveController.BreakMode(on);
