@@ -104,7 +104,7 @@ void DriveTrain::Periodic(){
     m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
     m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
   } else {
-    //DebugOutF(std::to_string((double)m_ModuleStates[0].angle.Radians()));
+    // DebugOutF("steer angle at point 1 in radians: " + std::to_string((double)m_ModuleStates[0].angle.Radians()));
     m_FrontLeftModule.Set(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[0].angle.Radians());
   }
 
