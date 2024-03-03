@@ -28,12 +28,16 @@ void Vision::PrintValues() {
     DebugOutF("tx: " + std::to_string(x));
     DebugOutF("ty: " + std::to_string(y));
   }
+
+  DebugOutF("Robot Angle: " + std::to_string(Robot::GetRobot()->GetNavX().GetAngle()));
+  DebugOutF("April Tag ID: " + std::to_string(m_LimelightTable->GetNumber("tid", 0.0)));
+  DebugOutF("Target Robot Angle: " + std::to_string(Rotation2d(Robot::GetRobot()->GetVision().VisionRobotYaw(m_LimelightTable->GetNumber("tid", 0.0))).Degrees().value()));
 }
 
 
 void Vision::CalcPose(){
   // DebugOutF("calc Pose");
-  if(m_LimelightTable->GetNumber("tv", 0.0) == 1 && m_LimelightTable->GetNumberArray("botpose-wpiblue", std::span<double>()).size() != 0){
+  if(m_LimelightTable->GetNumber("tv", 0.0) == 1 && m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).size() != 0){
 
     //print size
     //DebugOutF("size: " + std::to_string((int)Robot::GetRobot()->GetCOB().GetTable().GetEntry(COB_KEY_BOT_POSE).GetDoubleArray(std::span<double>()).size()));
@@ -41,9 +45,9 @@ void Vision::CalcPose(){
 
 
     // //print x, y, theta
-    DebugOutF("\nx: " + std::to_string((int)m_LimelightTable->GetNumberArray("botpose-wpiblue", std::span<double>()).at(1)));
-    DebugOutF("y: " + std::to_string((int)m_LimelightTable->GetNumberArray("botpose-wpiblue", std::span<double>()).at(0)));
-    DebugOutF("θ: " + std::to_string((int)m_LimelightTable->GetNumberArray("botpose-wpiblue", std::span<double>()).at(5)));
+    DebugOutF("\nx: " + std::to_string((int)m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)));
+    DebugOutF("y: " + std::to_string((int)m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(0)));
+    DebugOutF("θ: " + std::to_string((int)m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5)));
     //Robot::GetRobot()->GetCOB().GetTable().GetEntry(COB_KEY_BOT_POSE).GetDoubleArray(std::span<double>()).at(1)));
     //DebugOutF("y: " + std::to_string((int)Robot::GetRobot()->GetCOB().GetTable().GetEntry(COB_KEY_BOT_POSE).GetDoubleArray(std::span<double>()).at(0)));
     //DebugOutF("θ: " + std::to_string((int)Robot::GetRobot()->GetCOB().GetTable().GetEntry(COB_KEY_BOT_POSE).GetDoubleArray(std::span<double>()).at(5)));
@@ -57,20 +61,16 @@ void Vision::CalcPose(){
 }
 
 Pose2d Vision::GetFieldPose(){
-  if(m_LimelightTable->GetNumber("tv", 0.0) == 1 && m_LimelightTable->GetNumberArray("botpose-wpiblue", std::span<double>()).size() != 0) {
-    m_TempPose = Pose2d(units::meter_t(m_LimelightTable->GetNumberArray("botpose-wpiblue", std::span<double>()).at(0)), 
-      units::meter_t(m_LimelightTable->GetNumberArray("botpose-wpiblue", std::span<double>()).at(1)),
-      Rotation2d(units::radian_t(m_LimelightTable->GetNumberArray("botpose-wpiblue", std::span<double>()).at(5)))
+  if(m_LimelightTable->GetNumber("tv", 0.0) == 1.0 && m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).size() != 0) {
+    m_TempPose = Pose2d(units::meter_t(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(0)), 
+      units::meter_t(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)),
+      Rotation2d(units::radian_t(Deg2Rad(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5))))
     );
+    DebugOutF("x: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(0)));
+    DebugOutF("y: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)));
+    DebugOutF("theta: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5)));
     //change area (when we are using two limelights; used to determine which april tag to use to orient depending on which one can see more april tag)
   }
-  // if(m_LimelightTable->GetNumber("tv", 0.0) == 1 && m_LimelightTable->GetNumberArray("botpose", std::span<double>()).size() != 0 && m_FMS->GetBoolean("IsRedAlliance", false)) {
-  //   m_TempPose = Pose2d(units::meter_t(m_LimelightTable->GetNumberArray("botpose", std::span<double>()).at(0)), 
-  //     units::meter_t(m_LimelightTable->GetNumberArray("botpose", std::span<double>()).at(1)),
-  //     Rotation2d(units::radian_t(m_LimelightTable->GetNumberArray("botpose", std::span<double>()).at(5)))
-  //   );
-  //   //change area (when we are using two limelights; used to determine which april tag to use to orient depending on which one can see more april tag)
-  // }
   return m_TempPose;
 }
 
@@ -108,11 +108,11 @@ std::string Vision::FrontBack(std::string key){
 
 }
 
-units::angle::degree_t Vision::VisionRobotYaw(double ID) {
+units::angle::radian_t Vision::VisionRobotYaw(double ID) {
   double x = IDMap[0][(int)ID - 1] - m_AbsolutePose.X().value();
   double y = IDMap[1][(int)ID - 1] - m_AbsolutePose.Y().value();
-  DebugOutF("x: " + std::to_string(x) + "and y: " + std::to_string(y));
-  return units::angle::degree_t(atan(x / y));
+  // DebugOutF("inside vision robot yaw --> target yaw in radians: " + std::to_string(atan(x / y)));
+  return units::angle::radian_t(atan(x / y));
 }
 
 units::angle::degree_t Vision::ShooterAngle(double ID) {

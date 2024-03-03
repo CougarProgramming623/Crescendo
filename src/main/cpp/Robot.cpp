@@ -47,7 +47,7 @@ void Robot::RobotInit() {
   m_LED.Init();
   m_Arm.Init();
 
-  DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));  
+  DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
   DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
   DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
   DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
@@ -83,27 +83,30 @@ void Robot::AutoButtons(){
   // m_BR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BR));
   m_BigRed      = frc2::Trigger(BUTTON_L(BIG_RED));
 
-  m_SingleSub   = frc2::Trigger(BUTTON_L(5));
-  m_DoubleSub = frc2::Trigger(BUTTON_L_TWO(13));
+  // m_SingleSub   = frc2::Trigger(BUTTON_L(5));
+  // m_DoubleSub = frc2::Trigger(BUTTON_L_TWO(13));
   m_SingleSubCube = frc2::Trigger(BUTTON_L(7));
 
-  m_LeftGrid    = frc2::Trigger(BUTTON_L_TWO(LEFT_GRID));
-  m_CenterGrid  = frc2::Trigger(BUTTON_L_TWO(CENTER_GRID));
-  m_RightGrid   = frc2::Trigger(BUTTON_L_TWO(RIGHT_GRID));
+  // m_LeftGrid    = frc2::Trigger(BUTTON_L_TWO(LEFT_GRID));
+  // m_CenterGrid  = frc2::Trigger(BUTTON_L_TWO(CENTER_GRID));
+  // m_RightGrid   = frc2::Trigger(BUTTON_L_TWO(RIGHT_GRID));
 
   // m_MidCone = frc2::JoystickButton(BUTTON_L_TWO(TRANSIT_MODE));
 	// m_MidCube = frc2::JoystickButton(BUTTON_L_TWO(GROUND_PICKUP_MODE));
-  m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(PLACING_MODE));
-  m_GroundPickup = frc2::Trigger(BUTTON_L_TWO(GROUND_PICKUP_MODE));
+  // m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(PLACING_MODE));
+  // m_GroundPickup = frc2::Trigger(BUTTON_L_TWO(GROUND_PICKUP_MODE));
 
   m_NavXReset = frc2::Trigger(BUTTON_L(8)); //PUT Define
-  GetArm().m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(15));
+  // GetArm().m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(15));
   m_AutoBalance = frc2::Trigger(BUTTON_L(3));
   m_Print = frc2::Trigger(BUTTON_L(2));
 
   m_VisionPoseReset = frc2::Trigger([&] { return Robot::GetRobot()->GetButtonBoard().GetRawButton(6); }); //PUT Define
  
-  
+  GetDriveTrain().m_TestJoystickButton.OnTrue(new frc2::InstantCommand([&]{
+    GetVision().PrintValues();
+  }));
+
   // m_Print.whileTrue(
   //   new frc2::InstantCommand([&]{
   //     DebugOutF("StringDeg: " + std::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue()))));
@@ -392,10 +395,11 @@ void Robot::RobotPeriodic() {
   }
 
   if(Robot::GetButtonBoard().GetRawButton(4)){
-    DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
-    DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
-    DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
-    DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
+    DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
+    DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
+    DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
+    DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
+    DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
   }
 
   //LED
@@ -452,7 +456,7 @@ void Robot::AutonomousInit() {
   m_AutoFlag = true;
   DebugOutF("Auto init");
 
-  // frc2::CommandScheduler::GetInstance().CancelAll();
+  frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
   GetNavX().SetAngleAdjustment(0);
   GetDriveTrain().BreakMode(true);

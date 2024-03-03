@@ -112,13 +112,13 @@ class DriveTrain : public frc2::SubsystemBase {
   frc::Pose2d m_VisionRelative;
 
   frc2::Trigger m_JoystickOuttake;
+  frc2::Trigger m_TestJoystickButton;
 
   
   private:
   
   frc::Timer m_Timer;
 
-  frc2::Trigger m_TestJoystickButton;
   frc2::Trigger m_JoystickButtonTwo;
   frc2::Trigger m_DualMotorControlButton;
   frc2::Trigger m_NavXResetButton;
