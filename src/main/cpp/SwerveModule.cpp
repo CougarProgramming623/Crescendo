@@ -36,10 +36,10 @@ frc::SwerveModulePosition SwerveModule::GetPosition(){
 
 //Set the module to drive at a voltage at an angle in radians
 void SwerveModule::Set(double driveVoltage, double steerAngle){
-    // steerAngle  = fmod(steerAngle, 2.0 * M_PI);
-    // if(steerAngle < 0.0){
-    //     steerAngle += (2.0 * M_PI);
-    // }
+    steerAngle  = fmod(steerAngle, 2.0 * M_PI);
+    if(steerAngle < 0.0){
+        steerAngle += (2.0 * M_PI);
+    }
 
     // DebugOutF("steer angle of the robot in radians: " + std::to_string(GetSteerAngle()));
     double difference = steerAngle - GetSteerAngle();
@@ -52,12 +52,12 @@ void SwerveModule::Set(double driveVoltage, double steerAngle){
         steerAngle += (2.0 * M_PI);
     }
 
-    // difference = steerAngle - GetSteerAngle(); //recalc difference
+    difference = steerAngle - GetSteerAngle(); //recalc difference
 
-    // if(difference > M_PI / 2.0 || difference < (-M_PI) / 2.0) {
-    //     steerAngle += M_PI;
-    //     driveVoltage *= -1.0;
-    // }
+    if(difference > M_PI / 2.0 || difference < (-M_PI) / 2.0) {
+        steerAngle += M_PI;
+        driveVoltage *= -1.0;
+    }
 
     steerAngle = fmod(steerAngle, (2.0 * M_PI));
     if(steerAngle < 0.0) {
