@@ -20,6 +20,10 @@ double SwerveModule::GetSteerAngle(){
     return m_SteerController.GetStateAngle();
 }
 
+double SwerveModule::GetSteerSensorVoltage(){
+    return m_SteerController.encoder.GetVoltage();
+}
+
 //Set break mode of the drive motor
 void SwerveModule::BreakMode(bool on){
     m_DriveController.BreakMode(on);
@@ -27,7 +31,7 @@ void SwerveModule::BreakMode(bool on){
 
 //Get the pose of the module
 frc::SwerveModulePosition SwerveModule::GetPosition(){
-    return {units::meter_t(m_DriveController.motor.GetPosition().GetValueAsDouble() * DRIVE_ENCODER_POSITION_CONSTANT), frc::Rotation2d(units::radian_t(-GetSteerAngle()))};
+    return {units::meter_t(m_DriveController.motor.GetPosition().GetValueAsDouble() * DRIVE_ENCODER_POSITION_CONSTANT * 2048), frc::Rotation2d(units::radian_t(-GetSteerAngle()))};
 }
 
 //Set the module to drive at a voltage at an angle in radians
@@ -37,20 +41,16 @@ void SwerveModule::Set(double driveVoltage, double steerAngle){
     //     steerAngle += (2.0 * M_PI);
     // }
 
-<<<<<<< Updated upstream
+    // DebugOutF("steer angle of the robot in radians: " + std::to_string(GetSteerAngle()));
     double difference = steerAngle - GetSteerAngle();
-=======
-    // // DebugOutF("steer angle of the robot in radians: " + std::to_string(GetSteerAngle()));
-    // double difference = steerAngle - GetSteerAngle();
-    // // DebugOutF("steer difference between desired and current: " + std::to_string(difference));
->>>>>>> Stashed changes
+    // DebugOutF("steer difference between desired and current: " + std::to_string(difference));
 
-    // if(difference >= M_PI) {
-    //     steerAngle -= (2.0 * M_PI);
-    // }
-    // else if(difference < -M_PI) {
-    //     steerAngle += (2.0 * M_PI);
-    // }
+    if(difference >= M_PI) {
+        steerAngle -= (2.0 * M_PI);
+    }
+    else if(difference < -M_PI) {
+        steerAngle += (2.0 * M_PI);
+    }
 
     // difference = steerAngle - GetSteerAngle(); //recalc difference
 
@@ -59,16 +59,13 @@ void SwerveModule::Set(double driveVoltage, double steerAngle){
     //     driveVoltage *= -1.0;
     // }
 
-    // steerAngle = fmod(steerAngle, (2.0 * M_PI));
-    // if(steerAngle < 0.0) {
-    //     steerAngle += (2.0 * M_PI);
-    // }
+    steerAngle = fmod(steerAngle, (2.0 * M_PI));
+    if(steerAngle < 0.0) {
+        steerAngle += (2.0 * M_PI);
+    }
 
-<<<<<<< Updated upstream
-=======
     // DebugOutF("steer angle at point 2 in radians: " + std::to_string(steerAngle));
 
->>>>>>> Stashed changes
     m_SteerController.SetReferenceAngle(steerAngle);
     m_DriveController.SetReferenceVoltage(driveVoltage);
 }
