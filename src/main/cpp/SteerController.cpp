@@ -1,13 +1,26 @@
 #include "SteerController.h"
 #include "Constants.h"
 
+using namespace ctre::phoenix6::controls;
+
 //Constructor
 SteerController::SteerController(int motorID, int EncoderPort, double AngleOffset):
     motor(motorID),
     encoder{EncoderPort},
+<<<<<<< Updated upstream
     angleOffsetDegrees(AngleOffset)
 {
     motor.SetPosition(units::angle::turn_t((360-(fmod(((encoder.GetVoltage() * ENCODER_VOLTAGE_TO_DEGREE) + (360-AngleOffset)), 360))) / STEER_ENCODER_POSITION_CONSTANT));
+=======
+    angleOffsetVoltage(AngleOffset)
+
+{
+    //motor.SetControl(motorControlMode.WithPosition(units::angle::turn_t((360-(fmod(((encoder.GetVoltage() * ENCODER_VOLTAGE_TO_DEGREE) + (360-AngleOffset)), 360))) / STEER_ENCODER_POSITION_CONSTANT)));
+    DebugOutF("initial position: " + std::to_string((encoder.GetVoltage() / frc::RobotController::GetVoltage5V()) - (angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET)));
+    motor.SetPosition(units::angle::turn_t((angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) - (encoder.GetVoltage() / frc::RobotController::GetVoltage5V())));
+    motorControlMode.Position = units::turn_t(/*(encoder.GetVoltage() / frc::RobotController::GetVoltage5V()) - */(angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET));
+
+>>>>>>> Stashed changes
 }
 
 //Returns the reference angle which is just like not useful in radians
@@ -41,6 +54,7 @@ void SteerController::SetReferenceAngle(double referenceAngleRadians){
         resetIteration = 0;
     }
 
+<<<<<<< Updated upstream
     double currentAngleRadiansMod = fmod(currentAngleRadians, (2.0 * M_PI));
     if(currentAngleRadiansMod < 0.0) {
         currentAngleRadiansMod += (2.0 * M_PI);
@@ -52,6 +66,21 @@ void SteerController::SetReferenceAngle(double referenceAngleRadians){
     } else if(referenceAngleRadians - currentAngleRadiansMod < -M_PI) {
         adjustedReferenceAngleRadians += (2.0 * M_PI);
     }
+=======
+    // double currentAngleRadiansMod = fmod(currentAngleRadians, (2.0 * M_PI));
+    // if(currentAngleRadiansMod < 0.0) {
+    //     currentAngleRadiansMod += (2.0 * M_PI);
+    // }
+    // DebugOutF("current angle before point 3 in radians AFTER MOD: " + std::to_string(currentAngleRadiansMod - currentAngleRadiansMod));
+
+    double adjustedReferenceAngleRadians = referenceAngleRadians;// + currentAngleRadians - currentAngleRadiansMod;
+    // if(referenceAngleRadians - currentAngleRadiansMod > M_PI) {
+    //     adjustedReferenceAngleRadians -= (2.0 * M_PI);
+    // } else if(referenceAngleRadians - currentAngleRadiansMod < -M_PI) {
+    //     adjustedReferenceAngleRadians += (2.0 * M_PI);
+    // }
+    // DebugOutF("final angle to set to at point 3 in radians: " + std::to_string(adjustedReferenceAngleRadians));
+>>>>>>> Stashed changes
 
     motor.SetControl(motorControlMode.WithPosition(units::angle::turn_t(adjustedReferenceAngleRadians / STEER_ENCODER_POSITION_CONSTANT)));
 

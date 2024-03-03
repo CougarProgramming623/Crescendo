@@ -45,6 +45,15 @@ void Robot::RobotInit() {
   m_Vision.VisionInit(); //Make one
   m_LED.Init();
   m_Arm.Init();
+<<<<<<< Updated upstream
+=======
+
+  DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
+  DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
+  DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
+  DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
+  DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
+>>>>>>> Stashed changes
   
   AutoButtons();
   m_LED.Init();
@@ -377,8 +386,17 @@ void Robot::RobotPeriodic() {
 
 
   if(Robot::GetButtonBoard().GetRawButton(2)){
+<<<<<<< Updated upstream
     // DebugOutF("StringDeg: " + std::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue())-29000.0 - GetArm().WristDegreesToTicks(45))));
     // DebugOutF("PivotDeg: " + std::to_string(GetArm().PivotTicksToDegrees(GetArm().GetPivotMotor().GetPosition().GetValueAsDouble())));
+=======
+    // DebugOutF("BR: " + std::to_string(GetDriveTrain().m_BackLeftModule.m_SteerController.motor.GetPosition().GetValueAsDouble()));
+
+    DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
+    DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
+    DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
+    DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
+>>>>>>> Stashed changes
   }
 
   if(Robot::GetButtonBoard().GetRawButton(4)){

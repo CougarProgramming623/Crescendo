@@ -104,13 +104,18 @@ void DriveTrain::Periodic(){
     m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
     m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
   } else {
+<<<<<<< Updated upstream
     //DebugOutF(std::to_string((double)m_ModuleStates[0].angle.Radians()));
+=======
+    DebugOutF("steer desired angle in radians: " + std::to_string((double)m_ModuleStates[0].angle.Radians()));
+    DebugOutF("drive desired speed in meters per second: " + std::to_string((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE).value()));
+>>>>>>> Stashed changes
     m_FrontLeftModule.Set(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[0].angle.Radians());
   }
 
   if((m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[1].angle.Radians() == 0)){
     m_FrontRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
-    m_FrontRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));;
+    m_FrontRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
   } else {
     m_FrontRightModule.Set(m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[1].angle.Radians());
   }

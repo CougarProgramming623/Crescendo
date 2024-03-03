@@ -32,32 +32,43 @@ frc::SwerveModulePosition SwerveModule::GetPosition(){
 
 //Set the module to drive at a voltage at an angle in radians
 void SwerveModule::Set(double driveVoltage, double steerAngle){
-    steerAngle  = fmod(steerAngle, 2.0 * M_PI);
-    if(steerAngle < 0.0){
-        steerAngle += (2.0 * M_PI);
-    }
+    // steerAngle  = fmod(steerAngle, 2.0 * M_PI);
+    // if(steerAngle < 0.0){
+    //     steerAngle += (2.0 * M_PI);
+    // }
 
+<<<<<<< Updated upstream
     double difference = steerAngle - GetSteerAngle();
+=======
+    // // DebugOutF("steer angle of the robot in radians: " + std::to_string(GetSteerAngle()));
+    // double difference = steerAngle - GetSteerAngle();
+    // // DebugOutF("steer difference between desired and current: " + std::to_string(difference));
+>>>>>>> Stashed changes
 
-    if(difference >= M_PI) {
-        steerAngle -= (2.0 * M_PI);
-    }
-    else if(difference < -M_PI) {
-        steerAngle += (2.0 * M_PI);
-    }
+    // if(difference >= M_PI) {
+    //     steerAngle -= (2.0 * M_PI);
+    // }
+    // else if(difference < -M_PI) {
+    //     steerAngle += (2.0 * M_PI);
+    // }
 
-    difference = steerAngle - GetSteerAngle(); //recalc difference
+    // difference = steerAngle - GetSteerAngle(); //recalc difference
 
-    if(difference > M_PI / 2.0 || difference < (-M_PI) / 2.0) {
-        steerAngle += M_PI;
-        driveVoltage *= -1.0;
-    }
+    // if(difference > M_PI / 2.0 || difference < (-M_PI) / 2.0) {
+    //     steerAngle += M_PI;
+    //     driveVoltage *= -1.0;
+    // }
 
-    steerAngle = fmod(steerAngle, (2.0 * M_PI));
-    if(steerAngle < 0.0) {
-        steerAngle += (2.0 * M_PI);
-    }
+    // steerAngle = fmod(steerAngle, (2.0 * M_PI));
+    // if(steerAngle < 0.0) {
+    //     steerAngle += (2.0 * M_PI);
+    // }
 
+<<<<<<< Updated upstream
+=======
+    // DebugOutF("steer angle at point 2 in radians: " + std::to_string(steerAngle));
+
+>>>>>>> Stashed changes
     m_SteerController.SetReferenceAngle(steerAngle);
     m_DriveController.SetReferenceVoltage(driveVoltage);
 }
