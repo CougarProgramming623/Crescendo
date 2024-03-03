@@ -210,10 +210,10 @@ void DriveTrain::resetPose(Pose2d pose) {
 
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
   return /*Robot::GetRobot()->GetDriveTrain().BaseDrive(*/ChassisSpeeds::FromFieldRelativeSpeeds(
-          units::meters_per_second_t(1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
-          units::meters_per_second_t(-1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
-          units::radians_per_second_t(/*outputT*/1 * Robot::GetRobot()->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
-          frc::Rotation2d(units::radian_t(/*Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)*/1)));
+          units::meters_per_second_t(0.1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
+          units::meters_per_second_t(-0.1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
+          units::radians_per_second_t(0.1 * Robot::GetRobot()->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
+          frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - Robot::GetRobot()->GetNavX().GetAngle(), 360)))));
 }
 
 //Sets breakmode

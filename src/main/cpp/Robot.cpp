@@ -462,12 +462,11 @@ void Robot::DisabledInit() {
 void Robot::DisabledPeriodic() {}
 
 frc2::CommandPtr Robot::getAutonomousCommand() {
-// Load the path you want to follow using its name in the GUI
-auto path = PathPlannerPath::fromPathFile("AutoTest.auto");
-DebugOutF("pathtest");
-// Create a path following command using AutoBuilder. This will also trigger event markers.
-return AutoBuilder::followPath(path);
-
+  // Load the path you want to follow using its name in the GUI
+  auto path = PathPlannerPath::fromPathFile("PathTest");
+  DebugOutF("pathtest");
+  // Create a path following command using AutoBuilder. This will also trigger event markers.
+  return AutoBuilder::followPath(path);
 }
 
 /**
@@ -475,11 +474,11 @@ return AutoBuilder::followPath(path);
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
-  
-
 
   m_AutoFlag = true;
   DebugOutF("Auto init");
+
+
 
   frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
@@ -490,11 +489,14 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-  DebugOutF("pathTest1");
-  getAutonomousCommand();
-  DebugOutF("pathTest2");
+  // DebugOutF("pathTest1");
+  // // getAutonomousCommand();
+  // DebugOutF("pathTest2");
 
-  
+  //frc2::CommandScheduler::Schedule(getAutonomousCommand())	
+
+  frc2::CommandScheduler::GetInstance().Schedule(getAutonomousCommand());
+  // frc2::CommandScheduler::GetInstance().Run();
 
   //PathPlannerTrajectory traj;
 
