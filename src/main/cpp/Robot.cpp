@@ -352,13 +352,7 @@ void Robot::AutoButtons(){
   );
 }
 
-frc2::CommandPtr Robot::getAutonomousCommand() {
-// Load the path you want to follow using its name in the GUI
-auto path = PathPlannerPath::fromPathFile("TestAuto");
 
-// Create a path following command using AutoBuilder. This will also trigger event markers.
-return AutoBuilder::followPath(path);
-}
 
 frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
 	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
@@ -467,6 +461,15 @@ void Robot::DisabledInit() {
 
 void Robot::DisabledPeriodic() {}
 
+frc2::CommandPtr Robot::getAutonomousCommand() {
+// Load the path you want to follow using its name in the GUI
+auto path = PathPlannerPath::fromPathFile("AutoTest.auto");
+DebugOutF("pathtest");
+// Create a path following command using AutoBuilder. This will also trigger event markers.
+return AutoBuilder::followPath(path);
+
+}
+
 /**
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
@@ -486,6 +489,13 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
+  DebugOutF("pathTest1");
+  getAutonomousCommand();
+  DebugOutF("pathTest2");
+
+  
+
   //PathPlannerTrajectory traj;
 
   //Load trajectory
