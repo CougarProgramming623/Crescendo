@@ -1,5 +1,6 @@
 #include "DriveController.h"
 #include "Constants.h"
+#include "Robot.h"
 //using ctre::phoenix::motorcontrol::ControlMode;
 using ctre::phoenix::motorcontrol::NeutralMode;
 
@@ -12,12 +13,12 @@ DriveController::DriveController(int ID)
     motor.SetNeutralMode(NeutralMode::Brake);
     //motor.SetInverted(SMTH)                           FIX idk why but some of them rotate clockwise and others counter clockwise
     motor.SetInverted(true);
-    //motor.SetSensorPhase(true);                         //FIX also dont know why we do this one
+    // motor.SetSensorPhase(true);                         //FIX also dont know why we do this one
 }
 
 //Set drive voltage
-void  DriveController::SetReferenceVoltage(double voltage){
-    //motor.Set(ControlMode::PercentOutput, voltage / nominalVoltage);
+void DriveController::SetReferenceVoltage(double voltage){
+    motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(voltage / nominalVoltage));
 }   
 
 //Get module velocity in meters per second
