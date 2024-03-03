@@ -18,7 +18,8 @@ class Vision {
         void VisionInit();
         void CalcPose();
         void PushID();
-        
+        double relativeDistancex();
+
         Pose2d GetFieldPose();
 
         std::shared_ptr<nt::NetworkTable> GetLimeLight() { return nt::NetworkTableInstance::GetDefault().GetTable("limelight-front"); }

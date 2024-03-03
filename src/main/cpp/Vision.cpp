@@ -66,9 +66,10 @@ Pose2d Vision::GetFieldPose(){
       units::meter_t(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)),
       Rotation2d(units::radian_t(Deg2Rad(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5))))
     );
-    DebugOutF("x: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(0)));
-    DebugOutF("y: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)));
-    DebugOutF("theta: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5)));
+    DebugOutF(" tx: " + std::to_string(m_LimelightTable->GetNumber("tx", 0.0)));
+    //DebugOutF("x: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(0)));
+    //DebugOutF("y: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)));
+    //DebugOutF("theta: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5)));
     //change area (when we are using two limelights; used to determine which april tag to use to orient depending on which one can see more april tag)
   }
   return m_TempPose;
@@ -120,4 +121,22 @@ units::angle::degree_t Vision::ShooterAngle(double ID) {
   double y = IDMap[1][(int)ID - 1] - m_AbsolutePose.Y().value();
   double distance = sqrt(pow(IDMap[0][(int)ID - 1], 2) + pow(IDMap[1][(int)ID - 1], 2));
   double height = IDMap[2][(int)ID - 1] - robotHeight;
+}
+
+double Vision::relativeDistancex(){  
+    double targetOffsetAngle_Vertical = m_LimelightTable->GetNumber("ty",0.0);
+
+    double limelightMountAngleDegrees = -1.4;//rough estimate
+
+    // distance from the center of the Limelight lens to the floor
+    double limelightLensHeightInches = 18.25; 
+
+    // distance from the target to the floor
+    double goalHeightInches = 23.80; 
+
+    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/tan(angleToGoalRadians);
+    DebugOutF("delta x: " + std::to_string(distanceFromLimelightToGoalInches));
 }
