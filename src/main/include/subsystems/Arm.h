@@ -17,7 +17,7 @@
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/CommandScheduler.h>
 #include <frc2/command/PrintCommand.h>
-#include <frc2/command/SequentialCommandGroup.h>
+//#include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/FunctionalCommand.h>
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/WaitCommand.h>
@@ -44,6 +44,8 @@ class Arm : public frc2::SubsystemBase {
 	Arm();
 	void Init();
 	void SetButtons();
+	frc2::Trigger m_IntakeButton;
+	frc2::Trigger m_OuttakeButton;
 	
 
 	frc2::FunctionalCommand* ManualControls();
@@ -68,19 +70,19 @@ class Arm : public frc2::SubsystemBase {
 	//inline hardware::TalonFX& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline rev::CANSparkMax& GetBottomIntakeMotor() {return m_BottomIntake;}
 	//inline hardware::CANcoder& GetPivotCANCoder() {return m_PivotCANCoder;}
-	inline frc2::Trigger& GetCubeModeButton() {return m_CubeMode; }
-	inline frc2::Trigger& GetConeModeButton() {return m_ConeMode; }
+	inline frc2::Trigger& GetCubeModeButton() {return m_ShooterDown; }
+	inline frc2::Trigger& GetConeModeButton() {return m_ShooterUp; }
 	inline frc2::Trigger& GetIntakeButton() {return m_IntakeButton; }
 	inline frc2::Trigger& GetOuttakeButton() {return m_OuttakeButton; }
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
 
-
+	//Make sure to use this when recording values for the setpoints
 	double m_PivotMatrix[3][3] = {
 		{-8.0, -33.0, 25.0},
 		{-20.0, 58.5, -20.0},
 		{50, 50, 50},
 	};
-
+	//Idk if we need this anymore probably not
 	double m_WristMatrix[3][3] = {
 		{28, 46.0, -121.0},
 		{30.0, 60, 30.0},
@@ -88,7 +90,7 @@ class Arm : public frc2::SubsystemBase {
 	};
 	frc2::Trigger m_PlacingMode;
 
-	double m_WristPos;
+	//double m_WristPos;
 	double m_PivotPos;
 	//double set;
 	private:
@@ -107,23 +109,22 @@ class Arm : public frc2::SubsystemBase {
 	// units::voltage::volt_t m_PivotVoltage;
 	// units::voltage::volt_t m_WristVoltage;
 
-	//pot
+	//Stringpot initalization will probably use this to measure angle or current shooter
 	frc::AnalogInput m_StringPot{STRINGPOT};
 
 	//triggers
-	frc2::Trigger m_TransitMode;
-	frc2::Trigger m_GroundPickupMode;
+	frc2::Trigger m_StowButton;
+	frc2::Trigger m_AmpButton;
 
 	frc2::Trigger m_Override;
 	frc2::Trigger m_Override2;
 
-	frc2::Trigger m_ConeMode;
-	frc2::Trigger m_CubeMode;
+	frc2::Trigger m_ShooterUp;
+	frc2::Trigger m_ShooterDown;
 
-	frc2::Trigger m_IntakeButton;
-	frc2::Trigger m_OuttakeButton;
 
 	frc::Timer m_Timer;
+
 
 	frc2::SequentialCommandGroup* m_Top;
 	frc2::SequentialCommandGroup* m_Mid;

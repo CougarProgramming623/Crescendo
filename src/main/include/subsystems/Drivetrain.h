@@ -56,6 +56,7 @@ class DriveTrain : public frc2::SubsystemBase {
 	//hardware::TalonFX m_ShooterMotor2;
   //hardware::TalonFX m_PivotShooter;
   //hardware::TalonFX m_DustpanAngle;
+  frc2::Trigger m_BigRed;
   frc::Servo m_DustpanLaunch {2};
   void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
   void DriveInit();
@@ -120,6 +121,7 @@ class DriveTrain : public frc2::SubsystemBase {
   frc::Pose2d m_VisionRelative;
 
     frc2::Trigger m_JoystickOuttake;
+  
 
 
   private:
@@ -127,7 +129,6 @@ class DriveTrain : public frc2::SubsystemBase {
 
 
   frc::Timer m_Timer;
-
   frc2::Trigger m_TestJoystickButton;
   frc2::Trigger m_JoystickButtonTwo;
   frc2::Trigger m_DuaLMotorControlButton;

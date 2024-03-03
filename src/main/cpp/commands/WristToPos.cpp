@@ -3,7 +3,7 @@
 
 
 #define ARM Robot::GetRobot()->GetArm()
-
+	
 WristToPos::WristToPos() {
 	// targetDegrees = degPos;
 	AddRequirements(&Robot::GetRobot()->GetArm());
@@ -11,7 +11,7 @@ WristToPos::WristToPos() {
 
 void WristToPos::Initialize() {
 	//ARM.GetWristMotor().SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
-	targetDegrees = Robot::GetRobot()->GetArm().m_WristPos;
+	//targetDegrees = Robot::GetRobot()->GetArm().m_WristPos;
 }
 
 void WristToPos::Execute() {

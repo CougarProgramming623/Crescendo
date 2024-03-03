@@ -93,7 +93,7 @@ class Robot : public frc::TimedRobot {
 	frc2::Trigger m_CenterGrid;
 	frc2::Trigger m_RightGrid;
 
-  frc2::Trigger m_BigRed;
+  //frc2::Trigger m_BigRed;
   frc2::Trigger m_GroundPickup;
 
   frc2::Trigger m_SingleSub;

@@ -22,7 +22,8 @@ using namespace ctre::phoenix6;
 using namespace ctre::phoenix;
 using ctre::phoenix::motorcontrol::NeutralMode;
 
-Shooter::Shooter() 
+Shooter::Shooter()
+        //m_BigRed(frc2::Trigger(BUTTON_L(BIG_RED)))
     {
     }
 /*
@@ -43,11 +44,18 @@ pushes the balanced status and the pitch to the network tables and utilizes PID 
 function to perform the autobalance command
 */
 void Shooter::Execute() {
-    	    Robot::GetRobot()->m_BigRed.OnTrue(new frc2::InstantCommand([&]{
-                Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.55);
-                DebugOutF("Idk if this really works");
-        })
-    );
+     	    Robot::GetRobot()->GetArm().m_IntakeButton.OnTrue(new frc2::InstantCommand([&]{
+                    set = 0.22;
+                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
+                    frc2::WaitCommand(1_s);
+                    DebugOutF("Wow the code works1" + std::to_string(set));
+                    set = 0.77;
+                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.77);
+                    DebugOutF("Wow the code works2" + std::to_string(set));
+
+         })
+     );
+    //set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
     //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetAngle(180);
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));

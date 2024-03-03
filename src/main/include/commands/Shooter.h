@@ -23,6 +23,7 @@ class Shooter : public frc2::CommandHelper<frc2::Command, Shooter> {
 public:
   Shooter();
   void Initialize() override;
+  void SetMethod(double num);
   void Execute() override;
   void End(bool interrupted) override;
   bool IsFinished() override;
@@ -31,5 +32,7 @@ private:
   double power1;
   double power2;
   double set;
+
+  //frc2::Trigger m_BigRed;
   
 };

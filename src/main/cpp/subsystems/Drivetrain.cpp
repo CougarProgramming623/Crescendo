@@ -21,10 +21,8 @@ DriveTrain::DriveTrain()
       m_BackRightLocation(units::meter_t (-DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (DRIVETRAIN_WHEELBASE_METERS / 2.0)),
       m_Kinematics(m_FrontLeftLocation, m_FrontRightLocation, m_BackLeftLocation, m_BackRightLocation),
       m_Rotation(0_rad),
-      //m_ShooterMotor1(SHOOTER_MOTOR_1),
-			//m_ShooterMotor2(SHOOTER_MOTOR_2),
+      m_BigRed(BUTTON_L(BIG_RED)),
       //m_DustpanAngle(DUSTPAN_ANGLE),
-      //m_PivotShooter(SHOOTER_PIVOT),
       //m_ModulePositions( wpi::array<frc::SwerveModulePosition, 4>
       //  (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())),
        m_Odometry(m_Kinematics, m_Rotation, ( wpi::array<frc::SwerveModulePosition, 4>
@@ -158,7 +156,7 @@ void DriveTrain::Periodic(){
        {
           m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetPoseBlue().Translation(), m_Rotation), m_Timer.GetFPGATimestamp()
           - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
-          DebugOutF("Vision Update");
+         // DebugOutF("Vision Update");
           m_VisionCounter = 0;
         } 
    } else { m_VisionCounter++; }

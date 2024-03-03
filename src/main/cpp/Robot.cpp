@@ -74,7 +74,7 @@ void Robot::AutoButtons(){
   m_BL = frc2::Trigger(BUTTON_L_TWO(GRID_BL));
   m_BC = frc2::Trigger(BUTTON_L_TWO(GRID_BC));
   m_BR = frc2::Trigger(BUTTON_L_TWO(GRID_BR));
-  m_BigRed = frc2::Trigger(BUTTON_L(BIG_RED));
+  //m_BigRed = frc2::Trigger(BUTTON_L(BIG_RED));
 
   m_SingleSub   = frc2::Trigger(BUTTON_L(5));
   m_DoubleSub = frc2::Trigger(BUTTON_L_TWO(13));
@@ -134,7 +134,7 @@ void Robot::AutoButtons(){
           m_ArmCommand->Cancel();
         }
         Robot::GetRobot()->GetArm().m_PivotPos = Robot::GetRobot()->GetArm().m_PivotMatrix[SelectedRow][SelectedColumn];
-        Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[SelectedRow][SelectedColumn];
+        //Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[SelectedRow][SelectedColumn];
         m_ArmCommand = new frc2::ParallelCommandGroup(WristToPos(),
                                                       PivotToPos(),
                                                       frc2::PrintCommand("Execute")
@@ -149,7 +149,7 @@ void Robot::AutoButtons(){
     new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = 94.0;
-        Robot::GetRobot()->GetArm().m_WristPos = 10.0;
+        //Robot::GetRobot()->GetArm().m_WristPos = 10.0;
         Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
       }),
       WristToPos(),
@@ -162,7 +162,7 @@ void Robot::AutoButtons(){
     new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = Robot::GetRobot()->GetArm().m_PivotMatrix[0][2];
-        Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[0][2];
+        //Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[0][2];
         Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL / 1.5, WRIST_DFLT_ACC / 2.0); //make the divodor a bit smaller 2 is really slow
       }),
       WristToPos(),
@@ -175,7 +175,7 @@ void Robot::AutoButtons(){
     new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = Robot::GetRobot()->GetArm().m_PivotMatrix[0][0];
-        Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[0][0];   
+        //Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[0][0];   
         Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL / 1, PIVOT_DFLT_ACC / PIVOT_ACC_DIVISOR, WRIST_DFLT_VEL, WRIST_DFLT_ACC); 
       }),
       WristToPos(),
@@ -188,7 +188,7 @@ void Robot::AutoButtons(){
       new frc2::ParallelCommandGroup(
       frc2::InstantCommand([&]{
         Robot::GetRobot()->GetArm().m_PivotPos = 72.0;
-        Robot::GetRobot()->GetArm().m_WristPos = 54.0; 
+        //Robot::GetRobot()->GetArm().m_WristPos = 54.0; 
         Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
       }),
       WristToPos(),
@@ -279,22 +279,22 @@ void Robot::AutoButtons(){
 	// 	Robot::GetRobot()->GetDriveTrain().m_TransformedPose = TransformPose(SelectedPose);
   // }));
 
-  m_BigRed.OnTrue(
-    new frc2::ParallelCommandGroup(
-      frc2::InstantCommand([&]{
-        Robot::GetRobot()->GetArm().m_PivotPos = 92.0;
-        Robot::GetRobot()->GetArm().m_WristPos = 127.0;
-        Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
-        frc2::PrintCommand("Big Red");
-      }),
-      frc2::SequentialCommandGroup(
-        frc2::WaitCommand(0.25_s),
-        PivotToPos()
-      ),      
-      WristToPos(),
-      frc2::PrintCommand("Command")
-    )
-	);
+  // m_BigRed.OnTrue(
+  //   new frc2::ParallelCommandGroup(
+  //     frc2::InstantCommand([&]{
+  //       Robot::GetRobot()->GetArm().m_PivotPos = 92.0;
+  //       Robot::GetRobot()->GetArm().m_WristPos = 127.0;
+  //       Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
+  //       frc2::PrintCommand("Big Red");
+  //     }),
+  //     frc2::SequentialCommandGroup(
+  //       frc2::WaitCommand(0.25_s),
+  //       PivotToPos()
+  //     ),      
+  //     WristToPos(),
+  //     frc2::PrintCommand("Command")
+  //   )
+	// );
 
   // m_LeftGrid.OnTrue(new frc2::InstantCommand([&]{
   //   DebugOutF("m_LeftGrid");

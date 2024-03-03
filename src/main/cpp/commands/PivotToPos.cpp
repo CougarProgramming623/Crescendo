@@ -5,7 +5,7 @@
 #define ARM Robot::GetRobot()->GetArm()
 
 PivotToPos::PivotToPos() {
-	// targetDegrees = degPos;
+	 //targetDegrees = degPos;
 	// AddRequirements(&Robot::GetRobot()->GetArm());
 
 }
