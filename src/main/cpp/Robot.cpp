@@ -33,6 +33,7 @@ m_NavX(frc::SerialPort::Port(2), AHRS::SerialDataType(0), uint8_t(66)),
 m_Intake(),
 m_LED()
 {
+  DebugOutF("inside robot constructor");
   s_Instance = this;
 }
 
@@ -45,6 +46,12 @@ void Robot::RobotInit() {
   m_Vision.VisionInit(); //Make one
   m_LED.Init();
   m_Arm.Init();
+
+  DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));  
+  DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
+  DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
+  DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
+  DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
   
   AutoButtons();
   m_LED.Init();
@@ -376,8 +383,12 @@ void Robot::RobotPeriodic() {
 
 
   if(Robot::GetButtonBoard().GetRawButton(2)){
-    DebugOutF("StringDeg: " + std::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue())-29000.0 - GetArm().WristDegreesToTicks(45))));
-    //DebugOutF("PivotDeg: " + std::to_string(GetArm().PivotTicksToDegrees(GetArm().GetPivotMotor().GetPosition().GetValueAsDouble())));
+    // DebugOutF("BR: " + std::to_string(GetDriveTrain().m_BackLeftModule.m_SteerController.motor.GetPosition().GetValueAsDouble()));
+
+    DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
+    DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
+    DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
+    DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
   }
 
   if(Robot::GetButtonBoard().GetRawButton(4)){
@@ -434,7 +445,10 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() {  
+void Robot::AutonomousInit() {
+  
+
+
   m_AutoFlag = true;
   DebugOutF("Auto init");
 

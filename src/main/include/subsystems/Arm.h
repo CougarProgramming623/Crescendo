@@ -65,12 +65,12 @@ class Arm : public frc2::SubsystemBase {
 
 	
 	//getters
-	//inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
-	//inline hardware::TalonFX& GetWristMotor() {return m_Wrist;} 
+	// inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
+	// inline hardware::TalonFX& GetWristMotor() {return m_Wrist;} 
 	// inline TalonSRX& GetTopIntakeMotor() {return m_TopIntake;}
-	//inline motorcontrol::can::TalonSRX& GetBottomIntakeMotor() {return m_BottomIntake;}
+	// inline hardware::TalonFX& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline rev::CANSparkMax& GetBottomIntakeMotor() {return m_BottomIntake;}
-	//inline hardware::CANcoder& GetPivotCANCoder() {return m_PivotCANCoder;}
+	// inline hardware::CANcoder& GetPivotCANCoder() {return m_PivotCANCoder;}
 	inline frc2::Trigger& GetCubeModeButton() {return m_CubeMode; }
 	inline frc2::Trigger& GetConeModeButton() {return m_ConeMode; }
 	inline frc2::Trigger& GetIntakeButton() {return m_IntakeButton; }

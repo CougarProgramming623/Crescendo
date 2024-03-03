@@ -39,24 +39,25 @@ void DynamicIntake::Execute() {
 
 	double power = -.7; //default power for cone
 	//current limiter configuration obj
-	
-	//was using Robot::GetRobot()->m_VoltageOutRequest to access the voltage request, 
-	//below lines were changed to work similar to arm.cpp intake buttons
+	configs::CurrentLimitsConfigs bottomIntakeCurrentConfigs{};
+	// ARM.GetBottomIntakeMotor().GetConfigurator().Apply(bottomIntakeCurrentConfigs);
 
-	//if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)){
-		//ARM.GetBottomIntakeMotor().EnableCurrentLimit(true);
-		//ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power);
+	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)){
+		bottomIntakeCurrentConfigs.SupplyCurrentLimitEnable = true;
+		// ARM.GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(power));
 		//ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, power);
-	//} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)){
-		//ARM.GetBottomIntakeMotor().EnableCurrentLimit(false);
-		//ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -power);
-	//} else 
-		//ARM.GetBottomIntakeMotor().EnableCurrentLimit(true);
+	} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)){
+		bottomIntakeCurrentConfigs.SupplyCurrentLimitEnable = false;
+		//not sure what happens when you negate the voltage, im assuming another method must be called to inverse the output of the recieved voltage
+		// ARM.GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(-power));
+		//ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, -power);
+	} else 
+		bottomIntakeCurrentConfigs.SupplyCurrentLimitEnable = true;
 
 }
 
 void DynamicIntake::End(bool interrupted){
-	//ARM.GetBottomIntakeMotor().Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+	// ARM.GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
 	// ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
 }
 

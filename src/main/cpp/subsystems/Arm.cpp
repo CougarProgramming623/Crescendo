@@ -19,10 +19,10 @@ using namespace ctre::phoenix6;
 
 
 
-Arm::Arm() :// m_Pivot(PIVOT_MOTOR),
-			 //m_Wrist(WRIST_MOTOR),
+Arm::Arm() : //m_Pivot(PIVOT_MOTOR),
+			//  m_Wrist(WRIST_MOTOR),
 			//  m_TopIntake(TOP_INTAKE_MOTOR),
-			 //m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
+			//  m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
 
 			 //BUTTONBOARD 1
 			 m_Override(BUTTON_L(ARM_OVERRIDE)),
@@ -50,8 +50,8 @@ void Arm::Init()
 {
 	SetButtons();
 
-	//m_Pivot.SetNeutralMode(signals::NeutralModeValue::Brake);
-	//m_Wrist.SetNeutralMode(signals::NeutralModeValue::Brake);
+	// m_Pivot.SetNeutralMode(signals::NeutralModeValue::Brake);
+	// m_Wrist.SetNeutralMode(signals::NeutralModeValue::Brake);
 	// m_TopIntake.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 	// m_BottomIntake.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
@@ -62,7 +62,7 @@ void Arm::Init()
 	pivotConfigs.kD = 0.4; //0.3 original on 4/2/23
 	pivotConfigs.kV = 0.0639375;
 	//apply slot 0 PID
-	//m_Pivot.GetConfigurator().Apply(pivotConfigs, 50_ms);
+	// m_Pivot.GetConfigurator().Apply(pivotConfigs, 50_ms);
 
 	//couldn't find equivalent method in phoenix6, not sure how important
 	//m_Pivot.ConfigAllowableClosedloopError(0, 10);
@@ -92,10 +92,10 @@ void Arm::Init()
 
 	//creating configuration profile (could be more efficient?) - LOOK, before it was just one line and now its three lines 
 	configs::MagnetSensorConfigs canConfigs{};
-	//m_PivotCANCoder.GetConfigurator().Apply(canConfigs.WithAbsoluteSensorRange(signals::AbsoluteSensorRangeValue::Unsigned_0To1));
+	// m_PivotCANCoder.GetConfigurator().Apply(canConfigs.WithAbsoluteSensorRange(signals::AbsoluteSensorRangeValue::Unsigned_0To1));
 
 	//are the raw sensor units equal to the "mechanism rotations" - DEFINITELY LOOK, not completely sure about the units here
-	//m_Pivot.SetPosition(units::angle::turn_t(CANCODER_ZERO - m_PivotCANCoder.GetAbsolutePosition().GetValueAsDouble()) /* * PIVOT_TICKS_PER_DEGREE*/);
+	// m_Pivot.SetPosition(units::angle::turn_t(CANCODER_ZERO - m_PivotCANCoder.GetAbsolutePosition().GetValueAsDouble()) /* * PIVOT_TICKS_PER_DEGREE*/);
 	
 	// m_Pivot.SetSelectedSensorPosition((CANCODER_ZERO - m_PivotCANCoder.GetAbsolutePosition()) * PIVOT_TICKS_PER_DEGREE);
 	// m_Wrist.SetSelectedSensorPosition((WristStringPotUnitsToTicks(m_StringPot.GetValue())));
@@ -159,8 +159,8 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	return new frc2::FunctionalCommand([&] { // onInit
 		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 	}, [&] { // onExecute
-		//m_Pivot.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2 * 12.0)));
-		//m_Wrist.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2 * 12.0)));
+		// m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2));
+		// m_Wrist.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2));
 
 	// ---------------------------------------------------------------------------------------
 
@@ -189,17 +189,17 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	
 	//from percent output to voltage out ): - DEFINITELY LOOK, changed the if statements to just change the value of the voltage,
 	//and set the control statement outside of the if-statement just to make it a little neater
-	//m_BottomIntake.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power);
+	// m_BottomIntake.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(m_BottomIntakeVoltage));
 
 
-	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) m_BottomIntakeVoltage = 12 * power; /*m_BottomIntake.Set(ControlMode::PercentOutput, power);*/
-	else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) m_BottomIntakeVoltage = 12; /*m_BottomIntake.SetControl(m_request.WithOutput(12_V));*/
+	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) m_BottomIntakeVoltage = power; /*m_BottomIntake.Set(ControlMode::PercentOutput, power);*/
+	else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) m_BottomIntakeVoltage = 1; /*m_BottomIntake.SetControl(m_request.WithOutput(12_V));*/
 	else m_BottomIntakeVoltage = 0;
 
 	},[&](bool e) { // onEnd
-		//m_Pivot.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-		//m_Wrist.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-		//m_BottomIntake.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+		// m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+		// m_Wrist.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+		// m_BottomIntake.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
 	},
 	[&] { // isFinished
 		return !Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE);
@@ -214,6 +214,6 @@ void Arm::SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel
 	pivotMotionMagicConfigs.WithMotionMagicAcceleration(pivotAcc);
 	wristMotionMagicConfigs.WithMotionMagicCruiseVelocity(wristVel);
 	wristMotionMagicConfigs.WithMotionMagicAcceleration(wristAcc);
-	//m_Pivot.GetConfigurator().Apply(pivotMotionMagicConfigs, 0_s);
-	//m_Wrist.GetConfigurator().Apply(wristMotionMagicConfigs, 0_s);
+	// m_Pivot.GetConfigurator().Apply(pivotMotionMagicConfigs, 0_s);
+	// m_Wrist.GetConfigurator().Apply(wristMotionMagicConfigs, 0_s);
 }
