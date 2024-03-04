@@ -46,16 +46,41 @@ DriveTrain::DriveTrain()
       m_Timer(),
       m_EventMap()
 {
+  // AutoBuilder::configureHolonomic(
+  //       [this](){ return getPose(); }, // Robot pose supplier
+  //       [this](frc::Pose2d pose){ resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
+  //       [this](){ return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+  //       [this](frc::ChassisSpeeds speeds){ BaseDrive(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+  //       HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+  //           PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+  //           PIDConstants(5.0, 0.0, 20.0), // Rotation PID constants
+  //           kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
+  //           0.871_m, // Drive base radius in meters. Distance from robot center to furthest module.
+  //           ReplanningConfig() // Default path replanning config. See the API for the options here
+  //       ),
+  //       []() {
+  //           // Boolean supplier that controls when the path will be mirrored for the red alliance
+  //           // This will flip the path being followed to the red side of the field.
+  //           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+  //           auto alliance = DriverStation::GetAlliance();
+  //           if (alliance) {
+  //               return alliance.value() == DriverStation::Alliance::kRed;
+  //           }
+  //           return false;
+  //       },
+  //       this // Reference to this subsystem to set requirements
+  //   );
   AutoBuilder::configureHolonomic(
-        [this](){ return getPose(); }, // Robot pose supplier
+        [this]() { return getPose(); }, // Robot pose supplier
         [this](frc::Pose2d pose){ resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
-        [this](){ return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        [this]() { return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](frc::ChassisSpeeds speeds){ BaseDrive(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
             PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             PIDConstants(5.0, 0.0, 20.0), // Rotation PID constants
-            4.5_mps, // Max module speed, in m/s
-            0.4_m, // Drive base radius in meters. Distance from robot center to furthest module.
+            kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
+            0.871_m, // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         []() {
@@ -200,20 +225,20 @@ void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
 }
 
 Pose2d DriveTrain::getPose() {
-  return m_Odometry.GetEstimatedPosition();//::Odometry<frc::ChassisSpeeds, frc::SwerveModulePosition>::GetPose();
+  return m_Odometry.GetEstimatedPosition();
 }
 
 void DriveTrain::resetPose(Pose2d pose) {
   m_Odometry.ResetPosition(Rotation2d(units::degree_t(Robot::GetRobot()->GetNavX().GetYaw())), m_ModulePositions, pose);
 }
-//Robot::GetRobot()->GetNavX().GetYaw()
 
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
-  return /*Robot::GetRobot()->GetDriveTrain().BaseDrive(*/ChassisSpeeds::FromFieldRelativeSpeeds(
-          units::meters_per_second_t(0.1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
-          units::meters_per_second_t(-0.1 * Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
-          units::radians_per_second_t(0.1 * Robot::GetRobot()->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
-          frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - Robot::GetRobot()->GetNavX().GetAngle(), 360)))));
+  Robot* r = Robot::GetRobot();
+  return ChassisSpeeds::FromRobotRelativeSpeeds(
+      units::meters_per_second_t(0.1 * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
+      units::meters_per_second_t(-0.1 * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
+      units::radians_per_second_t(0.1 * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
+      frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)))));
 }
 
 //Sets breakmode

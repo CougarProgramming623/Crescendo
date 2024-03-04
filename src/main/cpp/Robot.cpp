@@ -352,7 +352,13 @@ void Robot::AutoButtons(){
   );
 }
 
-
+frc2::CommandPtr Robot::getAutonomousCommand() {
+  // Load the path you want to follow using its name in the GUI
+  auto path = PathPlannerPath::fromPathFile("PathTest");
+  DebugOutF("point 2 pathtest");
+  // Create a path following command using AutoBuilder. This will also trigger event markers.
+  return AutoBuilder::followPath(path);
+}
 
 frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
 	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
@@ -389,7 +395,7 @@ frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do 
  */
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
-  Robot::GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());   
+  Robot::GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());
   Robot::GetCOB().GetTable().GetEntry("/COB/matchTime").SetDouble(frc::DriverStation::GetMatchTime().value());
   Robot::GetCOB().GetTable().GetEntry("/COB/ticks").SetDouble(m_COBTicks);
   Robot::GetCOB().GetTable().GetEntry("/COB/deltaX").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.X().value()));
@@ -461,14 +467,6 @@ void Robot::DisabledInit() {
 
 void Robot::DisabledPeriodic() {}
 
-frc2::CommandPtr Robot::getAutonomousCommand() {
-  // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("PathTest");
-  DebugOutF("pathtest");
-  // Create a path following command using AutoBuilder. This will also trigger event markers.
-  return AutoBuilder::followPath(path);
-}
-
 /**
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
@@ -493,9 +491,14 @@ void Robot::AutonomousInit() {
   // // getAutonomousCommand();
   // DebugOutF("pathTest2");
 
-  //frc2::CommandScheduler::Schedule(getAutonomousCommand())	
+  //frc2::CommandScheduler::Schedule(getAutonomousCommand()
 
-  frc2::CommandScheduler::GetInstance().Schedule(getAutonomousCommand());
+  DebugOutF("point 1 pathtest");
+  frc2::InstantCommand([&] {
+    getAutonomousCommand();
+  });
+  DebugOutF("point 3 pathtest");
+
   // frc2::CommandScheduler::GetInstance().Run();
 
   //PathPlannerTrajectory traj;
