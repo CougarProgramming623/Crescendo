@@ -5,7 +5,7 @@
 #define ARM Robot::GetRobot()->GetArm()
 
 DynamicIntake::DynamicIntake() {
-	AddRequirements(&Robot::GetRobot()->m_Intake);
+	//AddRequirements(&Robot::GetRobot()->m_Intake);
 }
 
 void DynamicIntake::Initialize() {

@@ -31,7 +31,7 @@
 
 #include "./commands/PivotToPos.h"
 #include "./commands/DynamicIntake.h"
-#include "./commands/WristToPos.h"
+//#include "./commands/WristToPos.h"
 
 using namespace ctre::phoenix6;
 //using ctre::phoenix::motorcontrol::can::TalonSRX;
@@ -44,7 +44,7 @@ class Arm : public frc2::SubsystemBase {
 	Arm();
 	void Init();
 	void SetButtons();
-	frc2::Trigger m_IntakeButton;
+	frc2::Trigger m_ServoShoot;
 	frc2::Trigger m_OuttakeButton;
 	
 
@@ -72,7 +72,7 @@ class Arm : public frc2::SubsystemBase {
 	//inline hardware::CANcoder& GetPivotCANCoder() {return m_PivotCANCoder;}
 	inline frc2::Trigger& GetCubeModeButton() {return m_ShooterDown; }
 	inline frc2::Trigger& GetConeModeButton() {return m_ShooterUp; }
-	inline frc2::Trigger& GetIntakeButton() {return m_IntakeButton; }
+	inline frc2::Trigger& GetIntakeButton() {return m_ServoShoot; }
 	inline frc2::Trigger& GetOuttakeButton() {return m_OuttakeButton; }
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
 
@@ -96,7 +96,7 @@ class Arm : public frc2::SubsystemBase {
 	private:
 	
 	//motors
-	//hardware::TalonFX m_Pivot;
+	hardware::TalonFX m_Pivot;
 	//hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};
 	//hardware::TalonFX m_Wrist;
 	//hardware::TalonFX m_BottomIntake;

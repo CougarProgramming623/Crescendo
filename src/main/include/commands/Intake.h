@@ -16,14 +16,14 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/ParallelCommandGroup.h>
 
+
 using namespace ctre::phoenix6;
 
-class Shooter : public frc2::CommandHelper<frc2::Command, Shooter> {
+class Intake : public frc2::CommandHelper<frc2::Command, Intake> {
     
 public:
-  Shooter();
+  explicit Intake();
   void Initialize() override;
-  void SetMethod(double num);
   void Execute() override;
   void End(bool interrupted) override;
   bool IsFinished() override;
@@ -31,8 +31,8 @@ public:
 private:
   //double power1;
   //double power2;
-  double set;
 
   //frc2::Trigger m_BigRed;
   
 };
+

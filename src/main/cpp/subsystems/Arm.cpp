@@ -21,7 +21,7 @@ using namespace ctre::phoenix6;
 
 
 Arm::Arm() :
-			//m_Pivot(PIVOT_MOTOR),
+			m_Pivot(PIVOT_SHOOTER),
 			 //m_Wrist(WRIST_MOTOR),
 			//  m_TopIntake(TOP_INTAKE_MOTOR),
 			 //m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
@@ -30,12 +30,13 @@ Arm::Arm() :
 
 			 //BUTTONBOARD 1
 			 m_Override(BUTTON_L(ARM_OVERRIDE)),
+			 //Idk what this even does we aint even using it
 			 m_Override2(BUTTON_L(ARM_OVERRIDE_2)),
 
 			 m_ShooterUp(BUTTON_L(CONE_MODE)),  
 			 m_ShooterDown(BUTTON_L(CUBE_MODE)),
 
-			 m_IntakeButton(BUTTON_L(INTAKE_BUTTON)),
+			 m_ServoShoot(BUTTON_L(INTAKE_BUTTON)),
 			 m_OuttakeButton(BUTTON_L(OUTTAKE_BUTTON)),
 
 			 
@@ -118,8 +119,8 @@ void Arm::SetButtons()
 		//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC); ANIKETH NEEDS TO RESEARCH MOTION MAGIC
 		new frc2::ParallelCommandGroup(
 			frc2::PrintCommand("Ground Pickup"),
-			PivotToPos(), 
-      		WristToPos()
+			PivotToPos() 
+      		//WristToPos()
 	  	);
 	}));
 
@@ -129,10 +130,27 @@ void Arm::SetButtons()
 		//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 		new frc2::ParallelCommandGroup(
 			frc2::PrintCommand(""),
-			PivotToPos(), 
-      		WristToPos()
+			PivotToPos() 
+      		//WristToPos()
 	  	);
 	}));
+
+	// Robot::GetRobot()->GetArm().m_IntakeButton.OnTrue(new frc2::InstantCommand([&]{
+    //                 set = 0.22;
+    //                 Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
+    //                 //frc2::WaitCommand(1_s);
+    //                 DebugOutF("Wow the code works1" + std::to_string(set));
+
+    //             })
+         
+    //         );
+    // Robot::GetRobot()->GetArm().m_OuttakeButton.OnTrue(new frc2::InstantCommand([&]{
+    //                set = 0.77;
+    //                Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.77);
+    //                DebugOutF("Wow the code works 2" + std::to_string(set));
+
+    //             })
+    //         );
 
 	// m_GroundPickupMode.WhenPressed(
 	// 	new frc2::ParallelCommandGroup(
@@ -163,10 +181,10 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	return new frc2::FunctionalCommand([&] { // onInit
 		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 	}, [&] { // onExecute
-			Robot::GetRobot()->GetShooter().Execute();
-
-		// m_Pivot.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2 * 12.0)));
-		// m_Wrist.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2 * 12.0)));
+			Robot::GetRobot()->GetIntake().Execute();
+			//m_Pivot
+			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(Robot::GetRobot()->GetButtonBoard().GetRawAxis(1)));//Might need to change these constant values
+		// m_Wrist.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2 * 12.0))); // dont need wrist
 
 	// ---------------------------------------------------------------------------------------
 

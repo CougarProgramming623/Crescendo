@@ -1,4 +1,4 @@
-#include "commands/Shooter.h"
+#include "commands/Intake.h"
 #include "Robot.h"
 
 #include <ctre/phoenix6/CANcoder.hpp>
@@ -22,18 +22,18 @@ using namespace ctre::phoenix6;
 using namespace ctre::phoenix;
 using ctre::phoenix::motorcontrol::NeutralMode;
 
-Shooter::Shooter()
+Intake::Intake()
         //m_BigRed(frc2::Trigger(BUTTON_L(BIG_RED)))
     {
     }
 /*
 initialize values
 */
-void Shooter::Initialize() {
+void Intake::Initialize() {
     //Motors are initialized in drivetrain because the drivetrain class is not called multiple times so there is no need for a default constructor
-    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetNeutralMode(NeutralMode::Brake);
+    //Robot::GetRobot()->GetDriveTrain().m_IntakeMotor1.SetNeutralMode(NeutralMode::Brake);
     //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetNeutralMode(NeutralMode::Brake);
-    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetInverted(true);
+    //Robot::GetRobot()->GetDriveTrain().m_IntakeMotor2.SetInverted(true);
     //power1 = 0.2;
     //power2 = 0.2;
     //DebugOutF("Initialized");
@@ -43,22 +43,23 @@ void Shooter::Initialize() {
 pushes the balanced status and the pitch to the network tables and utilizes PID and the drivetrain BaseDrive()
 function to perform the autobalance command
 */
-void Shooter::Execute() {
-    //  	    Robot::GetRobot()->GetArm().m_IntakeButton.OnTrue(new frc2::InstantCommand([&]{
-    //                 set = 0.22;
-    //                 Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
-    //                 frc2::WaitCommand(1_s);
-    //                 DebugOutF("Wow the code works1" + std::to_string(set));
-    //                 set = 0.77;
-    //                 Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.77);
-    //                 DebugOutF("Wow the code works2" + std::to_string(set));
+void Intake::Execute() {
+     	    Robot::GetRobot()->GetArm().m_ServoShoot.OnTrue(new frc2::InstantCommand([&]{
+                    Robot::GetRobot()->m_Set = 0.22;
+                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(Robot::GetRobot()->m_Set);
+                    frc2::WaitCommand(1_s);
+                    DebugOutF("Wow the code works1" + std::to_string(Robot::GetRobot()->m_Set));
+                    Robot::GetRobot()->m_Set = 0.77;
+                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.77);
+                   DebugOutF("Wow the code works 2" + std::to_string(Robot::GetRobot()->m_Set));
+                })
+         
+            );
 
-    //      })
-    //  );
     //set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
     //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetAngle(180);
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));
+    // Robot::GetRobot()->GetDriveTrain().m_IntakeMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
+    // Robot::GetRobot()->GetDriveTrain().m_IntakeMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));
 
     ///Robot::GetRobot()->m_MR.OnTrue(
         //new frc2::InstantCommand([&]{
@@ -184,11 +185,11 @@ void Shooter::Execute() {
     // Robot::GetRobot()->dErrorY = errorY;
 }
 
-void Shooter::End(bool interrupted){
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+void Intake::End(bool interrupted){
+    // Robot::GetRobot()->GetDriveTrain().m_IntakeMotor1.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
+    // Robot::GetRobot()->GetDriveTrain().m_IntakeMotor2.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
 }
 
-bool Shooter::IsFinished(){
+bool Intake::IsFinished(){
     return false; //Robot::GetRobot()->GetJoyStick().GetRawAxis(1) > 0.3 || Robot::GetRobot()->GetJoyStick().GetRawAxis(0) > 0.3 || Robot::GetRobot()->GetJoyStick().GetRawAxis(2) > 0.3;
 }

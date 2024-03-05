@@ -27,7 +27,7 @@
 #include "subsystems/MotionMagicTest.h"
 #include "LED.h"
 #include <frc/geometry/Pose2d.h>
-#include "./subsystems/Intake.h"
+#include "commands/Intake.h"
 
 
 class Robot : public frc::TimedRobot {
@@ -64,6 +64,7 @@ class Robot : public frc::TimedRobot {
   inline COB& GetCOB() { return m_COB; }
   inline Vision& GetVision() { return m_Vision; }
   inline Shooter& GetShooter() { return m_Shooter; }
+  inline Intake& GetIntake() { return m_Intake;}
 
   //motor control requests - LOOK, VERY IMPORTANT
   controls::VoltageOut m_VoltageOutRequest{0_V};
@@ -111,12 +112,13 @@ class Robot : public frc::TimedRobot {
 
   frc2::Trigger m_Print;
   int m_COBTicks;
+  double m_Set;
 
 
   int SelectedRow;
 	int SelectedColumn;
 
-  Intake m_Intake;
+  //Intake m_Intake;
 
   bool m_AutoFlag;
   int m_ColOffset;
@@ -145,6 +147,7 @@ class Robot : public frc::TimedRobot {
   frc::Timer m_AutoTimer;
   DriveTrain m_DriveTrain;//Drivetrain "Master" object to access all instances(objects) of the drivetrain class
   Shooter m_Shooter;//Shooter "Master" object to access all instances(objects) of the shooter class
+  Intake m_Intake;//Intake "Master" object to access all instances(objects) of the intake class
 
   Vision m_Vision;
 

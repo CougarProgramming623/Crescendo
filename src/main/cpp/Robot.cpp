@@ -17,7 +17,7 @@
 #include <frc2/command/ParallelDeadlineGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/CommandPtr.h>
-#include "commands/WristToPosAuto.h"
+//#include "commands/WristToPosAuto.h"
 #include "commands/PivotToPosAuto.h"
 #include <frc/DriverStation.h>
 
@@ -29,7 +29,7 @@ Robot* Robot::s_Instance = nullptr;
 
 Robot::Robot() :
 m_NavX(frc::SerialPort::Port(2), AHRS::SerialDataType(0), uint8_t(66)),
-m_Intake(),
+//m_Intake(),
 m_LED()
 {
   s_Instance = this;
@@ -135,7 +135,7 @@ void Robot::AutoButtons(){
         }
         Robot::GetRobot()->GetArm().m_PivotPos = Robot::GetRobot()->GetArm().m_PivotMatrix[SelectedRow][SelectedColumn];
         //Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[SelectedRow][SelectedColumn];
-        m_ArmCommand = new frc2::ParallelCommandGroup(WristToPos(),
+        m_ArmCommand = new frc2::ParallelCommandGroup(//WristToPos(),
                                                       PivotToPos(),
                                                       frc2::PrintCommand("Execute")
         );
@@ -152,7 +152,7 @@ void Robot::AutoButtons(){
         //Robot::GetRobot()->GetArm().m_WristPos = 10.0;
         Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
       }),
-      WristToPos(),
+      //WristToPos(),
       PivotToPos(),
       frc2::PrintCommand("Command")
     )
@@ -165,7 +165,7 @@ void Robot::AutoButtons(){
         //Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[0][2];
         Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL / 1.5, WRIST_DFLT_ACC / 2.0); //make the divodor a bit smaller 2 is really slow
       }),
-      WristToPos(),
+      //WristToPos(),
       PivotToPos(),
       frc2::PrintCommand("Command")
     )
@@ -178,7 +178,7 @@ void Robot::AutoButtons(){
         //Robot::GetRobot()->GetArm().m_WristPos = Robot::GetRobot()->GetArm().m_WristMatrix[0][0];   
         Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL / 1, PIVOT_DFLT_ACC / PIVOT_ACC_DIVISOR, WRIST_DFLT_VEL, WRIST_DFLT_ACC); 
       }),
-      WristToPos(),
+      //WristToPos(),
       PivotToPos(),
       frc2::PrintCommand("Command")
     )
@@ -191,7 +191,7 @@ void Robot::AutoButtons(){
         //Robot::GetRobot()->GetArm().m_WristPos = 54.0; 
         Robot::GetRobot()->GetArm().SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
       }),
-      WristToPos(),
+      //WristToPos(),
       PivotToPos(),
       frc2::PrintCommand("Command")
     ));
@@ -383,7 +383,7 @@ void Robot::RobotPeriodic() {
 
 
   if(Robot::GetButtonBoard().GetRawButton(2)){
-    //DebugOutF("StringDeg: " + std::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue())-29000.0 - GetArm().WristDegreesToTicks(45))));
+    //DebugOutF("StringDeg: " + st32d::to_string(GetArm().WristTicksToDegrees(GetArm().WristStringPotUnitsToTicks(GetArm().GetStringPot().GetValue())-29000.0 - GetArm().WristDegreesToTicks(45))));
     //DebugOutF("PivotDeg: " + std::to_string(GetArm().PivotTicksToDegrees(GetArm().GetPivotMotor().GetPosition().GetValueAsDouble())));
   }
 

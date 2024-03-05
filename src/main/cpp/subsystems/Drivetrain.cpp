@@ -62,16 +62,16 @@ void DriveTrain::DriveInit(){
       Robot::GetRobot()->zeroGyroscope();
   }));
 
-  m_JoystickOuttake.WhileTrue(
-    new frc2::InstantCommand([&]{
-      if(Robot::GetRobot()->m_Intake.GetCurrentCommand() != nullptr){
-        Robot::GetRobot()->m_Intake.GetCurrentCommand()->Cancel();
-      }
-      DebugOutF("Joystick Outtake");
-  //     Robot::GetRobot()->GetArm().GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(0.8 * 12)));
-  //     //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, .8);
-       }
-     ));
+  // m_JoystickOuttake.WhileTrue(
+  //   new frc2::InstantCommand([&]{
+  //     if(Robot::GetRobot()->m_Intake.GetCurrentCommand() != nullptr){
+  //       Robot::GetRobot()->m_Intake.GetCurrentCommand()->Cancel();
+  //     }
+  //     DebugOutF("Joystick Outtake");
+  // //     Robot::GetRobot()->GetArm().GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(0.8 * 12)));
+  // //     //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, .8);
+  //      }
+  //    ));
 
   m_JoystickOuttake.OnFalse(
     new frc2::InstantCommand([&]{
