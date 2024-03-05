@@ -31,21 +31,21 @@ initialize values
 */
 void Shooter::Initialize() {
     //Motors are initialized in drivetrain because the drivetrain class is not called multiple times so there is no need for a default constructor
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetNeutralMode(NeutralMode::Brake);
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetNeutralMode(NeutralMode::Brake);
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetInverted(true);
-    //power1 = 0.2;
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetNeutralMode(NeutralMode::Brake);
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetNeutralMode(NeutralMode::Brake);
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetInverted(true);
+    power1 = 0.2;
     //power2 = 0.2;
-    //DebugOutF("Initialized");
+    DebugOutF("Initialized");
 }
 /*
 pushes the balanced status and the pitch to the network tables and utilizes PID and the drivetrain BaseDrive()
 function to perform the autobalance command
 */
 void Shooter::Execute() {
-    // power1 = Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL);
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
+    power1 = Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL);
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
+    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
 
     ///Robot::GetRobot()->m_MR.OnTrue(
         //new frc2::InstantCommand([&]{

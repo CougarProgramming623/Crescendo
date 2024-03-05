@@ -191,7 +191,7 @@ frc2::FunctionalCommand* Arm::ManualControls()
 		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 	}, [&] { // onExecute
 			Robot::GetRobot()->GetIntake().Execute();
-			//Robot::GetRobot()->GetShooter().Execute();
+			Robot::GetRobot()->GetShooter().Execute();
 
 		// m_Pivot.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2 * 12.0)));
 		// m_Wrist.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2 * 12.0)));

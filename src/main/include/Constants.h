@@ -184,7 +184,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define CONE_MODE 15 //left
 #define CUBE_MODE 16 //right
 #define SHOOTER_MOTOR_1 33
-#define SHOOTER_MOTOR_2 52
+#define SHOOTER_MOTOR_2 30
 #define SERVO_RUN 15
 #define DUSTPAN_ANGLE -1
 #define SHOOTER_PIVOT -1

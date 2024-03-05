@@ -47,13 +47,13 @@ function to perform the autobalance command
 */
 void Intake::Execute() {
      	    Robot::GetRobot()->GetArm().m_ServoShoot.OnTrue(new frc2::InstantCommand([&]{
-                    Robot::GetRobot()->m_Set = 0;
-                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(Robot::GetRobot()->m_Set);
+                    set = 0;
+                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
                     frc2::WaitCommand(1_s);
-                    DebugOutF("Wow the code works1" + std::to_string(Robot::GetRobot()->m_Set));
-                    Robot::GetRobot()->m_Set = 1;
-                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(Robot::GetRobot()->m_Set);
-                   DebugOutF("Wow the code works 2" + std::to_string(Robot::GetRobot()->m_Set));
+                    DebugOutF("Wow the code works1" + std::to_string(set));
+                    set = 1;
+                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
+                   DebugOutF("Wow the code works 2" + std::to_string(set));
                 })
          
             );

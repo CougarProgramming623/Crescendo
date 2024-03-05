@@ -112,7 +112,7 @@ class Robot : public frc::TimedRobot {
 
   frc2::Trigger m_Print;
   int m_COBTicks;
-  double m_Set;
+  //double m_Set;
 
 
   int SelectedRow;
