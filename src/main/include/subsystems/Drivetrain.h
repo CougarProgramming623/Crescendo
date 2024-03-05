@@ -90,6 +90,8 @@ class DriveTrain : public frc2::SubsystemBase {
   Pose2d getPose();
   void resetPose(Pose2d pose);
   ChassisSpeeds getRobotRelativeSpeeds();
+  void DriveRobotRelative(ChassisSpeeds robotRelativeSpeeds);
+  void SetStates(wpi::array<frc::SwerveModuleState, 4> states);
 
   // pathplanner::FollowPathWithEvents* TruePath();
   // pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);

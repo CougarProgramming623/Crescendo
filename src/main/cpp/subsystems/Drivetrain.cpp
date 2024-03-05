@@ -72,10 +72,10 @@ DriveTrain::DriveTrain()
   //       this // Reference to this subsystem to set requirements
   //   );
   AutoBuilder::configureHolonomic(
-        [this]() { return getPose(); }, // Robot pose supplier
-        [this](frc::Pose2d pose){ resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
-        [this]() { return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        [this](frc::ChassisSpeeds speeds){ BaseDrive(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        [this]() { return this->getPose(); }, // Robot pose supplier
+        [this](frc::Pose2d pose){ this->resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
+        [this]() { return this->getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        [this](frc::ChassisSpeeds robotRelativeSpeeds){ this->DriveRobotRelative(robotRelativeSpeeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
             PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             PIDConstants(5.0, 0.0, 20.0), // Rotation PID constants
@@ -225,6 +225,9 @@ void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
 }
 
 Pose2d DriveTrain::getPose() {
+  DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   return m_Odometry.GetEstimatedPosition();
 }
 
@@ -235,10 +238,26 @@ void DriveTrain::resetPose(Pose2d pose) {
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
   Robot* r = Robot::GetRobot();
   return ChassisSpeeds::FromRobotRelativeSpeeds(
-      units::meters_per_second_t(0.1 * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
-      units::meters_per_second_t(-0.1 * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
-      units::radians_per_second_t(0.1 * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
+      units::meters_per_second_t(r->GetNavX().GetVelocityX() * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
+      units::meters_per_second_t(-r->GetNavX().GetVelocityY() * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
+      units::radians_per_second_t(r->GetNavX().GetVelocityZ() * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
       frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)))));
+}
+
+void DriveTrain::DriveRobotRelative(frc::ChassisSpeeds robotRelativeSpeeds) {
+  frc::ChassisSpeeds speeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 0.02_s);
+
+  auto swerveModuleStates = m_Kinematics.ToSwerveModuleStates(speeds);
+  SetStates(swerveModuleStates);
+}
+
+void DriveTrain::SetStates(wpi::array<frc::SwerveModuleState, 4> states) {
+  frc::SwerveDriveKinematics<4>::DesaturateWheelSpeeds(&states, Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND);
+
+  m_FrontLeftModule.Set(states[0].speed.value(), states[0].angle.Radians().value());
+  m_FrontRightModule.Set(states[1].speed.value(), states[1].angle.Radians().value());
+  m_BackLeftModule.Set(states[2].speed.value(), states[2].angle.Radians().value());
+  m_BackRightModule.Set(states[3].speed.value(), states[3].angle.Radians().value());
 }
 
 //Sets breakmode

@@ -355,7 +355,9 @@ void Robot::AutoButtons(){
 frc2::CommandPtr Robot::getAutonomousCommand() {
   // Load the path you want to follow using its name in the GUI
   auto path = PathPlannerPath::fromPathFile("PathTest");
-  DebugOutF("point 2 pathtest");
+  DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   // Create a path following command using AutoBuilder. This will also trigger event markers.
   return AutoBuilder::followPath(path);
 }
@@ -491,12 +493,12 @@ void Robot::AutonomousInit() {
   // // getAutonomousCommand();
   // DebugOutF("pathTest2");
 
-  //frc2::CommandScheduler::Schedule(getAutonomousCommand()
+  m_autonomousCommand = getAutonomousCommand();
 
   DebugOutF("point 1 pathtest");
-  frc2::InstantCommand([&] {
-    getAutonomousCommand();
-  });
+  if(m_autonomousCommand) {
+    m_autonomousCommand->Schedule();
+  }
   DebugOutF("point 3 pathtest");
 
   // frc2::CommandScheduler::GetInstance().Run();
