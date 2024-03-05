@@ -92,11 +92,11 @@ class Arm : public frc2::SubsystemBase {
 
 	//double m_WristPos;
 	double m_PivotPos;
-	//double set;
+
 	private:
 	
 	//motors
-	hardware::TalonFX m_Pivot;
+	//hardware::TalonFX m_Pivot;
 	//hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};
 	//hardware::TalonFX m_Wrist;
 	//hardware::TalonFX m_BottomIntake;

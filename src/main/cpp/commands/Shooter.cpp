@@ -32,7 +32,7 @@ initialize values
 void Shooter::Initialize() {
     //Motors are initialized in drivetrain because the drivetrain class is not called multiple times so there is no need for a default constructor
     //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetNeutralMode(NeutralMode::Brake);
-    //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetNeutralMode(NeutralMode::Brake);
+    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetNeutralMode(NeutralMode::Brake);
     //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetInverted(true);
     //power1 = 0.2;
     //power2 = 0.2;
@@ -57,6 +57,9 @@ void Shooter::Execute() {
     //  );
     //set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
     //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetAngle(180);
+    //set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
+    //DebugOutF("Lets see if it actually works");
+    //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));
 
