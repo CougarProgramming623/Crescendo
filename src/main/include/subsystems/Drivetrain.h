@@ -123,6 +123,11 @@ class DriveTrain : public frc2::SubsystemBase {
   SwerveModule m_BackLeftModule;
   SwerveModule m_BackRightModule;
 
+  SwerveModulePosition m_FrontLeftOriginalPosition;
+  SwerveModulePosition m_FrontRightOriginalPosition;
+  SwerveModulePosition m_BackLeftOriginalPosition;
+  SwerveModulePosition m_BackRightOriginalPosition;
+
   //theoretical maximum angular velocity - can be replaced with measure amount
   const units::radians_per_second_t kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = units::radians_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI / std::sqrt(Pow((DRIVETRAIN_TRACKWIDTH_METERS / 2), 2) + Pow((DRIVETRAIN_WHEELBASE_METERS / 2), 2)));
 

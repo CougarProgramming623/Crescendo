@@ -124,6 +124,7 @@ class Robot : public frc::TimedRobot {
   int m_ColOffset;
 
  private:
+  frc::Pose2d startingPose;
 
   frc2::ParallelCommandGroup* m_ArmCommand;
 

@@ -61,6 +61,9 @@ void Robot::RobotInit() {
   GetNavX().SetAngleAdjustment(0);
   s_Instance = this;
   m_DriveTrain.DriveInit();
+  DebugOutF("x: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  DebugOutF("y: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  DebugOutF("theta: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   m_Vision.VisionInit(); //Make one
   m_LED.Init();
   m_Arm.Init();
@@ -354,11 +357,12 @@ void Robot::AutoButtons(){
 
 frc2::CommandPtr Robot::getAutonomousCommand() {
   // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("PathTest");
+  auto path = PathPlannerPath::fromPathFile("Rotation");
   DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   // Create a path following command using AutoBuilder. This will also trigger event markers.
+  startingPose = path.get()->getPathPoses().at(0);
   return AutoBuilder::followPath(path);
 }
 
@@ -495,6 +499,17 @@ void Robot::AutonomousInit() {
 
   m_autonomousCommand = getAutonomousCommand();
 
+  GetDriveTrain().GetOdometry()->ResetPosition(
+    units::radian_t(Deg2Rad(GetAngle())), 
+    wpi::array<frc::SwerveModulePosition, 4>(
+      GetDriveTrain().m_FrontLeftModule.GetPosition(), 
+      GetDriveTrain().m_FrontRightModule.GetPosition(), 
+      GetDriveTrain().m_BackLeftModule.GetPosition(), 
+      GetDriveTrain().m_BackRightModule.GetPosition()),
+    startingPose
+    );
+
+
   DebugOutF("point 1 pathtest");
   if(m_autonomousCommand) {
     m_autonomousCommand->Schedule();
@@ -520,11 +535,6 @@ void Robot::AutonomousInit() {
   // //PathPlannerTrajectory::transformTrajectoryForAlliance(traj, frc::DriverStation::GetAlliance());
 
   // frc::Pose2d startingPose = frc::Pose2d(traj.getInitialState().pose.Translation(), frc::Rotation2d(units::degree_t(0)));
-
-  // GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
-  //   wpi::array<frc::SwerveModulePosition, 4>
-  //        (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
-  //   startingPose);
   
   
   // DebugOutF("InitialRotation: " + std::to_string(traj.getInitialHolonomicPose().Rotation().Degrees().value()));
