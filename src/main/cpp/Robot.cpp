@@ -334,52 +334,53 @@ void Robot::AutoButtons(){
 }
 
 frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
-	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
-		SelectedPose = SelectedPose +
-			frc::Transform2d(
-				frc::Translation2d(units::meter_t(0), units::meter_t(1.68)),
-				frc::Rotation2d(units::radian_t(0))
-		).Inverse(); //delete inverse if not going 180
-	} else if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 2){
-		SelectedPose = SelectedPose + 
-			frc::Transform2d(
-				frc::Translation2d(units::meter_t(0), units::meter_t(2 * 1.68)),
-				frc::Rotation2d(units::radian_t(0))
-		).Inverse(); //delete inverse if not going 180	
-	}
-	if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
-		SelectedPose = 
-			frc::Pose2d(
-				units::meter_t(16.541)-SelectedPose.Translation().X(), 
-				SelectedPose.Translation().Y(),
-				SelectedPose.Rotation().RotateBy(Rotation2d(units::degree_t(180)))
-			);
-	}
-	return SelectedPose;
+// 	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
+// 		SelectedPose = SelectedPose +
+// 			frc::Transform2d(
+// 				frc::Translation2d(units::meter_t(0), units::meter_t(1.68)),
+// 				frc::Rotation2d(units::radian_t(0))
+// 		).Inverse(); //delete inverse if not going 180
+// 	} else if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 2){
+// 		SelectedPose = SelectedPose + 
+// 			frc::Transform2d(
+// 				frc::Translation2d(units::meter_t(0), units::meter_t(2 * 1.68)),
+// 				frc::Rotation2d(units::radian_t(0))
+// 		).Inverse(); //delete inverse if not going 180	
+// 	}
+// 	if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
+// 		SelectedPose = 
+// 			frc::Pose2d(
+// 				units::meter_t(16.541)-SelectedPose.Translation().X(), 
+// 				SelectedPose.Translation().Y(),
+// 				SelectedPose.Rotation().RotateBy(Rotation2d(units::degree_t(180)))
+// 			);
+// 	}
+// 	return SelectedPose;
+// }
+
+// /**
+//  * This function is called every 20 ms, no matter the mode. Use
+//  * this for items like diagnostics that you want to run during disabled,
+//  * autonomous, teleoperated and test.
+//  *
+//  * <p> This runs after the mode specific periodic functions, but before
+//  * LiveWindow and SmartDashboard integrated updating.
+//  */
 }
-
-/**
- * This function is called every 20 ms, no matter the mode. Use
- * this for items like diagnostics that you want to run during disabled,
- * autonomous, teleoperated and test.
- *
- * <p> This runs after the mode specific periodic functions, but before
- * LiveWindow and SmartDashboard integrated updating.
- */
 void Robot::RobotPeriodic() {
-  frc2::CommandScheduler::GetInstance().Run();
-  Robot::GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());   
-  Robot::GetCOB().GetTable().GetEntry("/COB/matchTime").SetDouble(frc::DriverStation::GetMatchTime().value());
-  Robot::GetCOB().GetTable().GetEntry("/COB/ticks").SetDouble(m_COBTicks);
-  Robot::GetCOB().GetTable().GetEntry("/COB/deltaX").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.X().value()));
-  Robot::GetCOB().GetTable().GetEntry("/COB/deltaY").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.Y().value()));
-  Robot::GetCOB().GetTable().GetEntry("/COB/deltaT").SetDouble(std::abs(-fmod(360 - GetDriveTrain().m_VisionRelative.Rotation().Degrees().value(), 360)));
-  m_Vision.PushID();
+//   frc2::CommandScheduler::GetInstance().Run();
+//   Robot::GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());   
+//   Robot::GetCOB().GetTable().GetEntry("/COB/matchTime").SetDouble(frc::DriverStation::GetMatchTime().value());
+//   Robot::GetCOB().GetTable().GetEntry("/COB/ticks").SetDouble(m_COBTicks);
+//   Robot::GetCOB().GetTable().GetEntry("/COB/deltaX").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.X().value()));
+//   Robot::GetCOB().GetTable().GetEntry("/COB/deltaY").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.Y().value()));
+//   Robot::GetCOB().GetTable().GetEntry("/COB/deltaT").SetDouble(std::abs(-fmod(360 - GetDriveTrain().m_VisionRelative.Rotation().Degrees().value(), 360)));
+//   m_Vision.PushID();
 
-  m_COBTicks++;
-  Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(Robot::GetRobot()->GetNavX().GetPitch() + 0.05);
-  m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
-  // DebugOutF("Row: " + std::to_string(SelectedRow) + " , Col: " + std::to_string(SelectedColumn));
+//   m_COBTicks++;
+//   Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(Robot::GetRobot()->GetNavX().GetPitch() + 0.05);
+//   m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
+//   // DebugOutF("Row: " + std::to_string(SelectedRow) + " , Col: " + std::to_string(SelectedColumn));
 
 
   if(Robot::GetButtonBoard().GetRawButton(2)){

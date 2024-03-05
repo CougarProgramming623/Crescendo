@@ -52,7 +52,7 @@ void Intake::Execute() {
                     frc2::WaitCommand(1_s);
                     DebugOutF("Wow the code works1" + std::to_string(Robot::GetRobot()->m_Set));
                     Robot::GetRobot()->m_Set = 1;
-                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.77);
+                    Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(Robot::GetRobot()->m_Set);
                    DebugOutF("Wow the code works 2" + std::to_string(Robot::GetRobot()->m_Set));
                 })
          

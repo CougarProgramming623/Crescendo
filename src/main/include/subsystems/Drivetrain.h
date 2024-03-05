@@ -62,92 +62,92 @@ class DriveTrain : public frc2::SubsystemBase {
   void BreakMode(bool on);
   void Periodic() override;
 
-  frc::Translation2d m_FrontLeftLocation;
-  frc::Translation2d m_FrontRightLocation;
-  frc::Translation2d m_BackLeftLocation;
-  frc::Translation2d m_BackRightLocation;
+  // // frc::Translation2d m_FrontLeftLocation;
+  // // frc::Translation2d m_FrontRightLocation;
+  // // frc::Translation2d m_BackLeftLocation;
+  // // frc::Translation2d m_BackRightLocation;
   
-  bool m_DriveToPoseFlag = false;
+  // bool m_DriveToPoseFlag = false;
 
-  inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
-  inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return &m_Odometry; }
-  inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
+  // //inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
+  // //inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return &m_Odometry; }
+  // inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
 
-  inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
+  // //inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
-  //pathplanner::FollowPathWithEvents* TruePath();
-  //pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
+  // //pathplanner::FollowPathWithEvents* TruePath();
+  // //pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
 
-  inline bool GetIsBalancing() { return m_IsBalancing; }
-  inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
+  // inline bool GetIsBalancing() { return m_IsBalancing; }
+  // inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
 
-  frc2::FunctionalCommand AutoBalanceCommand();
-  void AutoBalanceFunction();
+  // frc2::FunctionalCommand AutoBalanceCommand();
+  // void AutoBalanceFunction();
 
   //TrajectoryCommand DriveToPos(frc::Pose2d target);
 
 
 //how fast the robot should be able to drive
-  const units::meters_per_second_t kMAX_VELOCITY_METERS_PER_SECOND = units::meters_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI);
+  // const units::meters_per_second_t kMAX_VELOCITY_METERS_PER_SECOND = units::meters_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI);
 
-  std::array<frc::SwerveModulePosition, 4> m_ModulePositions;
+  // //std::array<frc::SwerveModulePosition, 4> m_ModulePositions;
 
-  const double kMAX_VOLTAGE = 12.0; //FIX
+  // const double kMAX_VOLTAGE = 12.0; //FIX
   
-  SwerveModule m_FrontLeftModule;
-  SwerveModule m_FrontRightModule;
-  SwerveModule m_BackLeftModule;
-  SwerveModule m_BackRightModule;
-  //hardware::TalonFX m_TestMotor1;
-  //hardware::TalonFX m_TestMotor2;
+  // SwerveModule m_FrontLeftModule;
+  // SwerveModule m_FrontRightModule;
+  // SwerveModule m_BackLeftModule;
+  // SwerveModule m_BackRightModule;
+  hardware::TalonFX m_ShooterMotor1;
+  hardware::TalonFX m_ShooterMotor2;
 
   //theoretical maximum angular velocity - can be replaced with measure amount
-  const units::radians_per_second_t kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = units::radians_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI / std::sqrt(Pow((DRIVETRAIN_TRACKWIDTH_METERS / 2), 2) + Pow((DRIVETRAIN_WHEELBASE_METERS / 2), 2)));
+  // const units::radians_per_second_t kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = units::radians_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI / std::sqrt(Pow((DRIVETRAIN_TRACKWIDTH_METERS / 2), 2) + Pow((DRIVETRAIN_WHEELBASE_METERS / 2), 2)));
 
-  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> m_EventMap;
+  // std::unordered_map<std::string, std::shared_ptr<frc2::Command>> m_EventMap;
 
-  int m_SelectedGrid;
+  // int m_SelectedGrid;
 
-  frc::Pose2d m_PoseMatrix[3][3] = {
-    {TLPOSE, TCPOSE, TRPOSE},
-    {MLPOSE, MCPOSE, MRPOSE},
-    {BLPOSE, BCPOSE, BRPOSE},
-  };
+  // frc::Pose2d m_PoseMatrix[3][3] = {
+  //   {TLPOSE, TCPOSE, TRPOSE},
+  //   {MLPOSE, MCPOSE, MRPOSE},
+  //   {BLPOSE, BCPOSE, BRPOSE},
+  // };
 
-  frc::Pose2d m_TransformedPose;
+  // frc::Pose2d m_TransformedPose;
   
-  int m_VisionCounter;
-  frc::Pose2d m_VisionRelative;
+  // int m_VisionCounter;
+  // frc::Pose2d m_VisionRelative;
 
-    frc2::Trigger m_JoystickOuttake;
+  //   frc2::Trigger m_JoystickOuttake;
   
 
 
-  private:
+  // private:
 
 
 
-  frc::Timer m_Timer;
-  frc2::Trigger m_TestJoystickButton;
-  frc2::Trigger m_JoystickButtonTwo;
-  frc2::Trigger m_DuaLMotorControlButton;
-  frc2::Trigger m_NavXResetButton;
-  frc2::Trigger m_ExtraJoystickButton;
+  // frc::Timer m_Timer;
+  // frc2::Trigger m_TestJoystickButton;
+  // frc2::Trigger m_JoystickButtonTwo;
+  // frc2::Trigger m_DuaLMotorControlButton;
+  // frc2::Trigger m_NavXResetButton;
+  // frc2::Trigger m_ExtraJoystickButton;
 
-  bool m_IsBalancing;
+  // bool m_IsBalancing;
 
-  frc::SwerveDriveKinematics<4> m_Kinematics;
-  frc::SwerveDrivePoseEstimator<4> m_Odometry;
+  //frc::SwerveDriveKinematics<4> m_Kinematics;
+  //frc::SwerveDrivePoseEstimator<4> m_Odometry;
   
-  frc::Rotation2d m_Rotation;             
-  frc::ChassisSpeeds m_ChassisSpeeds;
+  // //frc::Rotation2d m_Rotation;             
+  // frc::ChassisSpeeds m_ChassisSpeeds;
 
-  std::array<frc::SwerveModuleState, 4> m_ModuleStates;
+  // std::array<frc::SwerveModuleState, 4> m_ModuleStates;
   
-  frc::PIDController m_xController;
-  frc::PIDController m_yController;
-  frc::ProfiledPIDController <units::radians> m_ThetaController;
-  frc::HolonomicDriveController m_HolonomicController;
+ // frc::PIDController m_xController;
+  //frc::PIDController m_yController;
+  //frc::ProfiledPIDController <units::radians> m_ThetaController;
+  //frc::HolonomicDriveController m_HolonomicController;
 
   
 };

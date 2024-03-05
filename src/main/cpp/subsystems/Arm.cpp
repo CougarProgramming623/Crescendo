@@ -10,8 +10,8 @@
 #include "Constants.h"
 //#include <ctre/phoenix6/configs/Configs.hpp>
 
-// using ctre::phoenix::motorcontrol::ControlMode;
-// using ctre::phoenix::motorcontrol::can::TalonFX;
+using ctre::phoenix::motorcontrol::NeutralMode;
+using namespace ctre::phoenix;
 // using ctre::phoenix::motorcontrol::can::TalonSRX;
 using namespace ctre::phoenix6;
 //using ctre::phoenix6::configs::MagnetSensorConfigs;
@@ -132,6 +132,17 @@ void Arm::SetButtons()
       		//WristToPos()
 	  	);
 	}));
+	
+	m_ShooterDown.OnTrue(new frc2::InstantCommand([&]{
+		//Robot::GetRobot()->GetArm().m_PivotPos = TBD;
+      	//Robot::GetRobot()->GetArm().m_WristPos = 132.0;
+		//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
+		new frc2::ParallelCommandGroup(
+			//frc2::PrintCommand(""),
+			PivotToPos() 
+      		//WristToPos()
+	  	);
+	}));
 
 	// Robot::GetRobot()->GetArm().m_IntakeButton.OnTrue(new frc2::InstantCommand([&]{
     //                 set = 0.22;
@@ -180,13 +191,14 @@ frc2::FunctionalCommand* Arm::ManualControls()
 		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 	}, [&] { // onExecute
 			Robot::GetRobot()->GetIntake().Execute();
+			//Robot::GetRobot()->GetShooter().Execute();
 
 		// m_Pivot.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2 * 12.0)));
 		// m_Wrist.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2 * 12.0)));
 
 	// ---------------------------------------------------------------------------------------
 
-	//  double power = .55;
+	//  double power = .55; CHANGE THIS
 	// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(CUBE_MODE)) {
 	// 		if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) {
 	// 			m_TopIntake.Set(ControlMode::PercentOutput, power);

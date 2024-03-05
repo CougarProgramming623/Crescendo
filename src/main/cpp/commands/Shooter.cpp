@@ -31,37 +31,21 @@ initialize values
 */
 void Shooter::Initialize() {
     //Motors are initialized in drivetrain because the drivetrain class is not called multiple times so there is no need for a default constructor
-    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetNeutralMode(NeutralMode::Brake);
-    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetNeutralMode(NeutralMode::Brake);
-    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetInverted(true);
+    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetNeutralMode(NeutralMode::Brake);
+    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetNeutralMode(NeutralMode::Brake);
+    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetInverted(true);
     //power1 = 0.2;
     //power2 = 0.2;
     //DebugOutF("Initialized");
-    //balanced = false;
 }
 /*
 pushes the balanced status and the pitch to the network tables and utilizes PID and the drivetrain BaseDrive()
 function to perform the autobalance command
 */
 void Shooter::Execute() {
-    //  	    Robot::GetRobot()->GetArm().m_IntakeButton.OnTrue(new frc2::InstantCommand([&]{
-    //                 set = 0.22;
-    //                 Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
-    //                 frc2::WaitCommand(1_s);
-    //                 DebugOutF("Wow the code works1" + std::to_string(set));
-    //                 set = 0.77;
-    //                 Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.77);
-    //                 DebugOutF("Wow the code works2" + std::to_string(set));
-
-    //      })
-    //  );
-    //set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
-    //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetAngle(180);
-    //set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
-    //DebugOutF("Lets see if it actually works");
-    //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
+    // power1 = Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL);
     // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
-    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power2));
+    // Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
 
     ///Robot::GetRobot()->m_MR.OnTrue(
         //new frc2::InstantCommand([&]{

@@ -70,8 +70,8 @@ class Arm : public frc2::SubsystemBase {
 	//inline hardware::TalonFX& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline rev::CANSparkMax& GetBottomIntakeMotor() {return m_BottomIntake;}
 	//inline hardware::CANcoder& GetPivotCANCoder() {return m_PivotCANCoder;}
-	inline frc2::Trigger& GetCubeModeButton() {return m_ShooterDown; }
-	inline frc2::Trigger& GetConeModeButton() {return m_ShooterUp; }
+	inline frc2::Trigger& GetShooterDown() {return m_ShooterDown; }
+	inline frc2::Trigger& GetShooterUp() {return m_ShooterUp; }
 	inline frc2::Trigger& GetIntakeButton() {return m_ServoShoot; }
 	inline frc2::Trigger& GetOuttakeButton() {return m_OuttakeButton; }
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}

@@ -7,7 +7,7 @@
 PivotToPos::PivotToPos() {
 	 //targetDegrees = degPos;
 	// AddRequirements(&Robot::GetRobot()->GetArm());
-
+	
 }
 
 void PivotToPos::Initialize() {
