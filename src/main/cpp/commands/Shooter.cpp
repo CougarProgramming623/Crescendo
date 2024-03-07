@@ -65,8 +65,8 @@ void Shooter::Execute() {
             //DebugOutF(std::to_string(Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.GetAngle()));
     //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetAngle(180);
       Robot::GetRobot()->GetArm().GetCubeModeButton().OnTrue(new frc2::InstantCommand([&]{
-        power1 = 0.6;
-        Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1 + 0.05));
+        power1 = 0.95;
+        Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1 + 0.025));
         Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
         })
      );
