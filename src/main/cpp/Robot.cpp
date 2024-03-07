@@ -62,11 +62,6 @@ void Robot::RobotInit() {
   s_Instance = this;
   DebugOutF("initalizing drivetrain w/ motors");
   m_DriveTrain.DriveInit();
-  
-  DebugOutF("initalizing motors finished");
-  DebugOutF("x: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  DebugOutF("y: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  DebugOutF("theta: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   m_Vision.VisionInit(); //Make one
   m_LED.Init();
   m_Arm.Init();
@@ -382,16 +377,7 @@ void Robot::AutoButtons() {
 //   );
    }
 
-frc2::CommandPtr Robot::getAutonomousCommand() {
-  // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("Rotation");
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-  // Create a path following command using AutoBuilder. This will also trigger event markers.
-  startingPose = path.get()->getStartingDifferentialPose();
-  return AutoBuilder::followPath(path);
-}
+
 
 frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
 // 	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
@@ -523,6 +509,16 @@ void Robot::DisabledInit() {
 
 void Robot::DisabledPeriodic() {}
 
+frc2::CommandPtr Robot::getAutonomousCommand() {
+  // Load the path you want to follow using its name in the GUI
+  //auto path = PathPlannerAuto::getPathGroupFromAutoFile("AutoTest");
+  DebugOutF("point 2 pathtest");
+  // Create a path following command using AutoBuilder. This will also trigger event markers.
+  return AutoBuilder::buildAuto("AutoTest");
+}
+
+
+
 /**
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
@@ -547,24 +543,10 @@ void Robot::AutonomousInit() {
   // // getAutonomousCommand();
   // DebugOutF("pathTest2");
 
-  m_autonomousCommand = getAutonomousCommand();
-
-  GetDriveTrain().GetOdometry()->ResetPosition(
-    units::radian_t(Deg2Rad(GetAngle())), 
-    wpi::array<frc::SwerveModulePosition, 4>(
-      GetDriveTrain().m_FrontLeftModule.GetPosition(), 
-      GetDriveTrain().m_FrontRightModule.GetPosition(), 
-      GetDriveTrain().m_BackLeftModule.GetPosition(), 
-      GetDriveTrain().m_BackRightModule.GetPosition()),
-    startingPose
-    );
-
 
   DebugOutF("point 1 pathtest");
-  if(m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
-  }
-  DebugOutF("point 3 pathtest");
+  getAutonomousCommand();
+  frc2::PrintCommand("print command").ToPtr();
 
   // frc2::CommandScheduler::GetInstance().Run();
 
@@ -585,6 +567,11 @@ void Robot::AutonomousInit() {
   // //PathPlannerTrajectory::transformTrajectoryForAlliance(traj, frc::DriverStation::GetAlliance());
 
   // frc::Pose2d startingPose = frc::Pose2d(traj.getInitialState().pose.Translation(), frc::Rotation2d(units::degree_t(0)));
+
+  // GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
+  //   wpi::array<frc::SwerveModulePosition, 4>
+  //        (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
+  //   startingPose);
   
   
   // DebugOutF("InitialRotation: " + std::to_string(traj.getInitialHolonomicPose().Rotation().Degrees().value()));
