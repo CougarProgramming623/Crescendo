@@ -12,6 +12,7 @@
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 
 #include <frc2/command/SequentialCommandGroup.h>
@@ -34,6 +35,7 @@
 #include "./commands/WristToPos.h"
 
 using namespace ctre::phoenix6;
+using namespace ctre::phoenix;
 //using ctre::phoenix::motorcontrol::can::TalonSRX;
 //using ctre::phoenix6::
 
@@ -95,10 +97,10 @@ class Arm : public frc2::SubsystemBase {
 	private:
 	
 	//motors
-	// hardware::TalonFX m_Pivot;
-	// hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};
-	// hardware::TalonFX m_Wrist;
-	// hardware::TalonFX m_BottomIntake;
+	//hardware::TalonFX m_Pivot;
+	//hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};
+	//hardware::TalonFX m_Wrist;
+	//motorcontrol::can::TalonSRX m_BottomIntake;
 	// rev::CANSparkMax m_BottomIntake;
 	// TalonSRX m_TopIntake;
 

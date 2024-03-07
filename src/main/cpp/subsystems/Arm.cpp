@@ -109,25 +109,25 @@ void Arm::SetButtons()
 	m_OuttakeButton.OnTrue(DynamicIntake().ToPtr());
 
 	m_GroundPickupMode.OnTrue(new frc2::InstantCommand([&]{
-		Robot::GetRobot()->GetArm().m_PivotPos = 98.0;
-      	Robot::GetRobot()->GetArm().m_WristPos = 3.0;
+		//Robot::GetRobot()->GetArm().m_PivotPos = 98.0;
+      	//Robot::GetRobot()->GetArm().m_WristPos = 3.0;
 		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
-		new frc2::ParallelCommandGroup(
+		/*new frc2::ParallelCommandGroup(
 			frc2::PrintCommand("Ground Pickup"),
-			PivotToPos(), 
-      		WristToPos()
-	  	);
+			//PivotToPos(), 
+      		//WristToPos()
+	  	);*/
 	}));
 
 	m_TransitMode.OnTrue(new frc2::InstantCommand([&]{
-		Robot::GetRobot()->GetArm().m_PivotPos = 66.6;
-      	Robot::GetRobot()->GetArm().m_WristPos = 132.0;
+		//Robot::GetRobot()->GetArm().m_PivotPos = 66.6;
+      	//Robot::GetRobot()->GetArm().m_WristPos = 132.0;
 		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
-		new frc2::ParallelCommandGroup(
+		/*new frc2::ParallelCommandGroup(
 			frc2::PrintCommand(""),
-			PivotToPos(), 
-      		WristToPos()
-	  	);
+			//PivotToPos(), 
+      		//WristToPos()
+	  	);*/
 	}));
 
 	// m_GroundPickupMode.WhenPressed(

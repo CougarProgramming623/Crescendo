@@ -141,14 +141,14 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #ifdef ARM_SUBSYSTEM
 
 //motor and sensor IDs
-#define WRIST_MOTOR 39
-#define PIVOT_MOTOR 30
+//#define WRIST_MOTOR 39
+//#define PIVOT_MOTOR 30
 
-#define TOP_INTAKE_MOTOR -1 //check
-#define BOTTOM_INTAKE_MOTOR 15
+//#define TOP_INTAKE_MOTOR -1 //check
+//#define BOTTOM_INTAKE_MOTOR 15
 #define STRINGPOT_ANALOG_INPUT_ID 4
 #define STRINGPOT 4 
-#define PIVOT_CAN_ID 0
+//#define PIVOT_CAN_ID 0
 
 //setpoints
 #define PIVOT_CAN_DIFFERENCE_BETWEEN_STARTING_AND_LEVEL -1 //check

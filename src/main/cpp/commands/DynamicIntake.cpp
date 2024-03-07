@@ -1,6 +1,8 @@
 #include "./commands/DynamicIntake.h"
 #include "Robot.h"
 
+using namespace ctre::phoenix::motorcontrol;
+
 
 #define ARM Robot::GetRobot()->GetArm()
 

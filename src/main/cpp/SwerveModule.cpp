@@ -31,7 +31,7 @@ void SwerveModule::BreakMode(bool on){
 
 //Get the pose of the module
 frc::SwerveModulePosition SwerveModule::GetPosition(){
-    return {units::meter_t(m_DriveController.motor.GetPosition().GetValueAsDouble() * DRIVE_ENCODER_POSITION_CONSTANT), frc::Rotation2d(units::radian_t(-GetSteerAngle()))};
+    return {units::meter_t(m_DriveController.motor.GetPosition().GetValueAsDouble() * DRIVE_ENCODER_POSITION_CONSTANT * 2048), frc::Rotation2d(units::radian_t(-GetSteerAngle()))};
 }
 
 //Set the module to drive at a voltage at an angle in radians
