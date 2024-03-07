@@ -21,7 +21,7 @@
 #include "commands/PivotToPosAuto.h"
 #include <frc/DriverStation.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
-#include <commands/AutoLock.h>
+#include <commands/LockOn.h>
 //#include <commands/DriveToPosCommand.h>
 //#include <commands/DualMotorControl.h>
 //#include <commands/PivotToPosAuto.h>
@@ -42,7 +42,7 @@ m_LED()
   DebugOutF("inside robot constructor");
   s_Instance = this;
 
-    NamedCommands::registerCommand("autoLock", std::move(AutoLock().ToPtr())); 
+    NamedCommands::registerCommand("lockOn", std::move(LockOn().ToPtr())); 
     //NamedCommands::registerCommand("driveToPosCommand", std::move(DriveToPosCommand().ToPtr())); 
     NamedCommands::registerCommand("driveWithJoystick", std::move(DriveWithJoystick().ToPtr()));
     //NamedCommands::registerCommand("dualMotorControl", std::move(DualMotorControl().ToPtr()));
@@ -362,7 +362,7 @@ frc2::CommandPtr Robot::getAutonomousCommand() {
   DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   // Create a path following command using AutoBuilder. This will also trigger event markers.
-  startingPose = path.get()->getPathPoses().at(0);
+  startingPose = path.get()->getStartingDifferentialPose();
   return AutoBuilder::followPath(path);
 }
 
@@ -416,10 +416,10 @@ void Robot::RobotPeriodic() {
 
 
   if(Robot::GetButtonBoard().GetRawButton(15)){
-    // DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
-    // DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
+    DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
+    DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
     DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
-    // DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
+    DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
   }
 
   if(Robot::GetButtonBoard().GetRawButton(4)){
