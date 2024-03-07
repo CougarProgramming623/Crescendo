@@ -12,7 +12,7 @@ DriveController::DriveController(int ID)
 
     motor.SetNeutralMode(NeutralMode::Brake);
     //motor.SetInverted(SMTH)                           FIX idk why but some of them rotate clockwise and others counter clockwise
-    motor.SetInverted(true);
+    //motor.SetInverted(true);
     // motor.SetSensorPhase(true);                         //FIX also dont know why we do this one
 }
 
