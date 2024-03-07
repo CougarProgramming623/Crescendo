@@ -66,7 +66,7 @@ Pose2d Vision::GetFieldPose(){
       units::meter_t(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)),
       Rotation2d(units::radian_t(Deg2Rad(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5))))
     );
-    DebugOutF(" tx: " + std::to_string(m_LimelightTable->GetNumber("tx", 0.0)));
+    //DebugOutF(" tx: " + std::to_string(m_LimelightTable->GetNumber("tx", 0.0)));
     //DebugOutF("x: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(0)));
     //DebugOutF("y: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)));
     //DebugOutF("theta: " + std::to_string(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5)));
