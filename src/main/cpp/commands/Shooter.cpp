@@ -22,8 +22,7 @@ using namespace ctre::phoenix6;
 using namespace ctre::phoenix;
 using ctre::phoenix::motorcontrol::NeutralMode;
 
-Shooter::Shooter()
-        //m_BigRed(frc2::Trigger(BUTTON_L(BIG_RED)))
+Shooter::Shooter() 
     {
     }
 /*
@@ -34,18 +33,43 @@ void Shooter::Initialize() {
     Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetNeutralMode(NeutralMode::Brake);
     Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetNeutralMode(NeutralMode::Brake);
     Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetInverted(true);
-    power1 = 0.2;
-    //power2 = 0.2;
-    DebugOutF("Initialized");
+    //Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetInverted(true);
+    // power1 = 0.2;
+    // //power2 = 0.2;
+    // DebugOutF("Initialized");
+    
 }
 /*
 pushes the balanced status and the pitch to the network tables and utilizes PID and the drivetrain BaseDrive()
 function to perform the autobalance command
 */
 void Shooter::Execute() {
-    power1 = Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL);
-    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
-    Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
+//         Robot::GetRobot()->m_ServoRun.OnTrue(new frc2::InstantCommand([&]{
+//             //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetBounds(2.5_us, 0_us, 1.5_us,0_us, 0.5_us);
+//             Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(1);
+//             DebugOutF("Idk if this really works");
+        
+//         })
+//     );
+//             Robot::GetRobot()->GetArm().GetCubeModeButton().OnTrue(new frc2::InstantCommand([&]{
+//             //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetBounds(2.5_us, 0_us, 1.5_us,0_us, 0.5_us);
+//             Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.66);
+//             DebugOutF("Idk if this really works");
+        
+//         })
+//     );
+//             // set = Robot::GetRobot()->GetButtonBoard().GetRawAxis(1);
+            // //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetBounds(2.5_us, 0_us, 1.5_us,0_us, 0.5_us);
+            // Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(set);
+            // DebugOutF("Idk if this really works");
+            //DebugOutF(std::to_string(Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.GetAngle()));
+    //Robot::GetRobot()->GetDriveTrain().m_DustpanLaunch.SetAngle(180);
+      Robot::GetRobot()->GetArm().GetCubeModeButton().OnTrue(new frc2::InstantCommand([&]{
+        power1 = 0.6;
+        Robot::GetRobot()->GetDriveTrain().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1 + 0.05));
+        Robot::GetRobot()->GetDriveTrain().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(power1));
+        })
+     );
 
     ///Robot::GetRobot()->m_MR.OnTrue(
         //new frc2::InstantCommand([&]{

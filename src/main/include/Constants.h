@@ -140,7 +140,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 
 //motor and sensor IDs
 #define WRIST_MOTOR 39
-#define PIVOT_SHOOTER 30
+#define PIVOT_MOTOR 30
 
 #define TOP_INTAKE_MOTOR -1 //check
 #define BOTTOM_INTAKE_MOTOR 15
@@ -195,7 +195,9 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define INTAKE_BUTTON 20
 #define OUTTAKE_BUTTON 21
 
-#define ARM_OVERRIDE 1 
+#define SHOOTER_MOVE 22
+
+#define ARM_OVERRIDE 4 
 #define ARM_OVERRIDE_2 2
 
 #define BIG_RED 22

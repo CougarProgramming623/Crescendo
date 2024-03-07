@@ -24,18 +24,16 @@ Arm::Arm() :
 			 //m_Wrist(WRIST_MOTOR),
 			 //m_TopIntake(TOP_INTAKE_MOTOR),
 			 //m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
-			 //m_ShooterMotor1(SHOOTER_MOTOR_1),
-			//m_ShooterMotor2(SHOOTER_MOTOR_2),
 
 			 //BUTTONBOARD 1
 			 m_Override(BUTTON_L(ARM_OVERRIDE)),
 			 m_Override2(BUTTON_L(ARM_OVERRIDE_2)),
 
-			 m_ShooterUp(BUTTON_L(CONE_MODE)),  
-			 m_ShooterDown(BUTTON_L(CUBE_MODE)),
+			 m_ConeMode(BUTTON_L(CONE_MODE)),  
+			 m_CubeMode(BUTTON_L(22)),
 
-			 m_ServoShoot(BUTTON_L(INTAKE_BUTTON)),
-			 m_OuttakeButton(BUTTON_L(OUTTAKE_BUTTON)),
+			 //m_ServoShoot(BUTTON_L(INTAKE_BUTTON)),
+			 //m_OuttakeButton(BUTTON_L(OUTTAKE_BUTTON)),
 
 			 
 
@@ -111,10 +109,10 @@ void Arm::SetButtons()
 	//m_IntakeButton.OnTrue(DynamicIntake().ToPtr());
 	//m_OuttakeButton.OnTrue(DynamicIntake().ToPtr());
 
-	m_AmpButton.OnTrue(new frc2::InstantCommand([&]{
-		//Robot::GetRobot()->GetArm().m_PivotPos = TBD;
-      	//Robot::GetRobot()->GetArm().m_WristPos = 3.0;
-		//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC); ANIKETH NEEDS TO RESEARCH MOTION MAGIC
+	m_GroundPickupMode.OnTrue(new frc2::InstantCommand([&]{
+		Robot::GetRobot()->GetArm().m_PivotPos = 98.0;
+      	Robot::GetRobot()->GetArm().m_WristPos = 3.0;
+		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 		new frc2::ParallelCommandGroup(
 			frc2::PrintCommand("Ground Pickup"),
 			PivotToPos() 
@@ -122,10 +120,10 @@ void Arm::SetButtons()
 	  	);
 	}));
 
-	m_StowButton.OnTrue(new frc2::InstantCommand([&]{
-		//Robot::GetRobot()->GetArm().m_PivotPos = TBD;
-      	//Robot::GetRobot()->GetArm().m_WristPos = 132.0;
-		//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
+	m_TransitMode.OnTrue(new frc2::InstantCommand([&]{
+		Robot::GetRobot()->GetArm().m_PivotPos = 66.6;
+      	Robot::GetRobot()->GetArm().m_WristPos = 132.0;
+		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 		new frc2::ParallelCommandGroup(
 			frc2::PrintCommand(""),
 			PivotToPos() 
@@ -133,16 +131,16 @@ void Arm::SetButtons()
 	  	);
 	}));
 	
-	m_ShooterDown.OnTrue(new frc2::InstantCommand([&]{
-		//Robot::GetRobot()->GetArm().m_PivotPos = TBD;
-      	//Robot::GetRobot()->GetArm().m_WristPos = 132.0;
-		//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
-		new frc2::ParallelCommandGroup(
-			//frc2::PrintCommand(""),
-			PivotToPos() 
-      		//WristToPos()
-	  	);
-	}));
+	// m_ShooterDown.OnTrue(new frc2::InstantCommand([&]{
+	// 	//Robot::GetRobot()->GetArm().m_PivotPos = TBD;
+    //   	//Robot::GetRobot()->GetArm().m_WristPos = 132.0;
+	// 	//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
+	// 	new frc2::ParallelCommandGroup(
+	// 		//frc2::PrintCommand(""),
+	// 		PivotToPos() 
+    //   		//WristToPos()
+	//   	);
+	// }));
 
 	// Robot::GetRobot()->GetArm().m_IntakeButton.OnTrue(new frc2::InstantCommand([&]{
     //                 set = 0.22;
@@ -190,7 +188,7 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	return new frc2::FunctionalCommand([&] { // onInit
 		SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
 	}, [&] { // onExecute
-			Robot::GetRobot()->GetIntake().Execute();
+			//Robot::GetRobot()->GetIntake().Execute();
 			Robot::GetRobot()->GetShooter().Execute();
 
 		// m_Pivot.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::voltage::volt_t(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2 * 12.0)));

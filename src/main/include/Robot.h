@@ -64,7 +64,7 @@ class Robot : public frc::TimedRobot {
   inline COB& GetCOB() { return m_COB; }
   inline Vision& GetVision() { return m_Vision; }
   inline Shooter& GetShooter() { return m_Shooter; }
-  inline Intake& GetIntake() { return m_Intake;}
+  //inline Intake& GetIntake() { return m_Intake;}
 
   //motor control requests - LOOK, VERY IMPORTANT
   controls::VoltageOut m_VoltageOutRequest{0_V};
@@ -94,7 +94,7 @@ class Robot : public frc::TimedRobot {
 	frc2::Trigger m_CenterGrid;
 	frc2::Trigger m_RightGrid;
 
-  //frc2::Trigger m_BigRed;
+  frc2::Trigger m_BigRed;
   frc2::Trigger m_GroundPickup;
 
   frc2::Trigger m_SingleSub;
@@ -147,7 +147,7 @@ class Robot : public frc::TimedRobot {
   frc::Timer m_AutoTimer;
   DriveTrain m_DriveTrain;//Drivetrain "Master" object to access all instances(objects) of the drivetrain class
   Shooter m_Shooter;//Shooter "Master" object to access all instances(objects) of the shooter class
-  Intake m_Intake;//Intake "Master" object to access all instances(objects) of the intake class
+  //Intake m_Intake;//Intake "Master" object to access all instances(objects) of the intake class
 
   Vision m_Vision;
 
