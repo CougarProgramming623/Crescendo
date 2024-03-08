@@ -4,7 +4,7 @@
 #include "./subsystems/Drivetrain.h"
 
 LockOn::LockOn() {
-    AddRequirements(&Robot::GetRobot()->GetDriveTrain());
+    //AddRequirements(&Robot::GetRobot()->GetDriveTrain());
 }
 
 void LockOn::Initialize(){}
@@ -21,8 +21,10 @@ double LockOn::Deadfix(double in, double deadband) {
 void LockOn::Execute() {    
     Robot* r = Robot::GetRobot();
     if(m_LimelightTable->GetNumber("tv", 0.0) == 1) {
-        //DebugOutF("robot has found april tag");
         m_AprilTagID = m_LimelightTable->GetNumber("tid", 0.0);
+        Robot::GetRobot()->GetVision().setPriority(m_AprilTagID);   
+        DebugOutF(std::to_string(m_LimelightTable->GetNumber("priorityid", 0.0)));
+        //DebugOutF("robot has found april tag");
         r->GetVision().CalcPose();
         //m_GoalTheta = Rotation2d(r->GetVision().VisionRobotYaw(m_AprilTagID));
         m_GoalTheta = Rotation2d(units::angle::degree_t(r->GetAngle() + m_LimelightTable->GetNumber("tx", 0.0)));
@@ -47,11 +49,12 @@ void LockOn::Execute() {
             frc::Rotation2d(units::radian_t(Deg2Rad(r->GetAngle())))
     );
 
-    DebugOutF("OdoX: " + std::to_string(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-    DebugOutF("OdoY: " + std::to_string(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-    DebugOutF("OdoZ: " + std::to_string(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+    // DebugOutF("OdoX: " + std::to_string(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+    // DebugOutF("OdoY: " + std::to_string(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+    // DebugOutF("OdoZ: " + std::to_string(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
-    DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
+    // DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
+    m_AngleError = r->GetAngle() - m_GoalTheta.Degrees().value();
     // speeds.omega = -speeds.omega;
     
     r->GetDriveTrain().BaseDrive(speeds);
@@ -70,4 +73,8 @@ void LockOn::Execute() {
 
     }
     //DebugOutF("Robot Angle after turning: " + std::to_string(r->GetNavX().GetAngle()));
+}
+
+bool LockOn::IsFinished() {
+    return Robot::GetRobot()->m_AutoFlag && abs(m_AngleError) < 0.5;
 }

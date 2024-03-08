@@ -71,27 +71,29 @@
      */
     #define DRIVETRAIN_WHEELBASE_METERS 0.61595
 
-    #define FRONT_LEFT_MODULE_DRIVE_MOTOR 54
-    #define FRONT_LEFT_MODULE_STEER_MOTOR 58
-    #define FRONT_LEFT_MODULE_STEER_OFFSET 1.00//-204.7//-183.2//-203.6 //-207.8//JJ-180 //-198.2 //-207.8
+    #define FRONT_LEFT_MODULE_DRIVE_MOTOR 41
+    #define FRONT_LEFT_MODULE_STEER_MOTOR 36
+    #define FRONT_LEFT_MODULE_STEER_OFFSET 4.28//
     #define FRONT_LEFT_MODULE_ENCODER_PORT 2
 
-    #define FRONT_RIGHT_MODULE_DRIVE_MOTOR 38
-    #define FRONT_RIGHT_MODULE_STEER_MOTOR 61
-    #define FRONT_RIGHT_MODULE_STEER_OFFSET 2.27//-181.2//-180.1//-181.9 //-178.47//JJ-179 //-180.97 //-178.47
+    #define FRONT_RIGHT_MODULE_DRIVE_MOTOR 42
+    #define FRONT_RIGHT_MODULE_STEER_MOTOR 34
+    #define FRONT_RIGHT_MODULE_STEER_OFFSET 3.67//
     #define FRONT_RIGHT_MODULE_ENCODER_PORT 1
 
-    #define BACK_LEFT_MODULE_DRIVE_MOTOR 32
-    #define BACK_LEFT_MODULE_STEER_MOTOR 35
-    #define BACK_LEFT_MODULE_STEER_OFFSET 1.74//-146.9//-238.0//-146.9//-200.9//-164.0 //-161.51//-178.25// -180.43
+    #define BACK_LEFT_MODULE_DRIVE_MOTOR 37
+    #define BACK_LEFT_MODULE_STEER_MOTOR 52
+    #define BACK_LEFT_MODULE_STEER_OFFSET 3.44//
     #define BACK_LEFT_MODULE_ENCODER_PORT 3
 
-    #define BACK_RIGHT_MODULE_DRIVE_MOTOR 51
-    #define BACK_RIGHT_MODULE_STEER_MOTOR 60
-    #define BACK_RIGHT_MODULE_STEER_OFFSET 0.83//-299.3//-176.5//-297.6 //-296.93//JJ-359//-294.17 //-296.93
+    #define BACK_RIGHT_MODULE_DRIVE_MOTOR 53
+    #define BACK_RIGHT_MODULE_STEER_MOTOR 59
+    #define BACK_RIGHT_MODULE_STEER_OFFSET 2.47//
     #define BACK_RIGHT_MODULE_ENCODER_PORT 0
 
     #define MAX_VOLTAGE_WHEN_OFFSET 4.76
+
+    #define CLIMB_MOTOR 39
 
 
     // #define LIMELIGHT_HEIGHT    -1   //cm
@@ -141,13 +143,14 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #ifdef ARM_SUBSYSTEM
 
 //motor and sensor IDs
-//#define WRIST_MOTOR 39
-//#define PIVOT_MOTOR 30
+#define PIVOT_MOTOR 31
+#define SHOOTER1_MOTOR 30
+#define SHOOTER2_MOTOR 33
 
 //#define TOP_INTAKE_MOTOR -1 //check
 //#define BOTTOM_INTAKE_MOTOR 15
-#define STRINGPOT_ANALOG_INPUT_ID 4
-#define STRINGPOT 4 
+// #define STRINGPOT_ANALOG_INPUT_ID 4
+#define STRINGPOT_ANALOG_INPUT_ID 0
 //#define PIVOT_CAN_ID 0
 
 //setpoints
@@ -166,13 +169,28 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define CANCODER_MAX 237.6
 #define CANCODER_ZERO 126.3
 
-#define WRIST_TOTAL_TICKS 265679.39932
-#define WRIST_TOTAL_DEGREES (WRIST_TOTAL_TICKS/WRIST_GEAR_RATIO/2048)*360
-#define STRINGPOT_TOTAL_RANGE 512.0
-#define STRINGPOT_TOP 978 //1125.0
-#define STRINGPOT_BOTTOM 1490 //1637.0
-#define STRINGPOT_ZERO 1210 //1349.0
-#define WRIST_DEGREES_PER_STRINGPOT_UNITS (WRIST_TOTAL_DEGREES/STRINGPOT_TOTAL_RANGE)
+
+
+// #define WRIST_TOTAL_TICKS 265679.39932
+// #define WRIST_TOTAL_DEGREES (WRIST_TOTAL_TICKS/WRIST_GEAR_RATIO/2048)*360
+
+#define PIVOT_GEAR_RATIO 50
+#define PIVOT_TOTAL_ROTATIONS 4.98
+#define PIVOT_TOTAL_DEGREES ((PIVOT_TOTAL_ROTATIONS/PIVOT_GEAR_RATIO * 360) + STRINGPOT_ZERO_DEGREES)
+
+#define STRINGPOT_ZERO 431
+#define STRINGPOT_TOP 876
+#define STRINGPOT_TOTAL_RANGE 445
+#define STRINGPOT_ZERO_DEGREES 37
+
+#define PIVOT_DEGREES_PER_STRINGPOT_UNITS (PIVOT_TOTAL_DEGREES/STRINGPOT_TOTAL_RANGE)
+
+
+// #define STRINGPOT_TOTAL_RANGE 512.0
+// #define STRINGPOT_TOP 978 //1125.0
+//#define STRINGPOT_BOTTOM 1490 //1637.0
+// #define STRINGPOT_ZERO 1210 //1349.0
+//#define WRIST_DEGREES_PER_STRINGPOT_UNITS (WRIST_TOTAL_DEGREES/STRINGPOT_TOTAL_RANGE)
 
 #define PIVOT_DFLT_VEL 8000 //8400 working value
 #define PIVOT_DFLT_ACC 10000 //8000 working value
@@ -183,52 +201,34 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 
 //button IDs
 //BUTTONBOARD 0
-#define CONE_MODE 15 //left
-#define CUBE_MODE 16 //right
+#define DUSTPANUP_LIMIT 0 //x axis
+#define SHOOTER_SPEED 1 //y axis
+#define INTAKE_SWITCH 1
+#define FLYWHEEL_SWITCH 2
+#define AIM_BUTTON 3
+#define SHOOT_BUTTON 4
+#define AMP_BUTTON 5
+#define STOW_BUTTON 6
+#define ALLUP_BUTTON 7
+#define ARM_OVERRIDE 16
+#define SHOOTER_DOWN 17
+#define SHOOTER_UP 18
+#define CLIMB_UP 19
+#define CLIMB_DOWN 20
+#define DUSTPAN_UP 21
+#define DUSTPAN_DOWN 22
 
-#define PIVOT_CONTROL 1 
-#define WRIST_CONTROL 0 
-
-#define INTAKE_BUTTON 20
-#define OUTTAKE_BUTTON 21
-
-#define ARM_OVERRIDE 1 
-#define ARM_OVERRIDE_2 2
-
-#define BIG_RED 22
-
-//BUTTONBOARD 2
-#define GRID_TL 2
-#define GRID_TC 7 
-#define GRID_TR 12
-#define GRID_ML 3 
-#define GRID_MC 8 
-#define GRID_MR 10
-#define GRID_BL 4
-#define GRID_BC 9
-#define GRID_BR 14
-
-#define GROUND_PICKUP_MODE 5 //red
-#define TRANSIT_MODE 13 //green
-#define PLACING_MODE 15 //yellow
-
-#define LEFT_GRID 1 
-#define CENTER_GRID 6 
-#define RIGHT_GRID 11
-
-#define LED_YELLOW 19
-#define LED_PURPLE 18
 
 #endif
 
-#define TLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(0)))
-#define TCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(0)))
-#define TRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(0)))
+// #define TLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(0)))
+// #define TCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(0)))
+// #define TRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(0)))
 
-#define MLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
-#define MCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.072), frc::Rotation2d(units::degree_t(180)))
-#define MRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))
+// #define MLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
+// #define MCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.072), frc::Rotation2d(units::degree_t(180)))
+// #define MRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))
 
-#define BLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
-#define BCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(180)))
-#define BRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))
+// #define BLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
+// #define BCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(180)))
+// #define BRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))

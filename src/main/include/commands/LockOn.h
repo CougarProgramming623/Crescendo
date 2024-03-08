@@ -13,10 +13,13 @@ class LockOn : public frc2::CommandHelper<frc2::Command, LockOn> {
 
   void Initialize() override;
   void Execute() override;
+  bool IsFinished() override;
   double Deadfix(double in, double deadband);
 
   frc::Rotation2d m_GoalTheta;
-  int m_AprilTagID;
+  double m_AprilTagID;
+  double m_PriorityId;
+  double m_AngleError;
  
  private:
   std::shared_ptr<nt::NetworkTable> m_LimelightTable = Robot::GetRobot()->GetVision().GetLimeLight();

@@ -25,6 +25,7 @@ class Vision {
         std::shared_ptr<nt::NetworkTable> GetLimeLight() { return nt::NetworkTableInstance::GetDefault().GetTable("limelight-front"); }
 
         std::string FrontBack(std::string key);
+        void setPriority(double id);
         units::angle::radian_t VisionRobotYaw(double ID);
         units::angle::degree_t ShooterAngle(double ID);
 

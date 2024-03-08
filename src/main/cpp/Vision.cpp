@@ -34,6 +34,12 @@ void Vision::PrintValues() {
   DebugOutF("Target Robot Angle: " + std::to_string(Rotation2d(Robot::GetRobot()->GetVision().VisionRobotYaw(m_LimelightTable->GetNumber("tid", 0.0))).Degrees().value()));
 }
 
+void Vision::setPriority(double id) {
+  if(id == 5.0 || id == 8.0) {
+    m_LimelightTable->GetEntry("priorityid").SetDouble(id - 1);
+  }
+}
+
 
 void Vision::CalcPose(){
   // DebugOutF("calc Pose");

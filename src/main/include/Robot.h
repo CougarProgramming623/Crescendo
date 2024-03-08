@@ -70,7 +70,7 @@ class Robot : public frc::TimedRobot {
 
   //motor control requests - LOOK, VERY IMPORTANT
   //controls::VoltageOut m_VoltageOutRequest{0_V};
-  controls::DutyCycleOut m_DutyCycleRequest{0};
+  controls::DutyCycleOut m_DutyCycleOutRequest{0};
   controls::MotionMagicDutyCycle m_MotionMagicRequest{units::angle::turn_t(0)};
 
   double previousErrorX = 0;
@@ -82,34 +82,54 @@ class Robot : public frc::TimedRobot {
   double previousValueY = 0;
   double previousValueT = 0;
 
-  frc2::Trigger m_TL;
-	frc2::Trigger m_TC;
-	frc2::Trigger m_TR;
-	frc2::Trigger m_ML;
-	frc2::Trigger m_MC;
-	frc2::Trigger m_MR;
-	frc2::Trigger m_BL;
-	frc2::Trigger m_BC;
-	frc2::Trigger m_BR;
+  //BUTTONBOARD
 
-	frc2::Trigger m_LeftGrid;
-	frc2::Trigger m_CenterGrid;
-	frc2::Trigger m_RightGrid;
+  // frc::AnalogInput m_DustpanUpperLimit;
+  // frc::AnalogInput m_ShooterSpeed;
+  
+  // frc2::Trigger m_IntakeSwitch;
+  // frc2::Trigger m_FlywheelSwitch;
+  frc2::Trigger m_ArmOverride;
+	frc2::Trigger m_ShooterUp;
+	frc2::Trigger m_ShooterDown;
+  frc2::Trigger m_VisionAim;
+  frc2::Trigger m_Shoot;
+  frc2::Trigger m_AmpPreset;
+  frc2::Trigger m_StowPreset;
+  // frc2::Trigger m_AllUp;
+  // frc2::Trigger m_ClimbUp;
+  // frc2::Trigger m_ClimbDown;
+  // frc2::Trigger m_DustpanUp;
+  // frc2::Trigger m_DustpanDown;
 
-  frc2::Trigger m_BigRed;
-  frc2::Trigger m_GroundPickup;
+  // frc2::Trigger m_TL;
+	// frc2::Trigger m_TC;
+	// frc2::Trigger m_TR;
+	// frc2::Trigger m_ML;
+	// frc2::Trigger m_MC;
+	// frc2::Trigger m_MR;
+	// frc2::Trigger m_BL;
+	// frc2::Trigger m_BC;
+	// frc2::Trigger m_BR;
 
-  frc2::Trigger m_SingleSub;
-  frc2::Trigger m_SingleSubCube;
-  frc2::Trigger m_DoubleSub;
+	// frc2::Trigger m_LeftGrid;
+	// frc2::Trigger m_CenterGrid;
+	// frc2::Trigger m_RightGrid;
 
-  frc2::Trigger m_MidCone;
-  frc2::Trigger m_MidCube;
-  frc2::Trigger m_PlacingMode;
+  // frc2::Trigger m_BigRed;
+  // frc2::Trigger m_GroundPickup;
 
-  frc2::Trigger m_NavXReset;
-  frc2::Trigger m_AutoBalance;
-  frc2::Trigger m_VisionPoseReset;
+  // frc2::Trigger m_SingleSub;
+  // frc2::Trigger m_SingleSubCube;
+  // frc2::Trigger m_DoubleSub;
+
+  // frc2::Trigger m_MidCone;
+  // frc2::Trigger m_MidCube;
+  // frc2::Trigger m_PlacingMode;
+
+  // frc2::Trigger m_NavXReset;
+  // frc2::Trigger m_AutoBalance;
+  // frc2::Trigger m_VisionPoseReset;
 
   frc2::Trigger m_Print;
   int m_COBTicks;

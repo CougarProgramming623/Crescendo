@@ -112,14 +112,14 @@ void DriveTrain::DriveInit(){
 
 
   m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
-  m_FrontRightModule.m_DriveController.motor.SetInverted(false); //true for O12
-  m_FrontRightModule.m_SteerController.motor.SetInverted(false); 
-  m_BackRightModule.m_DriveController.motor.SetInverted(false);
+  m_FrontRightModule.m_DriveController.motor.SetInverted(false);
+  m_FrontRightModule.m_SteerController.motor.SetInverted(true); //2024
+  m_BackRightModule.m_DriveController.motor.SetInverted(true); //2024
   m_BackRightModule.m_SteerController.motor.SetInverted(false);
-  m_FrontLeftModule.m_DriveController.motor.SetInverted(true);
+  m_FrontLeftModule.m_DriveController.motor.SetInverted(true); //2024
   m_FrontLeftModule.m_SteerController.motor.SetInverted(false);
   m_BackLeftModule.m_DriveController.motor.SetInverted(false);
-  m_BackLeftModule.m_SteerController.motor.SetInverted(false);
+  m_BackLeftModule.m_SteerController.motor.SetInverted(true); //2024
 }
 
 /*
@@ -134,8 +134,8 @@ void DriveTrain::Periodic(){
   // DebugOutF("back right position: " + std::to_string(m_BackRightModule.GetPosition().distance()));
 
   if((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE) == 0 && ((double) m_ModuleStates[0].angle.Radians() == 0)){
-    m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
-    m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+    m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+    m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
   } else {
     // DebugOutF("steer desired angle in radians: " + std::to_string((double)m_ModuleStates[0].angle.Radians()));
     // DebugOutF("drive desired speed in meters per second: " + std::to_string((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE).value()));
@@ -143,22 +143,22 @@ void DriveTrain::Periodic(){
   }
 
   if((m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[1].angle.Radians() == 0)){
-    m_FrontRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
-    m_FrontRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+    m_FrontRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+    m_FrontRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
   } else {
     m_FrontRightModule.Set(m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[1].angle.Radians());
   }
 
   if((m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[2].angle.Radians() == 0)){
-    m_BackLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
-    m_BackLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+    m_BackLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+    m_BackLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
   } else {
     m_BackLeftModule.Set(m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[2].angle.Radians());
   }
 
   if((m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double) m_ModuleStates[3].angle.Radians() == 0)){
-    m_BackRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
-    m_BackRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+    m_BackRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+    m_BackRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
   } else {
     m_BackRightModule.Set(m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double) m_ModuleStates[3].angle.Radians());
   }
@@ -197,7 +197,7 @@ void DriveTrain::Periodic(){
     m_Odometry.Update(m_Rotation, m_ModulePositions);
   }
 
-  // DebugOutF("x: " + std::to_string(m_Odom////////////??/////////////////////////////////./÷≥≥/÷,l;l÷l,/ll,≥.GetEstimatedPosition().Rotation().Degrees().value()));
+  // DebugOutF("x: " + std::to_string(m_Odometry.GetEstimatedPosition().Rotation().Degrees().value()));
 
 }
 //Converts chassis speed object and updates module states

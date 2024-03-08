@@ -99,8 +99,6 @@ class DriveTrain : public frc2::SubsystemBase {
   inline bool GetIsBalancing() { return m_IsBalancing; }
   inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
 
-  
-
   // inline void driveRobotRelative(ChassisSpeeds speeds) {
   //   Robot::GetRobot()->GetDriveTrain().motorcontrol.Set(speeds);
   // }
@@ -135,11 +133,11 @@ class DriveTrain : public frc2::SubsystemBase {
 
   int m_SelectedGrid;
 
-  frc::Pose2d m_PoseMatrix[3][3] = {
-    {TLPOSE, TCPOSE, TRPOSE},
-    {MLPOSE, MCPOSE, MRPOSE},
-    {BLPOSE, BCPOSE, BRPOSE},
-  };
+  // frc::Pose2d m_PoseMatrix[3][3] = {
+  //   {TLPOSE, TCPOSE, TRPOSE},
+  //   {MLPOSE, MCPOSE, MRPOSE},
+  //   {BLPOSE, BCPOSE, BRPOSE},
+  // };
 
   frc::Pose2d m_TransformedPose;
   

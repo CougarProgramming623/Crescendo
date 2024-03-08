@@ -28,6 +28,7 @@
 #include <frc/Timer.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/ParallelCommandGroup.h>
+#include <frc/AnalogInput.h>
 //#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 #include "./commands/PivotToPos.h"
@@ -52,16 +53,14 @@ class Arm : public frc2::SubsystemBase {
 	frc2::FunctionalCommand* ManualControls();
 	void SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc);
 
-	inline double WristStringPotUnitsToDegrees(double units) {return -((units - STRINGPOT_ZERO) * WRIST_DEGREES_PER_STRINGPOT_UNITS); }
-	inline double WristDegreesToStringPotUnits(double degrees) {return -((degrees / WRIST_DEGREES_PER_STRINGPOT_UNITS) + STRINGPOT_ZERO); }
-	
-	inline double WristStringPotUnitsToTicks(double units) {return WristDegreesToTicks(WristStringPotUnitsToDegrees(units));}
-	inline double WristTicksToStringPotUnits(double ticks) {return WristDegreesToStringPotUnits(WristTicksToDegrees(ticks));}
-	inline double WristDegreesToTicks(double degrees) {return degrees * WRIST_TICKS_PER_DEGREE;}
-	inline double WristTicksToDegrees(double ticks) {return ticks / WRIST_TICKS_PER_DEGREE;}
+	inline double PivotStringPotUnitsToDegrees(double units) {return ((units - STRINGPOT_ZERO) * PIVOT_DEGREES_PER_STRINGPOT_UNITS + STRINGPOT_ZERO_DEGREES); }
+	inline double PivotStringPotUnitsToRotations(double units) {return PivotDegreesToRotations(PivotStringPotUnitsToDegrees(units));}
 
-	inline double PivotDegreesToTicks(double degrees) {return degrees * PIVOT_TICKS_PER_DEGREE;}
-	inline double PivotTicksToDegrees(double ticks) {return ticks / PIVOT_TICKS_PER_DEGREE;}
+	inline double PivotDegreesToStringPotUnits(double degrees) {return ((degrees / PIVOT_DEGREES_PER_STRINGPOT_UNITS) + STRINGPOT_ZERO); }
+	inline double PivotRotationsToStringPotUnits(double rotations) {return PivotDegreesToStringPotUnits(PivotRotationsToDegrees(rotations));}
+	
+	inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
+	inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
 
 	
 	//getters
@@ -71,10 +70,10 @@ class Arm : public frc2::SubsystemBase {
 	// inline hardware::TalonFX& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline rev::CANSparkMax& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline hardware::CANcoder& GetPivotCANCoder() {return m_PivotCANCoder;}
-	inline frc2::Trigger& GetCubeModeButton() {return m_CubeMode; }
-	inline frc2::Trigger& GetConeModeButton() {return m_ConeMode; }
-	inline frc2::Trigger& GetIntakeButton() {return m_IntakeButton; }
-	inline frc2::Trigger& GetOuttakeButton() {return m_OuttakeButton; }
+	// inline frc2::Trigger& GetArmOverrideButton() {return m_ArmOverride; }
+	// inline frc2::Trigger& GetConeModeButton() {return m_ConeMode; }
+	// inline frc2::Trigger& GetIntakeButton() {return m_IntakeButton; }
+	// inline frc2::Trigger& GetOuttakeButton() {return m_OuttakeButton; }
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
 
 
@@ -97,7 +96,10 @@ class Arm : public frc2::SubsystemBase {
 	private:
 	
 	//motors
-	//hardware::TalonFX m_Pivot;
+	hardware::TalonFX m_Pivot;
+	hardware::TalonFX m_Climb;
+	hardware::TalonFX m_ShooterMotor1;
+	hardware::TalonFX m_ShooterMotor2;
 	//hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};
 	//hardware::TalonFX m_Wrist;
 	//motorcontrol::can::TalonSRX m_BottomIntake;
@@ -106,25 +108,29 @@ class Arm : public frc2::SubsystemBase {
 
 
 	//motor control voltages
+	controls::DutyCycleOut m_DCO{0};
 	int m_BottomIntakeVoltage;
 	// units::voltage::volt_t m_PivotVoltage;
 	// units::voltage::volt_t m_WristVoltage;
 
 	//pot
-	frc::AnalogInput m_StringPot{STRINGPOT};
+	frc::AnalogInput m_StringPot{4};
+
 
 	//triggers
-	frc2::Trigger m_TransitMode;
-	frc2::Trigger m_GroundPickupMode;
+	// frc2::Trigger m_TransitMode;
+	// frc2::Trigger m_GroundPickupMode;
 
-	frc2::Trigger m_Override;
-	frc2::Trigger m_Override2;
+	// frc2::Trigger m_Override;
+	// frc2::Trigger m_Override2;
+	// frc2::Trigger m_ShooterDown;
+	// frc2::Trigger m_ShooterUp;
 
-	frc2::Trigger m_ConeMode;
-	frc2::Trigger m_CubeMode;
+	// frc2::Trigger m_ConeMode;
+	// frc2::Trigger m_CubeMode;
 
-	frc2::Trigger m_IntakeButton;
-	frc2::Trigger m_OuttakeButton;
+	// frc2::Trigger m_IntakeButton;
+	// frc2::Trigger m_OuttakeButton;
 
 	frc::Timer m_Timer;
 
