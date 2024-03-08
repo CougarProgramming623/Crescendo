@@ -21,8 +21,9 @@ using namespace ctre::phoenix6;
 
 Arm::Arm() : m_Pivot(PIVOT_MOTOR),
 			 m_Climb(CLIMB_MOTOR),
-			 m_ShooterMotor1(SHOOTER1_MOTOR),
+			 //m_ShooterMotor1(SHOOTER1_MOTOR),
 			 m_ShooterMotor2(SHOOTER2_MOTOR),
+			 m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
 			//  m_Wrist(WRIST_MOTOR),
 			//  m_TopIntake(TOP_INTAKE_MOTOR),
 			//  m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
@@ -50,21 +51,29 @@ Arm::Arm() : m_Pivot(PIVOT_MOTOR),
 			// m_Mid(PlaceElement(1, 2)),
 
 			// m_Bot(PlaceElement(2, 2))
-			{}
+			{
+				DebugOutF("arm override button: " + std::to_string(m_ArmOverride.Get()));
+			}
 
 void Arm::Init() {
 	DebugOutF("inside arm init");
 	m_Pivot.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 	m_Climb.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
 
-	// m_ArmOverride = frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
 	// m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
 	// m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
 
-	Robot::GetRobot()->m_ArmOverride.OnTrue(new frc2::InstantCommand([&] {
-		//ManualControls()
-		frc2::PrintCommand("ARM OVERRIDE");
-	}));
+	DebugOutF("arm override button: " + std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE)));
+
+	if (Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE)) {
+		DebugOutF("testest");
+	}
+	
+
+	// Robot::GetRobot()->m_ArmOverride.OnTrue(new frc2::InstantCommand([&] {
+	// 	//ManualControls()
+	// 	frc2::PrintCommand("ARM OVERRIDE");
+	// }));
 
 
 	// m_Wrist.SetNeutralMode(signals::NeutralModeValue::Brake);
@@ -116,6 +125,7 @@ void Arm::Init() {
 	// m_Pivot.SetSelectedSensorPosition((CANCODER_ZERO - m_PivotCANCoder.GetAbsolutePosition()) * PIVOT_TICKS_PER_DEGREE);
 	//m_Climb.SetPosition(units::angle::turn_t(PivotStringPotUnitsToRotations(m_StringPot.GetValue())));
 	DebugOutF("climb rotations: " + std::to_string(PivotStringPotUnitsToRotations(m_StringPot.GetValue())));
+
 }
 
 void Arm::SetButtons() {
@@ -179,7 +189,7 @@ frc2::FunctionalCommand* Arm::ManualControls()
 
 		DebugOutF("inside of manual controls");
 		
-		//DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
+		DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
 		while(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
 			if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
 				DebugOutF("inside of if for shooter up");
@@ -189,6 +199,8 @@ frc2::FunctionalCommand* Arm::ManualControls()
 				m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.25));
 			}
 		}
+		// m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.6));
+		// m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.55));
 			// //.WhileTrue(new frc2::InstantCommand([&] {
 			// 	//m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.1));
 			// 	frc2::PrintCommand("hello");

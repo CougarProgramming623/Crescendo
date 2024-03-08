@@ -70,7 +70,7 @@ class Arm : public frc2::SubsystemBase {
 	// inline hardware::TalonFX& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline rev::CANSparkMax& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline hardware::CANcoder& GetPivotCANCoder() {return m_PivotCANCoder;}
-	// inline frc2::Trigger& GetArmOverrideButton() {return m_ArmOverride; }
+	   inline frc2::Trigger& GetArmOverrideButton() {return m_ArmOverride; }
 	// inline frc2::Trigger& GetConeModeButton() {return m_ConeMode; }
 	// inline frc2::Trigger& GetIntakeButton() {return m_IntakeButton; }
 	// inline frc2::Trigger& GetOuttakeButton() {return m_OuttakeButton; }
@@ -93,13 +93,14 @@ class Arm : public frc2::SubsystemBase {
 	double m_WristPos;
 	double m_PivotPos;
 
+	//hardware::TalonFX m_ShooterMotor1;
+	hardware::TalonFX m_ShooterMotor2;
+
 	private:
 	
 	//motors
 	hardware::TalonFX m_Pivot;
 	hardware::TalonFX m_Climb;
-	hardware::TalonFX m_ShooterMotor1;
-	hardware::TalonFX m_ShooterMotor2;
 	//hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};
 	//hardware::TalonFX m_Wrist;
 	//motorcontrol::can::TalonSRX m_BottomIntake;
@@ -121,7 +122,7 @@ class Arm : public frc2::SubsystemBase {
 	// frc2::Trigger m_TransitMode;
 	// frc2::Trigger m_GroundPickupMode;
 
-	// frc2::Trigger m_Override;
+	  frc2::Trigger m_ArmOverride;
 	// frc2::Trigger m_Override2;
 	// frc2::Trigger m_ShooterDown;
 	// frc2::Trigger m_ShooterUp;

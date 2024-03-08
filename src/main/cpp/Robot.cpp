@@ -96,7 +96,7 @@ void Robot::AutoButtons() {
   
   // frc2::Trigger m_IntakeSwitch;
   // frc2::Trigger m_FlywheelSwitch;
-  m_ArmOverride = frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
+ //m_ArmOverride = frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
 	m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
 	m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
   m_VisionAim = frc2::Trigger(BUTTON_L(AIM_BUTTON));
@@ -450,6 +450,8 @@ void Robot::RobotPeriodic() {
   if(GetButtonBoard().GetRawButton(16)) {
     DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
     DebugOutF("Stringpot Degrees: " + std::to_string(GetArm().PivotStringPotUnitsToDegrees(GetArm().GetStringPot().GetValue())));
+    // GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.6));
+		GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.55));
   }
 
   // if(Robot::GetButtonBoard().GetRawButton(16)){
