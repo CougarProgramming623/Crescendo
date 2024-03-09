@@ -58,7 +58,7 @@ Arm::Arm() :
 
 void Arm::Init() {
 	DebugOutF("inside arm init");
-	m_Pivot.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+	//m_Pivot.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 	m_Climb.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
 
 	// m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
@@ -250,7 +250,7 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	// else m_BottomIntakeVoltage = 0;
 
 	},[&](bool e) { // onEnd
-		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+		//m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
 		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
 	},
 	[&] { // isFinished
