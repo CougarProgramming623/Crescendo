@@ -64,7 +64,7 @@ class Arm : public frc2::SubsystemBase {
 	
 	//getters
 	// inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
-	// inline hardware::TalonFX& GetWristMotor() {return m_Wrist;} 
+	 inline hardware::TalonFX& GetClimbMotor() {return m_Climb;} 
 	// inline TalonSRX& GetTopIntakeMotor() {return m_TopIntake;}
 	// inline hardware::TalonFX& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline rev::CANSparkMax& GetBottomIntakeMotor() {return m_BottomIntake;}
@@ -92,7 +92,7 @@ class Arm : public frc2::SubsystemBase {
 	double m_WristPos;
 	double m_PivotPos;
 
-	//hardware::TalonFX m_ShooterMotor1;
+	hardware::TalonFX m_ShooterMotor1;
 	hardware::TalonFX m_ShooterMotor2;
 
 	private:
