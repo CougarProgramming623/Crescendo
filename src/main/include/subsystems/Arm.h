@@ -92,7 +92,7 @@ class Arm : public frc2::SubsystemBase {
 	double m_WristPos;
 	double m_PivotPos;
 
-	hardware::TalonFX m_ShooterMotor1;
+	//hardware::TalonFX m_ShooterMotor1;
 	hardware::TalonFX m_ShooterMotor2;
 
 	private:
