@@ -203,11 +203,11 @@ void DriveTrain::Periodic(){
 
 }
 //Converts chassis speed object and updates module states
-// void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
-//   m_ChassisSpeeds = chassisSpeeds;
-//   auto [fl, fr, bl, br] = m_Kinematics.ToSwerveModuleStates(m_ChassisSpeeds);
-//   m_ModuleStates = {fl, fr, bl, br};
-// }
+void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
+  m_ChassisSpeeds = chassisSpeeds;
+  auto [fl, fr, bl, br] = m_Kinematics.ToSwerveModuleStates(m_ChassisSpeeds);
+  m_ModuleStates = {fl, fr, bl, br};
+}
 
 Pose2d DriveTrain::getPose() {
   DebugOutF(std::to_string(m_Odometry.GetEstimatedPosition().X().value()));
