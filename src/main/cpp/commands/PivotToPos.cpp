@@ -7,18 +7,18 @@
 PivotToPos::PivotToPos() {
 	// targetDegrees = degPos;
 	// AddRequirements(&Robot::GetRobot()->GetArm());
-
+	
 }
 
 void PivotToPos::Initialize() {
-	// ARM.GetPivotMotor().SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
+	//ARM.GetPivotMotor().SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
 	targetDegrees = Robot::GetRobot()->GetArm().m_PivotPos;
 	// DebugOutF("starting at: " + std::to_string((ARM.GetPivotCANCoder().GetAbsolutePosition() - CANCODER_ZERO)) + " degrees");
 	// DebugOutF("Going to: " + std::to_string(ARM.PivotTicksToDegrees(ARM.PivotDegreesToTicks(targetDegrees))) + " degrees");
 }
 
 void PivotToPos::Execute() {
-	// ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
+	//ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
 	//ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
 	//DebugOutF(std::to_string(abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition())));
 }

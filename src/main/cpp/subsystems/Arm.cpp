@@ -6,12 +6,12 @@
 #include <frc/geometry/Transform2d.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/WaitCommand.h>
-//#include "./commands/DriveToPosCommand.h"
+ //#include "./commands/DriveToPosCommand.h"
 #include "Constants.h"
 //#include <ctre/phoenix6/configs/Configs.hpp>
 
-// using ctre::phoenix::motorcontrol::ControlMode;
-// using ctre::phoenix::motorcontrol::can::TalonFX;
+using ctre::phoenix::motorcontrol::NeutralMode;
+using namespace ctre::phoenix;
 // using ctre::phoenix::motorcontrol::can::TalonSRX;
 using namespace ctre::phoenix6;
 //using ctre::phoenix6::configs::MagnetSensorConfigs;
@@ -19,14 +19,15 @@ using namespace ctre::phoenix6;
 
 
 
-Arm::Arm() : m_Pivot(PIVOT_MOTOR),
+Arm::Arm() :
+			//m_Pivot(PIVOT_SHOOTER),
 			 m_Climb(CLIMB_MOTOR),
 			 //m_ShooterMotor1(SHOOTER1_MOTOR),
 			 m_ShooterMotor2(SHOOTER2_MOTOR),
 			 m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
-			//  m_Wrist(WRIST_MOTOR),
-			//  m_TopIntake(TOP_INTAKE_MOTOR),
-			//  m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
+			//  //m_Wrist(WRIST_MOTOR),
+			 //m_TopIntake(TOP_INTAKE_MOTOR),
+			//  //m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
 
 			 //BUTTONBOARD 1
 			//  m_ArmOverride([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(ARM_OVERRIDE);}),
@@ -216,7 +217,7 @@ frc2::FunctionalCommand* Arm::ManualControls()
 
 	// ---------------------------------------------------------------------------------------
 
-	//  double power = .55;
+	//  double power = .55; CHANGE THIS
 	// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(CUBE_MODE)) {
 	// 		if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) {
 	// 			m_TopIntake.Set(ControlMode::PercentOutput, power);

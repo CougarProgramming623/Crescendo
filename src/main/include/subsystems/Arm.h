@@ -33,7 +33,7 @@
 
 #include "./commands/PivotToPos.h"
 #include "./commands/DynamicIntake.h"
-#include "./commands/WristToPos.h"
+//#include "./commands/WristToPos.h"
 
 using namespace ctre::phoenix6;
 using namespace ctre::phoenix;
@@ -44,7 +44,6 @@ using namespace ctre::phoenix;
 class Arm : public frc2::SubsystemBase {
 
 	public:
-
 	Arm();
 	void Init();
 	void SetButtons();
@@ -99,7 +98,7 @@ class Arm : public frc2::SubsystemBase {
 	private:
 	
 	//motors
-	hardware::TalonFX m_Pivot;
+	//hardware::TalonFX m_Pivot;
 	hardware::TalonFX m_Climb;
 	//hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};
 	//hardware::TalonFX m_Wrist;

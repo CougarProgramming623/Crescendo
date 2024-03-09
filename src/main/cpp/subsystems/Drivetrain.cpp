@@ -16,6 +16,8 @@
 
 using namespace pathplanner;
 
+using namespace ctre::phoenix6;
+
 //Constructor
 DriveTrain::DriveTrain()
     : m_FrontLeftLocation(units::meter_t (DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t (-DRIVETRAIN_WHEELBASE_METERS / 2.0)),
@@ -40,7 +42,7 @@ DriveTrain::DriveTrain()
       m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
       m_JoystickButtonTwo([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
       m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
-      m_DualMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
+      m_DuaLMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
       m_JoystickOuttake([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
       m_ExtraJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
       m_Timer(),
@@ -75,7 +77,7 @@ DriveTrain::DriveTrain()
 }
 
 void DriveTrain::DriveInit(){
-  m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
+  //m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
   SetDefaultCommand(DriveWithJoystick());
 
   m_JoystickButtonTwo.ToggleOnTrue(new LockOn());
@@ -90,9 +92,9 @@ void DriveTrain::DriveInit(){
 
   m_JoystickOuttake.WhileTrue(
     new frc2::InstantCommand([&]{
-      if(Robot::GetRobot()->m_Intake.GetCurrentCommand() != nullptr){
-        Robot::GetRobot()->m_Intake.GetCurrentCommand()->Cancel();
-      }
+      // if(Robot::GetRobot()->m_Intake.GetCurrentCommand() != nullptr){
+      //   Robot::GetRobot()->m_Intake.GetCurrentCommand()->Cancel();
+      // }
       DebugOutF("Joystick Outtake");
       // Robot::GetRobot()->GetArm().GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0.8));
       //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, .8);
@@ -184,16 +186,16 @@ void DriveTrain::Periodic(){
     if((m_DriveToPoseFlag != true || m_VisionCounter == 25) && !Robot::GetRobot()->m_AutoFlag)
     {
       if(
-        std::abs(m_VisionRelative.X().value()) < 1 &&
+       std::abs(m_VisionRelative.X().value()) < 1 &&
         std::abs(m_VisionRelative.Y().value()) < 1 &&
         std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) 
         {
           m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetFieldPose().Translation(), m_Rotation), m_Timer.GetFPGATimestamp()
           - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
-          //DebugOutF("Vision Update");
+          DebugOutF("Vision Update");
           m_VisionCounter = 0;
         } 
-    } else { m_VisionCounter++; }
+   } else { m_VisionCounter++; }
     m_Odometry.Update(m_Rotation, m_ModulePositions);
   }
 
@@ -201,11 +203,11 @@ void DriveTrain::Periodic(){
 
 }
 //Converts chassis speed object and updates module states
-void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
-  m_ChassisSpeeds = chassisSpeeds;
-  auto [fl, fr, bl, br] = m_Kinematics.ToSwerveModuleStates(m_ChassisSpeeds);
-  m_ModuleStates = {fl, fr, bl, br};
-}
+// void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
+//   m_ChassisSpeeds = chassisSpeeds;
+//   auto [fl, fr, bl, br] = m_Kinematics.ToSwerveModuleStates(m_ChassisSpeeds);
+//   m_ModuleStates = {fl, fr, bl, br};
+// }
 
 Pose2d DriveTrain::getPose() {
   DebugOutF(std::to_string(m_Odometry.GetEstimatedPosition().X().value()));
@@ -249,4 +251,4 @@ void DriveTrain::BreakMode(bool on){
   m_FrontRightModule.BreakMode(on);
   m_BackLeftModule.BreakMode(on);
   m_BackRightModule.BreakMode(on);
-}
+ }

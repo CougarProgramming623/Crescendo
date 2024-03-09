@@ -2,11 +2,11 @@
 #include "Robot.h"
 
 
-#define ARM Robot::GetRobot()->GetArm()
+// #define ARM Robot::GetRobot()->GetArm()
 
 WristToPos::WristToPos() {
-	// targetDegrees = degPos;
-	AddRequirements(&Robot::GetRobot()->GetArm());
+// 	// targetDegrees = degPos;
+// 	AddRequirements(&Robot::GetRobot()->GetArm());
 }
 
 void WristToPos::Initialize() {
@@ -28,7 +28,7 @@ void WristToPos::End(bool interrupted){
 	//ARM.GetWristMotor().Set(ControlMode::PercentOutput, 0);
 }
 
-bool WristToPos::IsFinished() {
-	//return abs(ARM.WristDegreesToTicks(targetDegrees) - ARM.GetWristMotor().GetSelectedSensorPosition()) < 20000;
-	return Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE);
+ bool WristToPos::IsFinished() {
+// 	//return abs(ARM.WristDegreesToTicks(targetDegrees) - ARM.GetWristMotor().GetSelectedSensorPosition()) < 20000;
+    return Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE);
 }

@@ -127,18 +127,19 @@ class Robot : public frc::TimedRobot {
   // frc2::Trigger m_MidCube;
   // frc2::Trigger m_PlacingMode;
 
-  // frc2::Trigger m_NavXReset;
-  // frc2::Trigger m_AutoBalance;
-  // frc2::Trigger m_VisionPoseReset;
+  frc2::Trigger m_NavXReset;
+  frc2::Trigger m_AutoBalance;
+  frc2::Trigger m_VisionPoseReset;
 
   frc2::Trigger m_Print;
   int m_COBTicks;
+  //double m_Set;
 
 
   int SelectedRow;
 	int SelectedColumn;
 
-  Intake m_Intake;
+  //Intake m_Intake;
 
   bool m_AutoFlag;
   int m_ColOffset;
@@ -166,7 +167,9 @@ class Robot : public frc::TimedRobot {
   Arm m_Arm;
 
   frc::Timer m_AutoTimer;
-  DriveTrain m_DriveTrain;
+  DriveTrain m_DriveTrain;//Drivetrain "Master" object to access all instances(objects) of the drivetrain class
+  //Shooter m_Shooter;//Shooter "Master" object to access all instances(objects) of the shooter class
+  //Intake m_Intake;//Intake "Master" object to access all instances(objects) of the intake class
 
   Vision m_Vision;
 

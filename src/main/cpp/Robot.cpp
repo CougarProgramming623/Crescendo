@@ -9,7 +9,7 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/geometry/Pose2d.h>
 #include "Util.h"
-//#include "commands/TrajectoryCommand.h"
+#include "commands/TrajectoryCommand.h"
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/RobotController.h>
 #include <frc2/command/SequentialCommandGroup.h>
@@ -17,7 +17,7 @@
 #include <frc2/command/ParallelDeadlineGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/CommandPtr.h>
-#include "commands/WristToPosAuto.h"
+//#include "commands/WristToPosAuto.h"
 #include "commands/PivotToPosAuto.h"
 #include "commands/LockOn.h"
 #include <frc/DriverStation.h>
@@ -37,7 +37,7 @@ Robot* Robot::s_Instance = nullptr;
 
 Robot::Robot() :
 m_NavX(frc::SerialPort::Port(2), AHRS::SerialDataType(0), uint8_t(66)),
-m_Intake(),
+//m_Intake(),
 m_LED()
 {
   DebugOutF("inside robot constructor");
@@ -57,11 +57,13 @@ m_LED()
 
 
 void Robot::RobotInit() {
-
   GetNavX().ZeroYaw();
   GetNavX().SetAngleAdjustment(0);
   s_Instance = this;
+  DebugOutF("initalizing drivetrain w/ motors");
   m_DriveTrain.DriveInit();
+  
+  DebugOutF("initalizing motors finished");
   DebugOutF("x: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   DebugOutF("y: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF("theta: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
@@ -176,7 +178,7 @@ void Robot::AutoButtons() {
 
   // m_AutoBalance.ToggleOnTrue(
   //   new frc2::InstantCommand([&]{
-  //     new DualMotorControl();
+  //     new Shooter();
   //   })
   // );
 
@@ -392,38 +394,39 @@ frc2::CommandPtr Robot::getAutonomousCommand() {
 }
 
 frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
-	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
-		SelectedPose = SelectedPose +
-			frc::Transform2d(
-				frc::Translation2d(units::meter_t(0), units::meter_t(1.68)),
-				frc::Rotation2d(units::radian_t(0))
-		).Inverse(); //delete inverse if not going 180
-	} else if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 2){
-		SelectedPose = SelectedPose + 
-			frc::Transform2d(
-				frc::Translation2d(units::meter_t(0), units::meter_t(2 * 1.68)),
-				frc::Rotation2d(units::radian_t(0))
-		).Inverse(); //delete inverse if not going 180	
-	}
-	if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
-		SelectedPose = 
-			frc::Pose2d(
-				units::meter_t(16.541)-SelectedPose.Translation().X(), 
-				SelectedPose.Translation().Y(),
-				SelectedPose.Rotation().RotateBy(Rotation2d(units::degree_t(180)))
-			);
-	}
-	return SelectedPose;
-}
+// 	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
+// 		SelectedPose = SelectedPose +
+// 			frc::Transform2d(
+// 				frc::Translation2d(units::meter_t(0), units::meter_t(1.68)),
+// 				frc::Rotation2d(units::radian_t(0))
+// 		).Inverse(); //delete inverse if not going 180
+// 	} else if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 2){
+// 		SelectedPose = SelectedPose + 
+// 			frc::Transform2d(
+// 				frc::Translation2d(units::meter_t(0), units::meter_t(2 * 1.68)),
+// 				frc::Rotation2d(units::radian_t(0))
+// 		).Inverse(); //delete inverse if not going 180	
+// 	}
+// 	if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
+// 		SelectedPose = 
+// 			frc::Pose2d(
+// 				units::meter_t(16.541)-SelectedPose.Translation().X(), 
+// 				SelectedPose.Translation().Y(),
+// 				SelectedPose.Rotation().RotateBy(Rotation2d(units::degree_t(180)))
+// 			);
+// 	}
+// 	return SelectedPose;
+// }
 
-/**
- * This function is called every 20 ms, no matter the mode. Use
- * this for items like diagnostics that you want to run during disabled,
- * autonomous, teleoperated and test.
- *
- * <p> This runs after the mode specific periodic functions, but before
- * LiveWindow and SmartDashboard integrated updating.
- */
+// /**
+//  * This function is called every 20 ms, no matter the mode. Use
+//  * this for items like diagnostics that you want to run during disabled,
+//  * autonomous, teleoperated and test.
+//  *
+//  * <p> This runs after the mode specific periodic functions, but before
+//  * LiveWindow and SmartDashboard integrated updating.
+//  */
+}
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
   Robot::GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());
@@ -451,8 +454,23 @@ void Robot::RobotPeriodic() {
     DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
     DebugOutF("Stringpot Degrees: " + std::to_string(GetArm().PivotStringPotUnitsToDegrees(GetArm().GetStringPot().GetValue())));
     // GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.6));
-		GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.55));
+		//GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.55));
   }
+  if(GetButtonBoard().GetRawButton(FLYWHEEL_SWITCH)){
+    GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(GetButtonBoard().GetRawAxis(SHOOTER_SPEED) - 0.05));
+    GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(GetButtonBoard().GetRawAxis(SHOOTER_SPEED)));
+  }
+  if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
+				DebugOutF("invside of if for shooter up");
+				GetArm().GetClimbMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.2));
+	} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
+				DebugOutF("inside of if for shooter down");
+				GetArm().GetClimbMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.2));
+			}
+  if(GetButtonBoard().GetRawButton(INTAKE_SWITCH)){ 
+    //Need to implement motor function and waitcommand and then servo
+  }
+
 
   // if(Robot::GetButtonBoard().GetRawButton(16)){
   //   DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
@@ -494,11 +512,11 @@ void Robot::RobotPeriodic() {
  * robot is disabled.
  */
 void Robot::DisabledInit() {
-  GetDriveTrain().BreakMode(true);
-  GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  //GetDriveTrain().BreakMode(true);
+  // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
   
 }
@@ -731,11 +749,11 @@ void Robot::TeleopInit() {
   // m_MMT.MotionMagicTestInit();
   m_LED.m_IsTele = true;  // used for LED Timer
   //GetNavX().ZeroYaw();
-  m_DriveTrain.BreakMode(true);
-  GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-  GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  //m_DriveTrain.BreakMode(true);
+  // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  // GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetNavX().SetAngleAdjustment(0);
    
   // frc::Pose2d startingPose = frc::Pose2d(units::meter_t(2.54), units::meter_t(1.75), frc::Rotation2d(units::degree_t(0)));

@@ -8,6 +8,7 @@
 class SwerveModule {
     public:
         SwerveModule(int driveID, int steerID, int encoderPort, double angleOffset);
+        SwerveModule();
 
         double GetDriveVelocity();
 

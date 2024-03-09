@@ -7,7 +7,7 @@ using namespace ctre::phoenix::motorcontrol;
 #define ARM Robot::GetRobot()->GetArm()
 
 DynamicIntake::DynamicIntake() {
-	AddRequirements(&Robot::GetRobot()->m_Intake);
+	//AddRequirements(&Robot::GetRobot()->m_Intake);
 }
 
 void DynamicIntake::Initialize() {
@@ -16,6 +16,10 @@ void DynamicIntake::Initialize() {
 
 void DynamicIntake::Execute() {
 	// double power = .55;
+
+	// if (Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_IN)) {
+	// 	if(Robot::GetRobot())
+	// }
 
 	// if(Robot::GetRobot()->GetButtonBoard().GetRawButton(CUBE_MODE)) {
 	// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) {
@@ -30,7 +34,7 @@ void DynamicIntake::Execute() {
 	// 		ARM.GetTopIntakeMotor().Set(ControlMode::PercentOutput, power);
 	// 		ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, -power);
 	// 	} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) {
-	// 		ARM.GetTopIntakeMotor().Set(ControlMode::PercentOutput, -power);
+	// 		ARM.GetTopIntakeMotor().Set(ControlMode::PercentOutput, -power)
 	// 		ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, power);
 	// 	}
 	// }
@@ -57,7 +61,7 @@ void DynamicIntake::Execute() {
 }
 
 void DynamicIntake::End(bool interrupted){
-	// ARM.GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+	//ARM.GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(0_V));
 	// ARM.GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
 }
 

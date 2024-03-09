@@ -10,6 +10,7 @@
 
 //copied includes
 #include <frc/geometry/Transform2d.h>
+#include <frc/Servo.h>
 #include <frc/geometry/Translation2d.h>
 #include <frc/geometry/Rotation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
@@ -33,7 +34,7 @@
 #include "SwerveModule.h"
 #include <frc2/command/SubsystemBase.h>
 #include "commands/DriveWithJoystick.h"
-#include "commands/DualMotorControl.h"
+//#include "commands/Shooter.h"
 //#include <./commands/TrajectoryCommand.h>
 //#include <./commands/DriveToPosCommand.h>
 #include <frc/Timer.h>
@@ -69,6 +70,12 @@ using namespace frc;
 class DriveTrain : public frc2::SubsystemBase {
  public:
   DriveTrain();
+  //hardware::TalonFX m_ShooterMotor1;
+	//hardware::TalonFX m_ShooterMotor2;
+  //hardware::TalonFX m_PivotShooter;
+  //hardware::TalonFX m_DustpanAngle;
+  //frc2::Trigger m_BigRed;
+  //frc::Servo m_DustpanLaunch {2};
   void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
   void DriveInit();
   void BreakMode(bool on);
@@ -120,6 +127,8 @@ class DriveTrain : public frc2::SubsystemBase {
   SwerveModule m_FrontRightModule;
   SwerveModule m_BackLeftModule;
   SwerveModule m_BackRightModule;
+  //hardware::TalonFX m_ShooterMotor1;
+  //hardware::TalonFX m_ShooterMotor2;
 
   SwerveModulePosition m_FrontLeftOriginalPosition;
   SwerveModulePosition m_FrontRightOriginalPosition;
@@ -153,7 +162,7 @@ class DriveTrain : public frc2::SubsystemBase {
   frc::Timer m_Timer;
 
   frc2::Trigger m_JoystickButtonTwo;
-  frc2::Trigger m_DualMotorControlButton;
+  frc2::Trigger m_DuaLMotorControlButton;
   frc2::Trigger m_NavXResetButton;
   frc2::Trigger m_ExtraJoystickButton;
 
@@ -167,7 +176,7 @@ class DriveTrain : public frc2::SubsystemBase {
 
   std::array<frc::SwerveModuleState, 4> m_ModuleStates;
   
-  frc::PIDController m_xController;
+ frc::PIDController m_xController;
   frc::PIDController m_yController;
   frc::ProfiledPIDController <units::radians> m_ThetaController;
   frc::HolonomicDriveController m_HolonomicController;
