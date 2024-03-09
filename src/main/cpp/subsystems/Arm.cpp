@@ -22,7 +22,6 @@ using namespace ctre::phoenix6;
 Arm::Arm() :
 			//m_Pivot(PIVOT_SHOOTER),
 			 m_Climb(CLIMB_MOTOR),
-			 //m_ShooterMotor1(SHOOTER1_MOTOR),
 			 m_ShooterMotor2(SHOOTER2_MOTOR),
 			 m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
 			//  //m_Wrist(WRIST_MOTOR),
