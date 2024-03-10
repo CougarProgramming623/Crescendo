@@ -20,10 +20,15 @@ using namespace ctre::phoenix6;
 
 
 Arm::Arm() :
-			//m_Pivot(PIVOT_SHOOTER),
+			 m_Pivot(PIVOT_MOTOR),
 			 m_Climb(CLIMB_MOTOR),
+<<<<<<< Updated upstream
+=======
+			 m_ShooterMotor1(SHOOTER1_MOTOR),
+>>>>>>> Stashed changes
 			 m_ShooterMotor2(SHOOTER2_MOTOR),
 			 m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
+			 m_Feeder(FEEDER_MOTOR),
 			//  //m_Wrist(WRIST_MOTOR),
 			 //m_TopIntake(TOP_INTAKE_MOTOR),
 			//  //m_BottomIntake(BOTTOM_INTAKE_MOTOR/*, rev::CANSparkMaxLowLevel::MotorType::kBrushless*/),
@@ -58,6 +63,7 @@ Arm::Arm() :
 void Arm::Init() {
 	DebugOutF("inside arm init");
 	//m_Pivot.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 	m_Climb.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
 
 	// m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
@@ -65,9 +71,9 @@ void Arm::Init() {
 
 	DebugOutF("arm override button: " + std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE)));
 
-	if (Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE)) {
-		DebugOutF("testest");
-	}
+	// if (Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE)) {
+	// 	DebugOutF("testest");
+	// }
 	
 
 	// Robot::GetRobot()->m_ArmOverride.OnTrue(new frc2::InstantCommand([&] {
@@ -190,7 +196,7 @@ frc2::FunctionalCommand* Arm::ManualControls()
 		DebugOutF("inside of manual controls");
 		
 		DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
-		while(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
+		if(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
 			if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
 				DebugOutF("inside of if for shooter up");
 				m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.25));

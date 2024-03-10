@@ -30,7 +30,7 @@
 //#include <commands/WristToPosAuto.h>
 
 
-//using ctre::phoenix::motorcontrol::ControlMode;
+using ctre::phoenix::motorcontrol::ControlMode;
 using namespace pathplanner;
 
 Robot* Robot::s_Instance = nullptr;
@@ -451,7 +451,7 @@ void Robot::RobotPeriodic() {
   }
 
   if(GetButtonBoard().GetRawButton(16)) {
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue())); 
     DebugOutF("Stringpot Degrees: " + std::to_string(GetArm().PivotStringPotUnitsToDegrees(GetArm().GetStringPot().GetValue())));
     // GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.6));
 		//GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.55));
@@ -460,15 +460,31 @@ void Robot::RobotPeriodic() {
     GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(GetButtonBoard().GetRawAxis(SHOOTER_SPEED) - 0.05));
     GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(GetButtonBoard().GetRawAxis(SHOOTER_SPEED)));
   }
+
   if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
-				DebugOutF("invside of if for shooter up");
+				DebugOutF("inside of if for shooter up");
 				GetArm().GetClimbMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.2));
 	} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
 				DebugOutF("inside of if for shooter down");
 				GetArm().GetClimbMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.2));
 			}
-  if(GetButtonBoard().GetRawButton(INTAKE_SWITCH)){ 
-    //Need to implement motor function and waitcommand and then servo
+  if(GetButtonBoard().GetRawButton(INTAKE_SWITCH)){
+                GetArm().m_Feeder.Set(ControlMode::PercentOutput, 1);
+    //First define running feeder motor 
+                GetRobot()->GetDriveTrain().m_DustpanRotate.Set(0);
+                frc2::WaitCommand(0.1_s);
+                GetRobot()->GetDriveTrain().m_DustpanRotate.Set(1);
+    //Then define servo rotating up 
+                GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.66);
+                frc2::WaitCommand(0.25_s);
+                GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(1);
+                frc2::WaitCommand(2_s);
+                GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.66);
+                GetRobot()->GetDriveTrain().m_DustpanRotate.Set(0);
+                GetArm().m_Feeder.Set(ControlMode::PercentOutput,0);
+                
+
+
   }
 
 
