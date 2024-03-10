@@ -12,7 +12,7 @@
 
 using ctre::phoenix::motorcontrol::NeutralMode;
 using namespace ctre::phoenix;
-// using ctre::phoenix::motorcontrol::can::TalonSRX;
+using ctre::phoenix::motorcontrol::can::TalonSRX;
 using namespace ctre::phoenix6;
 //using ctre::phoenix6::configs::MagnetSensorConfigs;
 // using ctre::phoenix6::signals::AbsoluteSensorRangeValue;
@@ -22,10 +22,7 @@ using namespace ctre::phoenix6;
 Arm::Arm() :
 			 m_Pivot(PIVOT_MOTOR),
 			 m_Climb(CLIMB_MOTOR),
-<<<<<<< Updated upstream
-=======
 			 m_ShooterMotor1(SHOOTER1_MOTOR),
->>>>>>> Stashed changes
 			 m_ShooterMotor2(SHOOTER2_MOTOR),
 			 m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
 			 m_Feeder(FEEDER_MOTOR),
@@ -57,7 +54,7 @@ Arm::Arm() :
 
 			// m_Bot(PlaceElement(2, 2))
 			{
-				DebugOutF("arm override button: " + std::to_string(m_ArmOverride.Get()));
+				m_OriginalPivotRotations = m_Pivot.GetPosition().GetValueAsDouble();
 			}
 
 void Arm::Init() {
@@ -130,7 +127,7 @@ void Arm::Init() {
 	
 	// m_Pivot.SetSelectedSensorPosition((CANCODER_ZERO - m_PivotCANCoder.GetAbsolutePosition()) * PIVOT_TICKS_PER_DEGREE);
 	//m_Climb.SetPosition(units::angle::turn_t(PivotStringPotUnitsToRotations(m_StringPot.GetValue())));
-	DebugOutF("climb rotations: " + std::to_string(PivotStringPotUnitsToRotations(m_StringPot.GetValue())));
+	// DebugOutF("climb rotations: " + std::to_string(PivotStringPotUnitsToRotations(m_StringPot.GetValue())));
 
 }
 
@@ -186,82 +183,83 @@ void Arm::SetButtons() {
 }
 
 // while override is active, gives manual joysticks control over the two arm motors
-frc2::FunctionalCommand* Arm::ManualControls()
-{
+// frc2::FunctionalCommand* Arm::ManualControls()
+// {
 	
-	return new frc2::FunctionalCommand([&] { // onInit
-		//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
-	}, [&] { // onExecute
+// 	return new frc2::FunctionalCommand([&] { // onInit
+// 		//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
+// 	}, [&] { // onExecute
 
-		DebugOutF("inside of manual controls");
+// 		DebugOutF("inside of manual controls");
 		
-		DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
-		if(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
-			if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
-				DebugOutF("inside of if for shooter up");
-				m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.25));
-			} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
-				DebugOutF("inside of if for shooter down");
-				m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.25));
-			}
-		}
-		// m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.6));
-		// m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.55));
-			// //.WhileTrue(new frc2::InstantCommand([&] {
-			// 	//m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.1));
-			// 	frc2::PrintCommand("hello");
-			// }));
-			// m_ShooterDown.WhileTrue(new frc2::InstantCommand([&] {
-			// 	//m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.1));
-			// 	frc2::PrintCommand("hello2");
-			// }));
-		//}
-		// m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-		// m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2));
-		// m_Wrist.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2));
+// 		// DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
+// 		// if(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
+// 		// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
+// 		// 		DebugOutF("inside of if for shooter up");
+// 		// 		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.25));
+// 		// 	} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
+// 		// 		DebugOutF("inside of if for shooter down");
+// 		// 		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.25));
+// 		// 	}
+// 		// }
+// 		// m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.6));
+// 		// m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.55));
+// 			// //.WhileTrue(new frc2::InstantCommand([&] {
+// 			// 	//m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.1));
+// 			// 	frc2::PrintCommand("hello");
+// 			// }));
+// 			// m_ShooterDown.WhileTrue(new frc2::InstantCommand([&] {
+// 			// 	//m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.1));
+// 			// 	frc2::PrintCommand("hello2");
+// 			// }));
+// 		//}
+// 		// m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+// 		// m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(Robot::GetRobot()->GetButtonBoard().GetRawAxis(PIVOT_CONTROL) / 2));
+// 		// m_Wrist.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(Robot::GetRobot()->GetButtonBoard().GetRawAxis(WRIST_CONTROL) / 2));
 
-	// ---------------------------------------------------------------------------------------
+// 	// ---------------------------------------------------------------------------------------
 
-	//  double power = .55; CHANGE THIS
-	// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(CUBE_MODE)) {
-	// 		if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) {
-	// 			m_TopIntake.Set(ControlMode::PercentOutput, power);
-	// 			m_BottomIntake.Set(ControlMode::PercentOutput, power);
-	// 		} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) {
-	// 			m_TopIntake.Set(ControlMode::PercentOutput, -power);
-	// 			m_BottomIntake.Set(ControlMode::PercentOutput, -power);
-	// 		}
-	// 	} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(CONE_MODE)) {
-	// 		if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) {f
-	// 			m_TopIntake.Set(ControlMode::PercentOutput, power);
-	// 			m_BottomIntake.Set(ControlMode::PercentOutput, -power);
-	// 		} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) {
-	// 			m_TopIntake.Set(ControlMode::PercentOutput, -power);
-	// 			m_BottomIntake.Set(ControlMode::PercentOutput, power);
-	// 		}
-	// }
+// 	//  double power = .55; CHANGE THIS
+// 	// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(CUBE_MODE)) {
+// 	// 		if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) {
+// 	// 			m_TopIntake.Set(ControlMode::PercentOutput, power);
+// 	// 			m_BottomIntake.Set(ControlMode::PercentOutput, power);
+// 	// 		} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) {
+// 	// 			m_TopIntake.Set(ControlMode::PercentOutput, -power);
+// 	// 			m_BottomIntake.Set(ControlMode::PercentOutput, -power);
+// 	// 		}
+// 	// 	} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(CONE_MODE)) {
+// 	// 		if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) {f
+// 	// 			m_TopIntake.Set(ControlMode::PercentOutput, power);
+// 	// 			m_BottomIntake.Set(ControlMode::PercentOutput, -power);
+// 	// 		} else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) {
+// 	// 			m_TopIntake.Set(ControlMode::PercentOutput, -power);
+// 	// 			m_BottomIntake.Set(ControlMode::PercentOutput, power);
+// 	// 		}
+// 	// }
 
-	//---------------------------------------------------------------------------------------------
+// 	//---------------------------------------------------------------------------------------------
 	
-	// double power = -.7; 
+// 	// double power = -.7; 
 	
-	//from percent output to voltage out ): - DEFINITELY LOOK, changed the if statements to just change the value of the voltage,
-	//and set the control statement outside of the if-statement just to make it a little neater
-	// m_BottomIntake.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(m_BottomIntakeVoltage));
+// 	//from percent output to voltage out ): - DEFINITELY LOOK, changed the if statements to just change the value of the voltage,
+// 	//and set the control statement outside of the if-statement just to make it a little neater
+// 	// m_BottomIntake.SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(m_BottomIntakeVoltage));
 
 
-	// if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) m_BottomIntakeVoltage = power; /*m_BottomIntake.Set(ControlMode::PercentOutput, power);*/
-	// else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) m_BottomIntakeVoltage = 1; /*m_BottomIntake.SetControl(m_request.WithOutput(12_V));*/
-	// else m_BottomIntakeVoltage = 0;
+// 	// if(Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_BUTTON)) m_BottomIntakeVoltage = power; /*m_BottomIntake.Set(ControlMode::PercentOutput, power);*/
+// 	// else if (Robot::GetRobot()->GetButtonBoard().GetRawButton(OUTTAKE_BUTTON)) m_BottomIntakeVoltage = 1; /*m_BottomIntake.SetControl(m_request.WithOutput(12_V));*/
+// 	// else m_BottomIntakeVoltage = 0;
 
-	},[&](bool e) { // onEnd
-		//m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-	},
-	[&] { // isFinished
-		return !Robot::GetRobot()->m_ArmOverride.Get();
-	});
-}
+// 	},[&](bool e) { // onEnd
+// 		//m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+// 		// m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+// 	},
+// 	[&] { // isFinished
+// 		// return !Robot::GetRobot()->m_ArmOverride.Get();
+// 		return false;
+// 	});
+// }
 
 void Arm::SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc) {
 	//LOOK

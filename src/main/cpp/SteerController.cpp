@@ -10,9 +10,14 @@ SteerController::SteerController(int motorID, int EncoderPort, double AngleOffse
     encoder{EncoderPort},
     angleOffsetVoltage(AngleOffset)
 {
+    // if(!motor.GetInverted() && (motorID == 34|| motorID == 52)) {
+    //     DebugOutF("motor " + std::to_string(motorID) + " needed to be fixed");
+    //     motor.SetInverted(true);
+    // }
     //motor.SetControl(motorControlMode.WithPosition(units::angle::turn_t((360-(fmod(((encoder.GetVoltage() * ENCODER_VOLTAGE_TO_DEGREE) + (360-AngleOffset)), 360))) / STEER_ENCODER_POSITION_CONSTANT)));
-    DebugOutF("initial position: " + std::to_string((encoder.GetVoltage() / frc::RobotController::GetVoltage5V()) - (angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET)));
-    motor.SetPosition(units::angle::turn_t((angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) - (encoder.GetVoltage() / frc::RobotController::GetVoltage5V())));
+    DebugOutF("initial position: " + std::to_string((encoder.GetVoltage() / frc::RobotController::GetVoltage5V()) - (angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) * (360/MAX_VOLTAGE_WHEN_OFFSET)));
+    motor.SetPosition(units::angle::turn_t(0));
+    //motor.SetPosition(units::angle::turn_t((angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) - (encoder.GetVoltage() / frc::RobotController::GetVoltage5V())));
     motorControlMode.Position = units::turn_t((encoder.GetVoltage() / frc::RobotController::GetVoltage5V()) - (angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET));
 }
 

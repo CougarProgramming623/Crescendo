@@ -80,7 +80,7 @@ void DriveTrain::DriveInit(){
   //m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
   SetDefaultCommand(DriveWithJoystick());
 
-  m_JoystickButtonTwo.ToggleOnTrue(new LockOn());
+  // m_JoystickButtonTwo.ToggleOnTrue(new LockOn());
 
   //m_ExtraJoystickButton.WhileHeld(new DriveToPosCommand());
 
@@ -101,27 +101,27 @@ void DriveTrain::DriveInit(){
     }
   ));
 
-  m_JoystickOuttake.OnFalse(
-    new frc2::InstantCommand([&]{
-      // Robot::GetRobot()->GetArm().GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
-      //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-      frc2::CommandScheduler::GetInstance().Schedule(new DynamicIntake());
-    })
-  );
+  // m_JoystickOuttake.OnFalse(
+  //   new frc2::InstantCommand([&]{
+  //     // Robot::GetRobot()->GetArm().GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
+  //     //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
+  //     frc2::CommandScheduler::GetInstance().Schedule(new DynamicIntake());
+  //   })
+  // );
 
 
   //m_DualMotorControlButton.ToggleOnTrue(new DualMotorControl());
 
 
   m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
-  m_FrontRightModule.m_DriveController.motor.SetInverted(false);
-  m_FrontRightModule.m_SteerController.motor.SetInverted(true); //2024
-  m_BackRightModule.m_DriveController.motor.SetInverted(true); //2024
-  m_BackRightModule.m_SteerController.motor.SetInverted(false);
-  m_FrontLeftModule.m_DriveController.motor.SetInverted(true); //2024
-  m_FrontLeftModule.m_SteerController.motor.SetInverted(false);
-  m_BackLeftModule.m_DriveController.motor.SetInverted(false);
-  m_BackLeftModule.m_SteerController.motor.SetInverted(true); //2024
+  DebugOutF("frd: " + std::to_string(m_FrontRightModule.m_DriveController.motor.GetInverted()));
+  DebugOutF("frs: " + std::to_string(m_FrontRightModule.m_SteerController.motor.GetInverted()));
+  DebugOutF("fld: " + std::to_string(m_FrontLeftModule.m_DriveController.motor.GetInverted()));
+  DebugOutF("fls: " + std::to_string(m_FrontLeftModule.m_SteerController.motor.GetInverted()));
+  DebugOutF("brd: " + std::to_string(m_BackRightModule.m_DriveController.motor.GetInverted()));
+  DebugOutF("brs: " + std::to_string(m_BackRightModule.m_SteerController.motor.GetInverted()));
+  DebugOutF("bld: " + std::to_string(m_BackLeftModule.m_DriveController.motor.GetInverted()));
+  DebugOutF("bls: " + std::to_string(m_BackLeftModule.m_SteerController.motor.GetInverted()));
 }
 
 /*

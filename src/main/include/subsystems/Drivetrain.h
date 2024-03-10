@@ -75,7 +75,8 @@ class DriveTrain : public frc2::SubsystemBase {
   //hardware::TalonFX m_PivotShooter;
   //hardware::TalonFX m_DustpanAngle;
   //frc2::Trigger m_BigRed;
-  //frc::Servo m_DustpanLaunch {2};
+  frc::Servo m_DustpanLaunch {0};
+  frc::Servo m_DustpanRotate {1};
   void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
   void DriveInit();
   void BreakMode(bool on);

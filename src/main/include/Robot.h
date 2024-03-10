@@ -67,11 +67,15 @@ class Robot : public frc::TimedRobot {
 
   frc2::CommandPtr getAutonomousCommand();
   frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
+  void MotorInversionCheck();
+  // void MotorInversionCorrection(ctre::phoenix6::hardware::TalonFX motor, int ID, bool invert);
 
   //motor control requests - LOOK, VERY IMPORTANT
   //controls::VoltageOut m_VoltageOutRequest{0_V};
   controls::DutyCycleOut m_DutyCycleOutRequest{0};
   controls::MotionMagicDutyCycle m_MotionMagicRequest{units::angle::turn_t(0)};
+
+  bool inversionPrint = true;
 
   double previousErrorX = 0;
   double previousErrorY = 0;

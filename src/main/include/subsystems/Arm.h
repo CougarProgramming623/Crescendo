@@ -29,7 +29,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc/AnalogInput.h>
-//#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 #include "./commands/PivotToPos.h"
 #include "./commands/DynamicIntake.h"
@@ -37,7 +37,7 @@
 
 using namespace ctre::phoenix6;
 using namespace ctre::phoenix;
-//using ctre::phoenix::motorcontrol::can::TalonSRX;
+using ctre::phoenix::motorcontrol::can::TalonSRX;
 //using ctre::phoenix6::
 
 
@@ -52,19 +52,20 @@ class Arm : public frc2::SubsystemBase {
 	frc2::FunctionalCommand* ManualControls();
 	void SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc);
 
-	inline double PivotStringPotUnitsToDegrees(double units) {return ((units - STRINGPOT_ZERO) * PIVOT_DEGREES_PER_STRINGPOT_UNITS + STRINGPOT_ZERO_DEGREES); }
-	inline double PivotStringPotUnitsToRotations(double units) {return PivotDegreesToRotations(PivotStringPotUnitsToDegrees(units));}
+	// inline double PivotStringPotUnitsToDegrees(double units) {return ((units - STRINGPOT_ZERO) * PIVOT_DEGREES_PER_STRINGPOT_UNITS + STRINGPOT_ZERO_DEGREES); }
+	// inline double PivotStringPotUnitsToRotations(double units) {return PivotDegreesToRotations(PivotStringPotUnitsToDegrees(units));}
+	inline double PivotStringPotUnitsToRotations(double units) {return 0;}
 
-	inline double PivotDegreesToStringPotUnits(double degrees) {return ((degrees / PIVOT_DEGREES_PER_STRINGPOT_UNITS) + STRINGPOT_ZERO); }
-	inline double PivotRotationsToStringPotUnits(double rotations) {return PivotDegreesToStringPotUnits(PivotRotationsToDegrees(rotations));}
+	// inline double PivotDegreesToStringPotUnits(double degrees) {return ((degrees / PIVOT_DEGREES_PER_STRINGPOT_UNITS) + STRINGPOT_ZERO); }
+	// inline double PivotRotationsToStringPotUnits(double rotations) {return PivotDegreesToStringPotUnits(PivotRotationsToDegrees(rotations));}
 	
 	inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
 	inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
 
 	
 	//getters
-	// inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
-	 inline hardware::TalonFX& GetClimbMotor() {return m_Climb;} 
+	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
+	inline hardware::TalonFX& GetClimbMotor() {return m_Climb;} 
 	// inline TalonSRX& GetTopIntakeMotor() {return m_TopIntake;}
 	// inline hardware::TalonFX& GetBottomIntakeMotor() {return m_BottomIntake;}
 	// inline rev::CANSparkMax& GetBottomIntakeMotor() {return m_BottomIntake;}
@@ -92,8 +93,12 @@ class Arm : public frc2::SubsystemBase {
 	double m_WristPos;
 	double m_PivotPos;
 
+	double m_OriginalPivotRotations;
+	double m_StringPotOffset;
+
 	hardware::TalonFX m_ShooterMotor1;
 	hardware::TalonFX m_ShooterMotor2;
+	TalonSRX m_Feeder;
 
 	private:
 	
@@ -104,7 +109,6 @@ class Arm : public frc2::SubsystemBase {
 	//hardware::TalonFX m_Wrist;
 	//motorcontrol::can::TalonSRX m_BottomIntake;
 	// rev::CANSparkMax m_BottomIntake;
-	// TalonSRX m_TopIntake;
 
 
 	//motor control voltages
