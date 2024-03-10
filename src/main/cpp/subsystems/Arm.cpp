@@ -20,6 +20,7 @@ using namespace ctre::phoenix6;
 
 
 Arm::Arm() :
+			//UNCOMMENT
 			 m_Pivot(PIVOT_MOTOR),
 			 m_Climb(CLIMB_MOTOR),
 			 m_ShooterMotor1(SHOOTER1_MOTOR),
@@ -54,12 +55,13 @@ Arm::Arm() :
 
 			// m_Bot(PlaceElement(2, 2))
 			{
-				m_OriginalPivotRotations = m_Pivot.GetPosition().GetValueAsDouble();
+				// m_OriginalPivotRotations = m_Pivot.GetPosition().GetValueAsDouble();
 			}
 
 void Arm::Init() {
 	DebugOutF("inside arm init");
-	//m_Pivot.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+	//UNCOMMENT
+	m_Pivot.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 	m_Climb.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
 
@@ -72,7 +74,7 @@ void Arm::Init() {
 	// 	DebugOutF("testest");
 	// }
 	
-
+	//UNCOMMENT
 	// Robot::GetRobot()->m_ArmOverride.OnTrue(new frc2::InstantCommand([&] {
 	// 	//ManualControls()
 	// 	frc2::PrintCommand("ARM OVERRIDE");
@@ -132,8 +134,6 @@ void Arm::Init() {
 }
 
 void Arm::SetButtons() {
-
-
 	//m_IntakeButton.OnTrue(DynamicIntake().ToPtr());
 	//m_OuttakeButton.OnTrue(DynamicIntake().ToPtr());
 

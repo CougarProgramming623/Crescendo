@@ -24,6 +24,7 @@ class DriveController {
     private:
         double nominalVoltage = 12;  //FIX it is double.NaN in the java and i still dont know what that means
         double currentLimit;    //FIX it is double.NaN in the java and i still dont know what that means
+        bool invert = false;
 
 
 };  

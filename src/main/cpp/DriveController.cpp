@@ -17,11 +17,19 @@ DriveController::DriveController(int ID)
     //motor.SetInverted(SMTH)                           FIX idk why but some of them rotate clockwise and others counter clockwise
     //motor.SetInverted(true);
     // motor.SetSensorPhase(true);                         //FIX also dont know why we do this one
+    if(ID == BACK_RIGHT_MODULE_DRIVE_MOTOR || ID == FRONT_LEFT_MODULE_DRIVE_MOTOR) {
+        invert = true;
+    }
 }
 
 //Set drive voltage
 void DriveController::SetReferenceVoltage(double voltage){
+    // if(invert) {
+    //     motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(voltage / nominalVoltage * -1));
+    // } else {
     motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(voltage / nominalVoltage));
+    // }
+    
 }   
 
 //Get module velocity in meters per second

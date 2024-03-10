@@ -7,7 +7,8 @@
 
 //#define ROBOT_WHEELBASE
 // #define ROBOT_WHEELBASE
-#define O12
+//#define O12
+#define ANATOLI
 
 #define DRIVE_REDUCTION ((14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0))
 #define STEER_REDUCTION ((14.0 /50.0) * (10.0 / 60.0))
@@ -71,6 +72,50 @@
      */
     #define DRIVETRAIN_WHEELBASE_METERS 0.61595
 
+    #define FRONT_LEFT_MODULE_DRIVE_MOTOR 54 //inverted
+    #define FRONT_LEFT_MODULE_STEER_MOTOR 58
+    #define FRONT_LEFT_MODULE_STEER_OFFSET 4.27//
+    #define FRONT_LEFT_MODULE_ENCODER_PORT 2
+
+    #define FRONT_RIGHT_MODULE_DRIVE_MOTOR 38
+    #define FRONT_RIGHT_MODULE_STEER_MOTOR 61 //inverted
+    #define FRONT_RIGHT_MODULE_STEER_OFFSET 3.67//
+    #define FRONT_RIGHT_MODULE_ENCODER_PORT 1
+
+    #define BACK_LEFT_MODULE_DRIVE_MOTOR 32
+    #define BACK_LEFT_MODULE_STEER_MOTOR 35 //inverted
+    #define BACK_LEFT_MODULE_STEER_OFFSET 3.42//
+    #define BACK_LEFT_MODULE_ENCODER_PORT 3
+
+    #define BACK_RIGHT_MODULE_DRIVE_MOTOR 51 //inverted
+    #define BACK_RIGHT_MODULE_STEER_MOTOR 60
+    #define BACK_RIGHT_MODULE_STEER_OFFSET 2.47//
+    #define BACK_RIGHT_MODULE_ENCODER_PORT 0
+
+    #define MAX_VOLTAGE_WHEN_OFFSET 4.76
+
+    #define CLIMB_MOTOR 31
+
+
+    // #define LIMELIGHT_HEIGHT    -1   //cm
+    // //#define LIMELIGHT_HEIGHT 44.846875 //cm on C
+    // //#define TARGET_HEIGHT_SHORT 31.4   // Grid //cm
+    // #define LIMELIGHT_ANGLE  -1     // degrees
+
+
+#endif
+
+#ifdef ANATOLI
+
+    #define DRIVETRAIN_TRACKWIDTH_METERS 0.61595
+
+    /**
+     * The front-to-back distance between the drivetrain wheels.
+     *
+     * Should be measured from center to center.
+     */
+    #define DRIVETRAIN_WHEELBASE_METERS 0.61595
+
     #define FRONT_LEFT_MODULE_DRIVE_MOTOR 41
     #define FRONT_LEFT_MODULE_STEER_MOTOR 36
     #define FRONT_LEFT_MODULE_STEER_OFFSET 4.27//
@@ -95,14 +140,8 @@
 
     #define CLIMB_MOTOR 31
 
-
-    // #define LIMELIGHT_HEIGHT    -1   //cm
-    // //#define LIMELIGHT_HEIGHT 44.846875 //cm on C
-    // //#define TARGET_HEIGHT_SHORT 31.4   // Grid //cm
-    // #define LIMELIGHT_ANGLE  -1     // degrees
-
-
 #endif
+
 
 #define TARGET_HEIGHT_TALL  69    // Loading Zone //cm
 #define TARGET_HEIGHT_SHORT 31.59125 //cm on the cone roughly 12.5 in

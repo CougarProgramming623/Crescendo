@@ -35,7 +35,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition(){
 }
 
 //Set the module to drive at a voltage at an angle in radians
-void SwerveModule::Set(double driveVoltage, double steerAngle){
+void SwerveModule::Set(double driveVoltage, double steerAngle) {
     steerAngle  = fmod(steerAngle, 2.0 * M_PI);
     if(steerAngle < 0.0){
         steerAngle += (2.0 * M_PI);

@@ -64,6 +64,7 @@ class Arm : public frc2::SubsystemBase {
 
 	
 	//getters
+	//UNCOMMENT
 	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
 	inline hardware::TalonFX& GetClimbMotor() {return m_Climb;} 
 	// inline TalonSRX& GetTopIntakeMotor() {return m_TopIntake;}
@@ -96,6 +97,7 @@ class Arm : public frc2::SubsystemBase {
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
 
+	//UNCOMMENT
 	hardware::TalonFX m_ShooterMotor1;
 	hardware::TalonFX m_ShooterMotor2;
 	TalonSRX m_Feeder;
@@ -103,6 +105,7 @@ class Arm : public frc2::SubsystemBase {
 	private:
 	
 	//motors
+	//UNCOMMENT
 	hardware::TalonFX m_Pivot;
 	hardware::TalonFX m_Climb;
 	//hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};

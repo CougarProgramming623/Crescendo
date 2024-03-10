@@ -23,6 +23,8 @@ class SteerController {
         controls::PositionDutyCycle motorControlMode{units::angle::turn_t(0)};
         
         frc::AnalogInput encoder;
+
+        bool invert = false;
         
         double angleOffsetVoltage;
         double referenceAngleRadians;

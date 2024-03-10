@@ -36,19 +36,19 @@ using namespace pathplanner;
 Robot* Robot::s_Instance = nullptr;
 
 Robot::Robot() :
-m_NavX(frc::SerialPort::Port(2), AHRS::SerialDataType(0), uint8_t(66)),
+m_NavX(frc::SerialPort::Port(1), AHRS::SerialDataType(0), uint8_t(66))
 //m_Intake(),
-m_LED()
+// m_LED()
 {
   DebugOutF("inside robot constructor");
   s_Instance = this;
 
-  NamedCommands::registerCommand("lockOn", std::move(LockOn().ToPtr()));
-  //NamedCommands::registerCommand("driveToPosCommand", std::move(DriveToPosCommand().ToPtr())); 
-  NamedCommands::registerCommand("driveWithJoystick", std::move(DriveWithJoystick().ToPtr()));
-  //NamedCommands::registerCommand("dualMotorControl", std::move(DualMotorControl().ToPtr()));
-  //NamedCommands::registerCommand("dynamicIntake", std::move(DynamicIntake().ToPtr())); 
-  NamedCommands::registerCommand("pivotToPos", std::move(PivotToPos().ToPtr())); 
+  // NamedCommands::registerCommand("lockOn", std::move(LockOn().ToPtr()));
+  // //NamedCommands::registerCommand("driveToPosCommand", std::move(DriveToPosCommand().ToPtr())); 
+  // NamedCommands::registerCommand("driveWithJoystick", std::move(DriveWithJoystick().ToPtr()));
+  // //NamedCommands::registerCommand("dualMotorControl", std::move(DualMotorControl().ToPtr()));
+  // //NamedCommands::registerCommand("dynamicIntake", std::move(DynamicIntake().ToPtr())); 
+  // NamedCommands::registerCommand("pivotToPos", std::move(PivotToPos().ToPtr())); 
   //NamedCommands::registerCommand("pivotToPosAuto", std::move(PivotToPosAuto().ToPtr()));
   //NamedCommands::registerCommand("trajectoryCommand", std::move(TrajectoryCommand().ToPtr()));
   // NamedCommands::registerCommand("wristToPos", std::move(WristToPos().ToPtr())); 
@@ -76,9 +76,9 @@ void Robot::RobotInit() {
   DebugOutF("x: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   DebugOutF("y: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF("theta: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-  m_Vision.VisionInit(); //Make one
-  m_LED.Init();
-  m_Arm.Init();
+  // m_Vision.VisionInit(); //Make one
+  // m_LED.Init();
+  // m_Arm.Init();
 
   DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
   DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
@@ -87,7 +87,7 @@ void Robot::RobotInit() {
   DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
   
   AutoButtons();
-  m_LED.Init();
+  // m_LED.Init();
   
   m_COBTicks = 0;
   m_AutoPath = "";
@@ -107,17 +107,17 @@ void Robot::AutoButtons() {
   
   // frc2::Trigger m_IntakeSwitch;
   // frc2::Trigger m_FlywheelSwitch;
- //m_ArmOverride = frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
-	m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
-	m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
-  m_VisionAim = frc2::Trigger(BUTTON_L(AIM_BUTTON));
-  m_Shoot = frc2::Trigger(BUTTON_L(SHOOT_BUTTON));
-  m_AmpPreset = frc2::Trigger(BUTTON_L(AMP_BUTTON));
-  m_StowPreset = frc2::Trigger(BUTTON_L(STOW_BUTTON));
+  // m_ArmOverride = frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
+	// m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
+	// m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
+  // m_VisionAim = frc2::Trigger(BUTTON_L(AIM_BUTTON));
+  // m_Shoot = frc2::Trigger(BUTTON_L(SHOOT_BUTTON));
+  // m_AmpPreset = frc2::Trigger(BUTTON_L(AMP_BUTTON));
+  // m_StowPreset = frc2::Trigger(BUTTON_L(STOW_BUTTON));
 
-  m_VisionAim.OnTrue(new frc2::InstantCommand([&] {
-		frc2::PrintCommand("VISION AIM");
-	}));
+  // m_VisionAim.OnTrue(new frc2::InstantCommand([&] {
+	// 	frc2::PrintCommand("VISION AIM");
+	// }));
 
   // frc2::Trigger m_AllUp;
   // frc2::Trigger m_ClimbUp;
@@ -266,7 +266,7 @@ void Robot::AutoButtons() {
 //     SelectedColumn = std::abs(m_ColOffset - 0);
 //     frc::Pose2d SelectedPose = 
 // 		  Robot::GetRobot()->GetDriveTrain().m_PoseMatrix[SelectedRow][SelectedColumn];
-// 		Robot::GetRobot()->GetDriveTrain().m_TransformedPose = TransformPose(SelectedPose).TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(180_deg)));
+// 		Robot::GetRobot()->GetDriveTrain().m_TransformedPose =  (SelectedPose).TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(180_deg)));
         
 //   }));
 
@@ -391,41 +391,42 @@ void Robot::AutoButtons() {
 //   );
    }
 
-frc2::CommandPtr Robot::getAutonomousCommand() {
-  // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("Rotation");
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-  // Create a path following command using AutoBuilder. This will also trigger event markers.
-  startingPose = path.get()->getStartingDifferentialPose();
-  return AutoBuilder::followPath(path);
-}
+// frc2::CommandPtr Robot::getAutonomousCommand() {
+//   //UNCOMMENT
+//   // Load the path you want to follow using its name in the GUI
+//   // auto path = PathPlannerPath::fromPathFile("Rotation");
+//   // // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+//   // // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+//   // // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+//   // // Create a path following command using AutoBuilder. This will also trigger event markers.
+//   // startingPose = path.get()->getStartingDifferentialPose();
+//   // return AutoBuilder::followPath(path);
+// }
 
-frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
-	if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
-		SelectedPose = SelectedPose +
-			frc::Transform2d(
-				frc::Translation2d(units::meter_t(0), units::meter_t(1.68)),
-				frc::Rotation2d(units::radian_t(0))
-		).Inverse(); //delete inverse if not going 180
-	} else if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 2){
-		SelectedPose = SelectedPose + 
-			frc::Transform2d(
-				frc::Translation2d(units::meter_t(0), units::meter_t(2 * 1.68)),
-				frc::Rotation2d(units::radian_t(0))
-		).Inverse(); //delete inverse if not going 180	
-	}
-	if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
-		SelectedPose = 
-			frc::Pose2d(
-				units::meter_t(16.541)-SelectedPose.Translation().X(), 
-				SelectedPose.Translation().Y(),
-				SelectedPose.Rotation().RotateBy(Rotation2d(units::degree_t(180)))
-			);
-	}
-	return SelectedPose;
-}
+// frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
+// 	// if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 1){
+// 	// 	SelectedPose = SelectedPose +
+// 	// 		frc::Transform2d(
+// 	// 			frc::Translation2d(units::meter_t(0), units::meter_t(1.68)),
+// 	// 			frc::Rotation2d(units::radian_t(0))
+// 	// 	).Inverse(); //delete inverse if not going 180
+// 	// } else if(Robot::GetRobot()->GetDriveTrain().m_SelectedGrid == 2){
+// 	// 	SelectedPose = SelectedPose + 
+// 	// 		frc::Transform2d(
+// 	// 			frc::Translation2d(units::meter_t(0), units::meter_t(2 * 1.68)),
+// 	// 			frc::Rotation2d(units::radian_t(0))
+// 	// 	).Inverse(); //delete inverse if not going 180	
+// 	// }
+// 	// if(COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
+// 	// 	SelectedPose = 
+// 	// 		frc::Pose2d(
+// 	// 			units::meter_t(16.541)-SelectedPose.Translation().X(), 
+// 	// 			SelectedPose.Translation().Y(),
+// 	// 			SelectedPose.Rotation().RotateBy(Rotation2d(units::degree_t(180)))
+// 	// 		);
+// 	// }
+// 	return SelectedPose;
+// }
 
 // /**
 //  * This function is called every 20 ms, no matter the mode. Use
@@ -443,7 +444,7 @@ void Robot::RobotPeriodic() {
   Robot::GetCOB().GetTable().GetEntry("/COB/deltaX").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.X().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/deltaY").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.Y().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/deltaT").SetDouble(std::abs(-fmod(360 - GetDriveTrain().m_VisionRelative.Rotation().Degrees().value(), 360)));
-  m_Vision.PushID();
+  // m_Vision.PushID();
 
   m_COBTicks++;
   Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(Robot::GetRobot()->GetNavX().GetPitch() + 0.05);
@@ -458,8 +459,8 @@ void Robot::RobotPeriodic() {
   //   DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
   // }
 
-  if(GetButtonBoard().GetRawButton(16)) {
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+  // if(GetButtonBoard().GetRawButton(16)) {
+    // DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
     // DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
     // DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
     // DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
@@ -468,7 +469,7 @@ void Robot::RobotPeriodic() {
     // DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
     // DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
     // DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
-  }
+  // }
 
   // DebugOutF("feed to intake servo: " + std::to_string(GetRobot()->GetDriveTrain().m_DustpanRotate.Get()));
   // DebugOutF("upwards servo: " + std::to_string(GetRobot()->GetDriveTrain().m_DustpanLaunch.Get()));
@@ -478,6 +479,8 @@ void Robot::RobotPeriodic() {
 
   bool preset = false;
   double difference = 0;
+
+  //UNCOMMENT BUTTONS
 
   if(GetButtonBoard().GetRawButton(7)) {
     preset = true;
@@ -553,20 +556,20 @@ void Robot::RobotPeriodic() {
 
 
 
-  // if(Robot::GetButtonBoard().GetRawButton(16)){
-  //   DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
-  //   DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
-  //   DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
-  //   DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
-  //   DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
-  // }
+  if(Robot::GetButtonBoard().GetRawButton(16)){
+    DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
+    DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
+    DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
+    DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
+    DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
+  }
 
   //LED
-  m_LED.SponsorBoardAllianceColor();
-  //m_LED.LowBattery();
-  m_LED.EyesAllianceColor();
-  m_LED.EndGame();
-  m_LED.SetData();
+  // m_LED.SponsorBoardAllianceColor();
+  // //m_LED.LowBattery();
+  // m_LED.EyesAllianceColor();
+  // m_LED.EndGame();
+  // m_LED.SetData();
   //m_LED.SponsorBoardRainbow();
   //m_LED.LowBattery();
 
@@ -600,16 +603,9 @@ void Robot::DisabledInit() {
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 }
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic() {
 
-frc2::CommandPtr Robot::getAutonomousCommand() {
-  // Load the path you want to follow using its name in the GUI
-  //auto path = PathPlannerAuto::getPathGroupFromAutoFile("AutoTest");
-  DebugOutF("point 2 pathtest");
-  // Create a path following command using AutoBuilder. This will also trigger event markers.
-  return AutoBuilder::buildAuto("AutoTest");
 }
-
 
 
 /**
@@ -634,24 +630,24 @@ void Robot::AutonomousInit() {
   // // getAutonomousCommand();
   // DebugOutF("pathTest2");
 
-  m_autonomousCommand = getAutonomousCommand();
+  // m_autonomousCommand = getAutonomousCommand();
 
-  GetDriveTrain().GetOdometry()->ResetPosition(
-    units::radian_t(Deg2Rad(GetAngle())), 
-    wpi::array<frc::SwerveModulePosition, 4>(
-      GetDriveTrain().m_FrontLeftModule.GetPosition(), 
-      GetDriveTrain().m_FrontRightModule.GetPosition(), 
-      GetDriveTrain().m_BackLeftModule.GetPosition(), 
-      GetDriveTrain().m_BackRightModule.GetPosition()),
-    startingPose
-    );
+  // GetDriveTrain().GetOdometry()->ResetPosition(
+  //   units::radian_t(Deg2Rad(GetAngle())), 
+  //   wpi::array<frc::SwerveModulePosition, 4>(
+  //     GetDriveTrain().m_FrontLeftModule.GetPosition(), 
+  //     GetDriveTrain().m_FrontRightModule.GetPosition(), 
+  //     GetDriveTrain().m_BackLeftModule.GetPosition(), 
+  //     GetDriveTrain().m_BackRightModule.GetPosition()),
+  //   startingPose
+  //   );
 
 
-  DebugOutF("point 1 pathtest");
-  if(m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
-  }
-  DebugOutF("point 3 pathtest");
+  // DebugOutF("point 1 pathtest");
+  // if(m_autonomousCommand) {
+  //   m_autonomousCommand->Schedule();
+  // }
+  // DebugOutF("point 3 pathtest");
 
   // frc2::CommandScheduler::GetInstance().Run();
 
@@ -821,26 +817,26 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {
   MotorInversionCheck();
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Cancel();
-  }
+  // if (m_autonomousCommand) {
+  //   m_autonomousCommand->Cancel();
+  // }
 
-  m_AutoFlag = false;
-  frc2::CommandScheduler::GetInstance().Schedule(new frc2::InstantCommand([&] {
-      if(COB_GET_ENTRY(m_Vision.FrontBack("tv")).GetInteger(0) == 1 && COB_GET_ENTRY(m_Vision.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){
-        frc::Pose2d startingPose = frc::Pose2d(m_Vision.GetFieldPose().Translation(), units::radian_t(Deg2Rad(GetAngle())));
-        GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
-        wpi::array<frc::SwerveModulePosition, 4>
-              (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
-        startingPose);
-        DebugOutF("Pose Reset. X: " + std::to_string(startingPose.X().value()) + ", Y: " + std::to_string(startingPose.Y().value()) + ", Z: " + std::to_string(startingPose.Rotation().Degrees().value()));
-      } else {
-        DebugOutF("Pose Reset Fail");
-      }
-    })
-  );
+  // m_AutoFlag = false;
+  // frc2::CommandScheduler::GetInstance().Schedule(new frc2::InstantCommand([&] {
+  //     if(COB_GET_ENTRY(m_Vision.FrontBack("tv")).GetInteger(0) == 1 && COB_GET_ENTRY(m_Vision.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){
+  //       frc::Pose2d startingPose = frc::Pose2d(m_Vision.GetFieldPose().Translation(), units::radian_t(Deg2Rad(GetAngle())));
+  //       GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
+  //       wpi::array<frc::SwerveModulePosition, 4>
+  //             (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
+  //       startingPose);
+  //       DebugOutF("Pose Reset. X: " + std::to_string(startingPose.X().value()) + ", Y: " + std::to_string(startingPose.Y().value()) + ", Z: " + std::to_string(startingPose.Rotation().Degrees().value()));
+  //     } else {
+  //       DebugOutF("Pose Reset Fail");
+  //     }
+  //   })
+  // );
   // m_MMT.MotionMagicTestInit();
-  m_LED.m_IsTele = true;  // used for LED Timer
+  // m_LED.m_IsTele = true;  // used for LED Timer
   GetNavX().ZeroYaw();
   // m_DriveTrain.BreakMode(true);
   GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
@@ -862,14 +858,15 @@ void Robot::TeleopInit() {
  * This function is called periodically during operator control.  
  */
 void Robot::TeleopPeriodic() {
-  if(inversionPrint) {
-    DebugOutF("print");
-    MotorInversionCheck();
-    DebugOutF("fixed");
-    DebugOutF("print:");
-    MotorInversionCheck();
-    inversionPrint = false;
-  }
+  MotorInversionCheck();
+  // if(inversionPrint) {
+  //   DebugOutF("print");
+  //   MotorInversionCheck();
+  //   DebugOutF("fixed");
+  //   DebugOutF("print:");
+  //   MotorInversionCheck();
+  //   inversionPrint = false;
+  // }
   //DebugOutF("Theta: " + std::to_string(GetAngle())); 
   
   // DebugOutF("LLX: " + std::to_string(m_Vision.GetPoseBlue().X().value()));
