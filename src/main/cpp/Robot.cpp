@@ -9,7 +9,6 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/geometry/Pose2d.h>
 #include "Util.h"
-#include "commands/TrajectoryCommand.h"
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/RobotController.h>
 #include <frc2/command/SequentialCommandGroup.h>
@@ -17,12 +16,12 @@
 #include <frc2/command/ParallelDeadlineGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/CommandPtr.h>
-//#include "commands/WristToPosAuto.h"
-#include "commands/PivotToPosAuto.h"
 #include "commands/LockOn.h"
 #include <frc/DriverStation.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
 #include <commands/LockOn.h>
+#include <commands/AutoTest.h>
+
 //#include <commands/DriveToPosCommand.h>
 //#include <commands/DualMotorControl.h>
 //#include <commands/PivotToPosAuto.h>
@@ -37,17 +36,17 @@ Robot* Robot::s_Instance = nullptr;
 
 Robot::Robot() :
 m_NavX(frc::SerialPort::Port(1), AHRS::SerialDataType(0), uint8_t(66))
-//m_Intake(),
 // m_LED()
 {
   DebugOutF("inside robot constructor");
   s_Instance = this;
 
+  NamedCommands::registerCommand("AutoTest", std::move(AutoTest().ToPtr()));
+
   // NamedCommands::registerCommand("lockOn", std::move(LockOn().ToPtr()));
   // //NamedCommands::registerCommand("driveToPosCommand", std::move(DriveToPosCommand().ToPtr())); 
   // NamedCommands::registerCommand("driveWithJoystick", std::move(DriveWithJoystick().ToPtr()));
   // //NamedCommands::registerCommand("dualMotorControl", std::move(DualMotorControl().ToPtr()));
-  // //NamedCommands::registerCommand("dynamicIntake", std::move(DynamicIntake().ToPtr())); 
   // NamedCommands::registerCommand("pivotToPos", std::move(PivotToPos().ToPtr())); 
   //NamedCommands::registerCommand("pivotToPosAuto", std::move(PivotToPosAuto().ToPtr()));
   //NamedCommands::registerCommand("trajectoryCommand", std::move(TrajectoryCommand().ToPtr()));
@@ -88,6 +87,7 @@ void Robot::RobotInit() {
   
   AutoButtons();
   // m_LED.Init();
+  
   
   m_COBTicks = 0;
   m_AutoPath = "";
@@ -392,9 +392,8 @@ void Robot::AutoButtons() {
    }
 
 frc2::CommandPtr Robot::getAutonomousCommand() {
-  //UNCOMMENT
   // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("AutoPath");
+  auto path = PathPlannerPath::fromPathFile(m_AutoPath);
   // // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   // // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   // // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
@@ -480,84 +479,82 @@ void Robot::RobotPeriodic() {
   bool preset = false;
   double difference = 0;
 
-  //UNCOMMENT BUTTONS
+  // if(GetButtonBoard().GetRawButton(7)) {
+  //   preset = true;
+  //   // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
+  //   // GetArm().GetPivotMotor().SetControl(m_DutyCycleOutRequest.WithOutput(GetArm().m_OriginalPivotRotations - GetArm().PivotStringPotUnitsToRotations(GetArm().m_StringPotOffset)));
+  //   // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
+  //   // DebugOutF("stringpot value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+  //   // DebugOutF("preset value: " + CLOSEUPSHOOTSTRINGPOT);
+  //   difference = GetRobot()->GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
+  //   DebugOutF("difference: " + std::to_string(difference));
+  //   if(GetRobot()->GetArm().GetStringPot().GetValue() != CLOSEUPSHOOTSTRINGPOT) {
+  //     if(difference > 0) {
+  //       GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+  //     } else if(difference < 0) {
+  //       GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
+  //     }
+  //   }
+  //   preset = false;
+  // }
 
-  if(GetButtonBoard().GetRawButton(7)) {
-    preset = true;
-    // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
-    // GetArm().GetPivotMotor().SetControl(m_DutyCycleOutRequest.WithOutput(GetArm().m_OriginalPivotRotations - GetArm().PivotStringPotUnitsToRotations(GetArm().m_StringPotOffset)));
-    // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
-    // DebugOutF("stringpot value: " + std::to_string(GetArm().GetStringPot().GetValue()));
-    // DebugOutF("preset value: " + CLOSEUPSHOOTSTRINGPOT);
-    difference = GetRobot()->GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
-    DebugOutF("difference: " + std::to_string(difference));
-    if(GetRobot()->GetArm().GetStringPot().GetValue() != CLOSEUPSHOOTSTRINGPOT) {
-      if(difference > 0) {
-        GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-      } else if(difference < 0) {
-        GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
-      }
-    }
-    preset = false;
-  }
+  // if(GetButtonBoard().GetRawButton(8)) {
+  //   preset = true;
+  //   // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
+  //   // GetArm().GetPivotMotor().SetControl(m_DutyCycleOutRequest.WithOutput(GetArm().m_OriginalPivotRotations - GetArm().PivotStringPotUnitsToRotations(GetArm().m_StringPotOffset)));
+  //   // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - PICKUPSTRINGPOT;
+  //   if(GetRobot()->GetArm().GetStringPot().GetValue() != PICKUPSTRINGPOT) {
+  //     difference = GetRobot()->GetArm().GetStringPot().GetValue() - PICKUPSTRINGPOT;
+  //     if(difference > 0) {
+  //       GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+  //     } else if(difference < 0) {
+  //       GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
+  //     }
+  //   }
+  //   preset = false;
+  // }
 
-  if(GetButtonBoard().GetRawButton(8)) {
-    preset = true;
-    // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
-    // GetArm().GetPivotMotor().SetControl(m_DutyCycleOutRequest.WithOutput(GetArm().m_OriginalPivotRotations - GetArm().PivotStringPotUnitsToRotations(GetArm().m_StringPotOffset)));
-    // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - PICKUPSTRINGPOT;
-    if(GetRobot()->GetArm().GetStringPot().GetValue() != PICKUPSTRINGPOT) {
-      difference = GetRobot()->GetArm().GetStringPot().GetValue() - PICKUPSTRINGPOT;
-      if(difference > 0) {
-        GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-      } else if(difference < 0) {
-        GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
-      }
-    }
-    preset = false;
-  }
+  // if(GetButtonBoard().GetRawButton(18)) {
+  //   GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+  // } else if(GetButtonBoard().GetRawButton(17) && GetArm().GetStringPot().GetValue() < 815) {
+  //   GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
+  // } else if(!GetButtonBoard().GetRawButton(17) && !GetButtonBoard().GetRawButton(18) && !preset) {
+  //   GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+  // }
 
-  if(GetButtonBoard().GetRawButton(18)) {
-    GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-  } else if(GetButtonBoard().GetRawButton(17) && GetArm().GetStringPot().GetValue() < 815) {
-    GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
-  } else if(!GetButtonBoard().GetRawButton(17) && !GetButtonBoard().GetRawButton(18) && !preset) {
-    GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-  }
-
-  if(GetButtonBoard().GetRawButton(21)){
-    GetRobot()->GetDriveTrain().m_DustpanRotate.Set(0);
-  }
+  // if(GetButtonBoard().GetRawButton(21)){
+  //   GetRobot()->GetDriveTrain().m_DustpanRotate.Set(0);
+  // }
   
-  if(GetButtonBoard().GetRawButton(22)) {
-    GetRobot()->GetDriveTrain().m_DustpanRotate.Set(1);
-  }
+  // if(GetButtonBoard().GetRawButton(22)) {
+  //   GetRobot()->GetDriveTrain().m_DustpanRotate.Set(1);
+  // }
 
-  if(GetButtonBoard().GetRawButton(5)){
-    GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.75);
-  } else if(!GetButtonBoard().GetRawButton(5)) {
-    GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(1);
-  }
+  // if(GetButtonBoard().GetRawButton(5)){
+  //   GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.75);
+  // } else if(!GetButtonBoard().GetRawButton(5)) {
+  //   GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(1);
+  // }
 
-  if(GetButtonBoard().GetRawButton(1)) {
-    double output = GetButtonBoard().GetRawAxis(SHOOTER_SPEED);
-    GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-output + 0.05));
-    GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-output));
-  } else if(!GetButtonBoard().GetRawButton(1)) {
-    GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-    GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-  }
+  // if(GetButtonBoard().GetRawButton(1)) {
+  //   double output = GetButtonBoard().GetRawAxis(SHOOTER_SPEED);
+  //   GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-output + 0.05));
+  //   GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-output));
+  // } else if(!GetButtonBoard().GetRawButton(1)) {
+  //   GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+  //   GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+  // }
 
-  if(GetButtonBoard().GetRawButton(2)) {
-    GetArm().m_Feeder.Set(ControlMode::PercentOutput, 0.25);
-  } else if(!GetButtonBoard().GetRawButton(2)) {
-    GetArm().m_Feeder.Set(ControlMode::PercentOutput, 0);
-  }
+  // if(GetButtonBoard().GetRawButton(2)) {
+  //   GetArm().GetFeeder().Set(ControlMode::PercentOutput, 0.25);
+  // } else if(!GetButtonBoard().GetRawButton(2)) {
+  //   GetArm().GetFeeder().Set(ControlMode::PercentOutput, 0);
+  // }
 
 
 
   if(Robot::GetButtonBoard().GetRawButton(16)){
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+    // DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
     // DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
     // DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
     // DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
@@ -614,7 +611,7 @@ void Robot::DisabledPeriodic() {
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
-  MotorInversionCheck();
+  // MotorInversionCheck();
   m_AutoFlag = true;
   DebugOutF("Auto init");
 
@@ -627,217 +624,28 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
+  m_AutoPath = "part1Blue";
   m_autonomousCommand = getAutonomousCommand();
-    frc2::CommandScheduler::GetInstance().Schedule(
-      new frc2::SequentialCommandGroup(
+  frc2::CommandScheduler::GetInstance().Schedule(
+    new frc2::SequentialCommandGroup(
+      frc2::ParallelCommandGroup(
         frc2::ParallelCommandGroup(
-          frc2::ParallelCommandGroup(
-            frc2::WaitCommand(1.5_s),
-            frc2::InstantCommand([&] {
-              GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.75);
-            })
-          ),
-          frc2::InstantCommand([] {
-            Robot::GetRobot()->GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
-            Robot::GetRobot()->GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+          frc2::WaitCommand(1.5_s),
+          frc2::InstantCommand([&] {
+            GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.75);
           })
         ),
         frc2::InstantCommand([] {
-          Robot::GetRobot()->m_autonomousCommand;
+          DebugOutF("where shooter motors were");
+          // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
+          // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
         })
-      )
-    );
-
-  //Shoot in Auto
-  GetArm().m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
-  GetArm().m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-
-  //Drive out of zone
-  
-
-
-  // DebugOutF("pathTest1");
-  // // getAutonomousCommand();
-  // DebugOutF("pathTest2");
-
-  // m_autonomousCommand = getAutonomousCommand();
-
-  // GetDriveTrain().GetOdometry()->ResetPosition(
-  //   units::radian_t(Deg2Rad(GetAngle())), 
-  //   wpi::array<frc::SwerveModulePosition, 4>(
-  //     GetDriveTrain().m_FrontLeftModule.GetPosition(), 
-  //     GetDriveTrain().m_FrontRightModule.GetPosition(), 
-  //     GetDriveTrain().m_BackLeftModule.GetPosition(), 
-  //     GetDriveTrain().m_BackRightModule.GetPosition()),
-  //   startingPose
-  //   );
-
-
-  // DebugOutF("point 1 pathtest");
-  // if(m_autonomousCommand) {
-  //   m_autonomousCommand->Schedule();
-  // }
-  // DebugOutF("point 3 pathtest");
-
-  // frc2::CommandScheduler::GetInstance().Run();
-
-  //PathPlannerTrajectory traj;
-
-  //Load trajectory
-  // if(!COB_GET_ENTRY(COB_KEY_IS_RED).GetBoolean(false)){
-    // DebugOutF("Blue");
-  //PathPlannerTrajectory traj = PathPlanner::loadPath(m_AutoPath, PathConstraints(4_mps, 1_mps_sq));
-
-  // PathPlannerPath traj = PathPlannerPath::fromPathFile("AutoBalanceExtra", PathConstraints(4_mps, 1.5_mps_sq, 4_rad_per_s, 1.5_rad_per_s_sq));
-
-  // // } else {
-  // // //   DebugOutF("Red");
-  // // //   PathPlannerTrajectory traj = PathPlanner::loadPath("TestBalanceRed", PathConstraints(4_mps, 1_mps_sq));
-  // // // }
-
-  // //PathPlannerTrajectory::transformTrajectoryForAlliance(traj, frc::DriverStation::GetAlliance());
-
-  // frc::Pose2d startingPose = frc::Pose2d(traj.getInitialState().pose.Translation(), frc::Rotation2d(units::degree_t(0)));
-
-  // GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
-  //   wpi::array<frc::SwerveModulePosition, 4>
-  //        (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
-  //   startingPose);
-  
-  
-  // DebugOutF("InitialRotation: " + std::to_string(traj.getInitialHolonomicPose().Rotation().Degrees().value()));
-  // DebugOutF("InitialY: " + std::to_string(traj.asWPILibTrajectory().InitialPose().Y().value()));
-  // DebugOutF("InitialX: " + std::to_string(traj.asWPILibTrajectory().InitialPose().X().value()));
-  
-  //DEFINITELY LOOK - COMMENTING OUT AUTO FOR NOW TO FOCUS ON REIMPLEMENTING OTHER FUNCTIONALITY
-  if(true/*COB_GET_ENTRY("/COB/autos").GetString("") == "Auto1"*/){
-  //   frc2::CommandScheduler::GetInstance().Schedule(
-  //     new frc2::SequentialCommandGroup(
-  //     frc2::ParallelRaceGroup(
-  //       frc2::WaitCommand(1.8_s),
-  //       PivotToPosAuto(-22.0), 
-  //       frc2::FunctionalCommand(
-  //         [&] {
-  //           GetArm().GetBottomIntakeMotor().EnableCurrentLimit(false);
-  //           GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, -1);
-  //         },
-  //         [&] {},
-  //         [&](bool e) { // onEnd
-  //           GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-  //         },
-  //         [&] { // isFinished
-  //         return false;
-  //         }
-  //       ),
-  //       WristToPosAuto(28.0)
-  //     ),
-
-  //     frc2::ParallelRaceGroup(
-  //       frc2::FunctionalCommand(
-  //         [&] {
-  //           GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 1);
-  //         },
-  //         [&] {},
-  //         [&](bool e) { // onEnd
-  //           GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-  //           GetArm().GetBottomIntakeMotor().EnableCurrentLimit(true);
-  //         },
-  //         [&] { // isFinished
-  //         return false;
-  //         }
-  //       ),
-  //       frc2::WaitCommand(0.8_s)
-  //     ),
-
-  //   frc2::ParallelDeadlineGroup(
-  //       //TrajectoryCommand(traj),
-  //     PivotToPosAuto(92.0), 
-  //     WristToPosAuto(120)
-  //   ),
-  //   AutoBalance()
-    
-  // ));
-  //DebugOutF(GetDriveTrain().m_EventMap.find("\"Mark 1\""));
-  // (GetDriveTrain().m_EventMap.at(std::string("Mark 1")).get()->Schedule());
-  // } else if (COB_GET_ENTRY("/COB/autos").GetString("") == "Auto2"){
-  //   frc2::CommandScheduler::GetInstance().Schedule(
-  //     new frc2::SequentialCommandGroup(
-
-  //       frc2::ParallelRaceGroup(
-  //         frc2::WaitCommand(1.8_s),
-  //         PivotToPosAuto(-22.0), 
-  //         frc2::FunctionalCommand(
-  //           [&] {
-  //             GetArm().GetBottomIntakeMotor().EnableCurrentLimit(false);
-  //             GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, -1);
-  //           },
-  //           [&] {},
-  //           [&](bool e) { // onEnd
-  //             GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-  //           },
-  //           [&] { // isFinished
-  //           return false;
-  //           }
-  //         ),
-  //         WristToPosAuto(28.0)
-  //       ),
-
-  //       frc2::ParallelRaceGroup(
-  //         frc2::FunctionalCommand(
-  //           [&] {
-  //             GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 1);
-  //           },
-  //           [&] {},
-  //           [&](bool e) { // onEnd
-  //             GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-  //             GetArm().GetBottomIntakeMotor().EnableCurrentLimit(true);
-  //           },
-  //           [&] { // isFinished
-  //           return false;
-  //           }
-  //         ),
-  //         frc2::WaitCommand(0.8_s)
-  //       ),
-
-  //       frc2::ParallelDeadlineGroup(
-  //         TrajectoryCommand(traj),
-  //         frc2::SequentialCommandGroup(
-  //           frc2::ParallelRaceGroup(
-  //             frc2::WaitCommand(3.5_s), //FIX:: not sure abt time
-  //             PivotToPosAuto(92.0), 
-  //             WristToPosAuto(120)
-  //           ),
-  //           frc2::ParallelRaceGroup(
-  //             frc2::WaitCommand(1.5_s), //FIX: not sure abt time
-  //             PivotToPosAuto(94.0),
-  //             WristToPosAuto(-2.0),
-  //             frc2::FunctionalCommand(
-  //               [&] {
-  //               GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, -1);
-  //               },
-  //               [&] {},
-  //               [&](bool e) { // onEnd
-  //                 GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-  //                 GetArm().GetBottomIntakeMotor().EnableCurrentLimit(true);
-  //               },
-  //             [&] { // isFinished
-  //               return false;
-  //             }
-  //             )
-  //           ),
-  //           frc2::ParallelRaceGroup(
-  //             frc2::WaitCommand(1.0_s),
-  //             PivotToPosAuto(92.0), 
-  //             WristToPosAuto(127)
-  //           )
-  //         )
-  //       ),
-  //       AutoBalance()
-  //   ));
-  // //DebugOutF(GetDriveTrain().m_EventMap.find("\"Mark 1\""));
-  // // (GetDriveTrain().m_EventMap.at(std::string("Mark 1")).get()->Schedule());
-  // }
-  }
+      ),
+      frc2::InstantCommand([] {
+        Robot::GetRobot()->m_autonomousCommand;
+      })
+    )
+  );
 }
 void Robot::AutonomousPeriodic() {
     // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));

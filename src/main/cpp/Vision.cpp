@@ -81,39 +81,10 @@ Pose2d Vision::GetFieldPose(){
   return m_TempPose;
 }
 
-void Vision::PushID(){
-  COB_GET_ENTRY("/COB/apriltagID").SetDouble(COB_GET_ENTRY(FrontBack("tid")).GetInteger(-1));
-}
+void Vision::PushID() {}
 
 //1 for front 0 for back
-std::string Vision::FrontBack(std::string key){
-  
-  if(COB_GET_ENTRY(COB_KEY_TV_FRONT).GetInteger(0) == 1 && COB_GET_ENTRY(COB_KEY_BOT_POSE_FRONT).GetDoubleArray(std::span<double>()).size() != 0){
-    m_Area = COB_GET_ENTRY(COB_KEY_TA_FRONT).GetDouble(0);
-  }
-  
-  if(COB_GET_ENTRY(COB_KEY_TV_BACK).GetInteger(0) == 1 && COB_GET_ENTRY(COB_KEY_BOT_POSE_BACK).GetDoubleArray(std::span<double>()).size() != 0 && COB_GET_ENTRY(COB_KEY_TA_BACK).GetDouble(0) > m_Area){
-    return ("/limelight-back/" + key);
-  } else {
-    return ("/limelight-front/" + key);
-  }//O12
-
-
-
-
-
-  // if(COB_GET_ENTRY("/limelight/tv").GetInteger(0) == 1 && COB_GET_ENTRY("/limelight/botpose").GetDoubleArray(std::span<double>()).size() != 0){
-  //   m_Area = COB_GET_ENTRY("/limelight/ta").GetDouble(0);
-  // }
-  
-  // if(COB_GET_ENTRY("/limelight/tv").GetInteger(0) == 1 && COB_GET_ENTRY("/limelight/botpose").GetDoubleArray(std::span<double>()).size() != 0 && COB_GET_ENTRY("/limelight/ta").GetDouble(0) > m_Area){
-  //   return ("/limelight/" + key);
-  // } else {
-  //   return ("/limelight/" + key);
-  // } //Saber
-
-
-}
+// std::string Vision::FrontBack(std::string key) {}
 
 units::angle::radian_t Vision::VisionRobotYaw(double ID) {
   double x = IDMap[0][(int)ID - 1] - m_AbsolutePose.X().value();

@@ -26,7 +26,7 @@
 #include "subsystems/Arm.h"
 #include "LED.h"
 #include <frc/geometry/Pose2d.h>
-#include "./subsystems/Intake.h"
+//#include "./subsystems/Intake.h"
 
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <memory>

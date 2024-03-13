@@ -5,8 +5,7 @@
 using ctre::phoenix::motorcontrol::NeutralMode;
 
 //Constructor
-DriveController::DriveController(int ID)
-:
+DriveController::DriveController(int ID):
     motor(ID)
 {
     // if(!motor.GetInverted() && (ID == 53|| ID == 41)) {

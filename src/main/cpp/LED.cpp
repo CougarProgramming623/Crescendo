@@ -86,15 +86,7 @@ void LED::LowBattery(){
     
 }
 
-void LED::EndGame(){
-    if ((int)COB_GET_ENTRY(COB_KEY_MATCHTIME).GetDouble(31) <= 30 && (int)COB_GET_ENTRY(COB_KEY_MATCHTIME).GetDouble(31) > 28 
-        && (int)COB_GET_ENTRY(COB_KEY_MATCHTIME).GetDouble(31) != -1){
-        SponsorBoardFlash(frc::Color::kWhite);
-    } else if ((int)COB_GET_ENTRY(COB_KEY_MATCHTIME).GetDouble(31) <= 20
-        && (int)COB_GET_ENTRY(COB_KEY_MATCHTIME).GetDouble(31) != -1){
-        SponsorBoardFlash(frc::Color::kWhite);
-    }
-}
+void LED::EndGame() {}
 
 // m_NavXReset.WhenPressed(
 //     new frc2::InstantCommand([&]{

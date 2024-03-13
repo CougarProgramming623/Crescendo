@@ -3,12 +3,10 @@
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <frc/Joystick.h>
 #include <frc/Servo.h>
-//#include <ctre/phoenix/motorcontrol/can/BaseMotorController.h>
 #include <frc/Joystick.h>
 #include <frc2/command/button/Trigger.h>
 #include <frc/AnalogInput.h>
 #include <math.h>
-//#include <ctre/phoenix/sensors/CANCoder.h>
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 #include <ctre/phoenix6/TalonFX.hpp>
@@ -32,14 +30,9 @@
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 #include "./commands/PivotToPos.h"
-#include "./commands/DynamicIntake.h"
-//#include "./commands/WristToPos.h"
 
 using namespace ctre::phoenix6;
 using namespace ctre::phoenix;
-using ctre::phoenix::motorcontrol::can::TalonSRX;
-//using ctre::phoenix6::
-
 
 class Arm : public frc2::SubsystemBase {
 
@@ -64,31 +57,14 @@ class Arm : public frc2::SubsystemBase {
 
 	
 	//getters
-	//UNCOMMENT
-	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
-	inline hardware::TalonFX& GetClimbMotor() {return m_Climb;} 
-	// inline TalonSRX& GetTopIntakeMotor() {return m_TopIntake;}
-	// inline hardware::TalonFX& GetBottomIntakeMotor() {return m_BottomIntake;}
-	// inline rev::CANSparkMax& GetBottomIntakeMotor() {return m_BottomIntake;}
-	// inline hardware::CANcoder& GetPivotCANCoder() {return m_PivotCANCoder;}
-	   inline frc2::Trigger& GetArmOverrideButton() {return m_ArmOverride; }
-	// inline frc2::Trigger& GetConeModeButton() {return m_ConeMode; }
-	// inline frc2::Trigger& GetIntakeButton() {return m_IntakeButton; }
-	// inline frc2::Trigger& GetOuttakeButton() {return m_OuttakeButton; }
-	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
+	// inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
+	// inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
+	// inline hardware::TalonFX& GetShooterMotor1() {return m_ShooterMotor1;}
+	// inline hardware::TalonFX& GetShooterMotor2() {return m_ShooterMotor2;}
+	// inline motorcontrol::can::TalonSRX& GetFeeder() {return m_Feeder;}
+	inline frc2::Trigger& GetArmOverrideButton() {return m_ArmOverride; }
+	// inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
 
-
-	double m_PivotMatrix[3][3] = {
-		{-8.0, -33.0, 25.0},
-		{-20.0, 58.5, -20.0},
-		{50, 50, 50},
-	};
-
-	double m_WristMatrix[3][3] = {
-		{28, 46.0, -121.0},
-		{30.0, 60, 30.0},
-		{-40, -40, -40},
-	};
 	frc2::Trigger m_PlacingMode;
 
 	double m_WristPos;
@@ -97,41 +73,23 @@ class Arm : public frc2::SubsystemBase {
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
 
-	//UNCOMMENT
-	hardware::TalonFX m_ShooterMotor1;
-	hardware::TalonFX m_ShooterMotor2;
-	TalonSRX m_Feeder;
-
 	private:
 	
 	//motors
-	//UNCOMMENT
-	hardware::TalonFX m_Pivot;
-	hardware::TalonFX m_Climb;
-	//hardware::CANcoder m_PivotCANCoder{PIVOT_CAN_ID};
-	//hardware::TalonFX m_Wrist;
-	//motorcontrol::can::TalonSRX m_BottomIntake;
-	// rev::CANSparkMax m_BottomIntake;
+	// hardware::TalonFX m_Pivot;
+	// hardware::TalonFX m_Climb;
+	// hardware::TalonFX m_ShooterMotor1;
+	// hardware::TalonFX m_ShooterMotor2;
+	// motorcontrol::can::TalonSRX m_Feeder;
 
-
-	//motor control voltages
-	controls::DutyCycleOut m_DCO{0};
-	int m_BottomIntakeVoltage;
-	// units::voltage::volt_t m_PivotVoltage;
-	// units::voltage::volt_t m_WristVoltage;
-
-	//pot
-	frc::AnalogInput m_StringPot{4};
-
+	//potentiometer
+	// frc::AnalogInput m_StringPot{4};
 
 	//triggers
-	// frc2::Trigger m_TransitMode;
-	// frc2::Trigger m_GroundPickupMode;
-
-	  frc2::Trigger m_ArmOverride;
-	// frc2::Trigger m_Override2;
-	// frc2::Trigger m_ShooterDown;
-	// frc2::Trigger m_ShooterUp;
+	frc2::Trigger m_ArmOverride;
+	frc2::Trigger m_ShooterUp;
+	frc2::Trigger m_ShooterDown;
+	
 
 	// frc2::Trigger m_ConeMode;
 	// frc2::Trigger m_CubeMode;

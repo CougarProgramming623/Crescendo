@@ -6,15 +6,9 @@
 #include "Constants.h"
 
 
-class WristToPosAuto : public frc2::CommandHelper<frc2::Command, WristToPosAuto> {
+class AutoTest : public frc2::CommandHelper<frc2::Command, AutoTest> {
 	public:
-		explicit WristToPosAuto(double deg);
 		void Initialize() override;
 		void Execute() override;
   		void End(bool interrupted) override;
-		bool IsFinished() override;
-
-		double targetDegrees;
-		double startingDegrees;
-		double ticksToMove;
 };
