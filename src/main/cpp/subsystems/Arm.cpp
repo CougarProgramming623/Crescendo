@@ -6,7 +6,7 @@
 #include <frc/geometry/Transform2d.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/WaitCommand.h>
- //#include "./commands/DriveToPosCommand.h"
+#include "/commands/Flywheel.h"
 #include "Constants.h"
 //#include <ctre/phoenix6/configs/Configs.hpp>
 
@@ -30,6 +30,10 @@ Arm::Arm():
 	m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
 	m_ShooterUp(BUTTON_L(SHOOTER_UP)),
 	m_ShooterDown(BUTTON_L(SHOOTER_DOWN)),
+	m_FlywheelPowerLock(BUTTON_L(3)),
+	m_RunFlywheel(BUTTON_L(FLYWHEEL_SWITCH)),
+	m_FlywheelPowerLock(BUTTON_L(4)),
+	
 	m_Timer()
 {}
 
@@ -47,7 +51,11 @@ void Arm::Init() {
 }
 
 void Arm::SetButtons() {
+	m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
+		m_FlywheelPower = Robot::GetRobot()->GetButtonBoard().GetRawAxis(6);
+	}));
 	m_ArmOverride.OnTrue(ManualControls());
+	m_RunFlywheel.OnTrue(new Flywheel());
 
 	// m_GroundPickupMode.OnTrue(new frc2::InstantCommand([&]{
 	// 	//Robot::GetRobot()->GetArm().m_PivotPos = 98.0;

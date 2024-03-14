@@ -57,18 +57,20 @@ class Arm : public frc2::SubsystemBase {
 
 	
 	//getters
-	// inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
-	// inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
-	// inline hardware::TalonFX& GetShooterMotor1() {return m_ShooterMotor1;}
-	// inline hardware::TalonFX& GetShooterMotor2() {return m_ShooterMotor2;}
-	// inline motorcontrol::can::TalonSRX& GetFeeder() {return m_Feeder;}
+	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
+	inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
+	inline hardware::TalonFX& GetShooterMotor1() {return m_ShooterMotor1;}
+	inline hardware::TalonFX& GetShooterMotor2() {return m_ShooterMotor2;}
+	inline motorcontrol::can::TalonSRX& GetFeeder() {return m_Feeder;}
 	inline frc2::Trigger& GetArmOverrideButton() {return m_ArmOverride; }
-	// inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
+	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
 
 	frc2::Trigger m_PlacingMode;
 
 	double m_WristPos;
 	double m_PivotPos;
+	double m_FlywheelPower;
+	double m_FlywheelPowerLock;
 
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
@@ -76,19 +78,21 @@ class Arm : public frc2::SubsystemBase {
 	private:
 	
 	//motors
-	// hardware::TalonFX m_Pivot;
-	// hardware::TalonFX m_Climb;
-	// hardware::TalonFX m_ShooterMotor1;
-	// hardware::TalonFX m_ShooterMotor2;
-	// motorcontrol::can::TalonSRX m_Feeder;
+	hardware::TalonFX m_Pivot;
+	hardware::TalonFX m_Climb;
+	hardware::TalonFX m_ShooterMotor1;
+	hardware::TalonFX m_ShooterMotor2;
+	motorcontrol::can::TalonSRX m_Feeder;
 
 	//potentiometer
-	// frc::AnalogInput m_StringPot{4};
+	frc::AnalogInput m_StringPot{4};
 
 	//triggers
 	frc2::Trigger m_ArmOverride;
 	frc2::Trigger m_ShooterUp;
 	frc2::Trigger m_ShooterDown;
+	frc2::Trigger m_FlywheelPowerLock;
+	frc2::Trigger m_RunFlywheel;
 	
 
 	// frc2::Trigger m_ConeMode;
