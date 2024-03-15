@@ -11,6 +11,7 @@
 #include <rev/CANSparkMaxLowLevel.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 
 #include <frc2/command/SequentialCommandGroup.h>

@@ -8,6 +8,7 @@
 #include <frc2/command/WaitCommand.h>
 #include "commands/Flywheel.h"
 #include "Constants.h"
+#include "commands/AutoTest.h"
 //#include <ctre/phoenix6/configs/Configs.hpp>
 
 using ctre::phoenix::motorcontrol::NeutralMode;
@@ -145,6 +146,8 @@ void Arm::SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel
 	pivotMotionMagicConfigs.WithMotionMagicAcceleration(pivotAcc);
 	wristMotionMagicConfigs.WithMotionMagicCruiseVelocity(wristVel);
 	wristMotionMagicConfigs.WithMotionMagicAcceleration(wristAcc);
+	// m_Pivot.GetConfigurator().Apply(pivotMotionMagicConfigs, 0_s);
+	// m_Wrist.GetConfigurator().Apply(wristMotionMagicConfigs, 0_s);
 	// m_Pivot.GetConfigurator().Apply(pivotMotionMagicConfigs, 0_s);
 	// m_Wrist.GetConfigurator().Apply(wristMotionMagicConfigs, 0_s);
 }

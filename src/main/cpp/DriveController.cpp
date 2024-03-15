@@ -16,9 +16,6 @@ DriveController::DriveController(int ID):
     //motor.SetInverted(SMTH)                           FIX idk why but some of them rotate clockwise and others counter clockwise
     //motor.SetInverted(true);
     // motor.SetSensorPhase(true);                         //FIX also dont know why we do this one
-    if(ID == BACK_RIGHT_MODULE_DRIVE_MOTOR || ID == FRONT_LEFT_MODULE_DRIVE_MOTOR) {
-        invert = true;
-    }
 }
 
 //Set drive voltage

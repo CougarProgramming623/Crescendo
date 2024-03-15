@@ -16,12 +16,13 @@ SteerController::SteerController(int motorID, int EncoderPort, double AngleOffse
     // }
     //motor.SetControl(motorControlMode.WithPosition(units::angle::turn_t((360-(fmod(((encoder.GetVoltage() * ENCODER_VOLTAGE_TO_DEGREE) + (360-AngleOffset)), 360))) / STEER_ENCODER_POSITION_CONSTANT)));
     DebugOutF("initial position: " + std::to_string((encoder.GetVoltage() / frc::RobotController::GetVoltage5V()) - (angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) * (360/MAX_VOLTAGE_WHEN_OFFSET)));
-    motor.SetPosition(units::angle::turn_t(0));
-    //motor.SetPosition(units::angle::turn_t((angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) - (encoder.GetVoltage() / frc::RobotController::GetVoltage5V())));
-    // motorControlMode.Position = units::turn_t((encoder.GetVoltage() / frc::RobotController::GetVoltage5V()) - (angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET));
-    if(motorID == FRONT_RIGHT_MODULE_STEER_MOTOR || motorID == BACK_LEFT_MODULE_STEER_MOTOR) {
-        invert = true;
+    if(motorID == BACK_LEFT_MODULE_STEER_MOTOR || motorID == FRONT_RIGHT_MODULE_STEER_MOTOR) {
+        motor.SetPosition(units::angle::turn_t(-((angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) - (encoder.GetVoltage() / frc::RobotController::GetVoltage5V()))));
+    } else {
+        motor.SetPosition(units::angle::turn_t((angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) - (encoder.GetVoltage() / frc::RobotController::GetVoltage5V())));
     }
+    // motor.SetPosition(units::angle::turn_t(0));
+
 }
 
 //Returns the reference angle which is just like not useful in radians
@@ -73,12 +74,7 @@ void SteerController::SetReferenceAngle(double referenceAngleRadians){
         adjustedReferenceAngleRadians += (2.0 * M_PI);
     }
 
-    // if(invert) {
-    //     motor.SetControl(motorControlMode.WithPosition(units::angle::turn_t(adjustedReferenceAngleRadians / STEER_ENCODER_POSITION_CONSTANT * -1)));
-    // } else {
-    motor.SetControl(motorControlMode.WithPosition(units::angle::turn_t(adjustedReferenceAngleRadians / STEER_ENCODER_POSITION_CONSTANT)));
-    // }
-    
+    motor.SetControl(motorControlMode.WithPosition(units::angle::turn_t(adjustedReferenceAngleRadians / STEER_ENCODER_POSITION_CONSTANT)));    
 
     //this.referenceAngleRadians = referenceAngleRadians;
 }

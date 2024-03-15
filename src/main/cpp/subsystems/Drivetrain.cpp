@@ -78,8 +78,8 @@ DriveTrain::DriveTrain()
         [this]() { return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](frc::ChassisSpeeds speeds){ BaseDrive(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            PIDConstants(5.0, 0.0, 20.0), // Rotation PID constants
+            PIDConstants(0.04, 0.0, 0.0), // Translation PID constants
+            PIDConstants(0.0, 0.0, 0.0), // Rotation PID constants
             kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
             0.871_m, // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -187,8 +187,10 @@ void DriveTrain::Periodic(){
 
   m_ModulePositions = wpi::array<frc::SwerveModulePosition, 4>(m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition());
 
-
   m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetEstimatedPosition());
+
+  m_Odometry.Update(m_Rotation, m_ModulePositions);
+
   //Robot::GetRobot()->GetVision().relativeDistancex(); useless idk why i did this
   //DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));
   //DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetEstimatedPosition().Y().value()));
@@ -214,7 +216,6 @@ void DriveTrain::Periodic(){
   //         m_VisionCounter = 0;
   //       } 
   //  } else { m_VisionCounter++; }
-  //   m_Odometry.Update(m_Rotation, m_ModulePositions);
   // }
 }
 //Converts chassis speed object and updates module states

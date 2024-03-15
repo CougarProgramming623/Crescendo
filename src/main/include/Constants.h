@@ -101,6 +101,40 @@
     // //#define TARGET_HEIGHT_SHORT 31.4   // Grid //cm
     // #define LIMELIGHT_ANGLE  -1     // degrees
 
+#endif
+
+
+#ifdef ANATOLI
+    /**
+     * The front-to-back distance between the drivetrain wheels.
+     * Should be measured from center to center.
+     */
+    #define DRIVETRAIN_WHEELBASE_METERS 0.61595
+    #define DRIVETRAIN_TRACKWIDTH_METERS 0.61595
+
+    #define FRONT_LEFT_MODULE_DRIVE_MOTOR 41
+    #define FRONT_LEFT_MODULE_STEER_MOTOR 36
+    #define FRONT_LEFT_MODULE_STEER_OFFSET 4.209//4.27
+    #define FRONT_LEFT_MODULE_ENCODER_PORT 2
+
+    #define FRONT_RIGHT_MODULE_DRIVE_MOTOR 42
+    #define FRONT_RIGHT_MODULE_STEER_MOTOR 34
+    #define FRONT_RIGHT_MODULE_STEER_OFFSET 3.66//3.67
+    #define FRONT_RIGHT_MODULE_ENCODER_PORT 1
+
+    #define BACK_LEFT_MODULE_DRIVE_MOTOR 37
+    #define BACK_LEFT_MODULE_STEER_MOTOR 52
+    #define BACK_LEFT_MODULE_STEER_OFFSET 3.42//1.47//3.42
+    #define BACK_LEFT_MODULE_ENCODER_PORT 3
+
+    #define BACK_RIGHT_MODULE_DRIVE_MOTOR 53
+    #define BACK_RIGHT_MODULE_STEER_MOTOR 59
+    #define BACK_RIGHT_MODULE_STEER_OFFSET 2.468//2.47
+    #define BACK_RIGHT_MODULE_ENCODER_PORT 0
+
+    #define MAX_VOLTAGE_WHEN_OFFSET 4.76
+
+    #define CLIMB_MOTOR 31
 
 #endif
 
