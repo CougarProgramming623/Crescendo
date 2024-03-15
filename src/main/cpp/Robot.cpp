@@ -40,6 +40,19 @@ m_NavX(frc::SerialPort::Port(1), AHRS::SerialDataType(0), uint8_t(66))
 {
   DebugOutF("inside robot constructor");
   s_Instance = this;
+
+  
+  // NamedCommands::registerCommand("Shoot", std::move(Robot::GetRobot()->GetArm().ManualControls().ToPtr()));
+
+  // NamedCommands::registerCommand("lockOn", std::move(LockOn().ToPtr()));
+  // //NamedCommands::registerCommand("driveToPosCommand", std::move(DriveToPosCommand().ToPtr())); 
+  // NamedCommands::registerCommand("driveWithJoystick", std::move(DriveWithJoystick().ToPtr()));
+  // //NamedCommands::registerCommand("dualMotorControl", std::move(DualMotorControl().ToPtr()));
+  // NamedCommands::registerCommand("pivotToPos", std::move(PivotToPos().ToPtr())); 
+  //NamedCommands::registerCommand("pivotToPosAuto", std::move(PivotToPosAuto().ToPtr()));
+  //NamedCommands::registerCommand("trajectoryCommand", std::move(TrajectoryCommand().ToPtr()));
+  // NamedCommands::registerCommand("wristToPos", std::move(WristToPos().ToPtr())); 
+  //NamedCommands::registerCommand("wristToPosAuto", std::move(WristToPosAuto().ToPtr()));
 }
 
 
