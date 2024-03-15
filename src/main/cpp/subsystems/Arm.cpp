@@ -6,7 +6,7 @@
 #include <frc/geometry/Transform2d.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/WaitCommand.h>
-#include "/commands/Flywheel.h"
+#include "commands/Flywheel.h"
 #include "Constants.h"
 //#include <ctre/phoenix6/configs/Configs.hpp>
 
@@ -20,19 +20,22 @@ using namespace ctre::phoenix6;
 
 
 Arm::Arm(): 
-	// m_Pivot(PIVOT_MOTOR),
-	// m_Climb(CLIMB_MOTOR),
-	// m_ShooterMotor1(SHOOTER1_MOTOR),
-	// m_ShooterMotor2(SHOOTER2_MOTOR),
-	// m_Feeder(FEEDER_MOTOR),
+	m_Pivot(PIVOT_MOTOR),
+	m_Climb(CLIMB_MOTOR),
+	m_ShooterMotor1(SHOOTER1_MOTOR),
+	m_ShooterMotor2(SHOOTER2_MOTOR),
+	m_Feeder(FEEDER_MOTOR),
 
 	//BUTTONBOARD
 	m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
 	m_ShooterUp(BUTTON_L(SHOOTER_UP)),
 	m_ShooterDown(BUTTON_L(SHOOTER_DOWN)),
-	m_FlywheelPowerLock(BUTTON_L(3)),
 	m_RunFlywheel(BUTTON_L(FLYWHEEL_SWITCH)),
-	m_FlywheelPowerLock(BUTTON_L(4)),
+	m_FlywheelPowerLock(BUTTON_L(SHOOTER_LOCK_POWER)),
+	m_DustpanUp(BUTTON_L(DUSTPAN_UP)),
+	m_DustpanDown(BUTTON_L(DUSTPAN_DOWN)),
+	m_ClimbUp(BUTTON_L(CLIMB_UP)),
+	m_ClimbDown(BUTTON_L(CLIMB_DOWN)),
 	
 	m_Timer()
 {}

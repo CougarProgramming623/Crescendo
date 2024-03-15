@@ -1,12 +1,13 @@
 #include "Robot.h"
 #include "commands/Flywheel.h"
 
+#define r Robot::GetRobot()
+
 Flywheel::Flywheel() {}
 
 void Flywheel::Initialize() {}
 
 void Flywheel::Execute() {
-    Robot* r = Robot::GetRobot();
     if (r->GetArm().m_FlywheelPower != 0) {
         r->GetArm().GetShooterMotor1().SetControl(r->m_DutyCycleOutRequest.WithOutput(r->GetArm().m_FlywheelPower));
         r->GetArm().GetShooterMotor2().SetControl(r->m_DutyCycleOutRequest.WithOutput(r->GetArm().m_FlywheelPower - 0.05));

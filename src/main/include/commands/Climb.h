@@ -19,10 +19,10 @@
 
 using namespace ctre::phoenix6;
 
-class Intake : public frc2::CommandHelper<frc2::Command, Intake> {
+class Climb : public frc2::CommandHelper<frc2::Command, Climb> {
     
 public:
-  explicit Intake();
+  explicit Climb();
   void Initialize() override;
   void Execute() override;
   void End(bool interrupted) override;
@@ -32,4 +32,3 @@ private:
 
   
 };
-

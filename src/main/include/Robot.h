@@ -66,7 +66,7 @@ class Robot : public frc::TimedRobot {
   inline Vision& GetVision() { return m_Vision; }
 
   frc2::CommandPtr getAutonomousCommand();
-  // frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
+  frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
   void MotorInversionCheck();
   // void MotorInversionCorrection(ctre::phoenix6::hardware::TalonFX motor, int ID, bool invert);
 
@@ -98,13 +98,13 @@ class Robot : public frc::TimedRobot {
 	frc2::Trigger m_ShooterDown;
   frc2::Trigger m_VisionAim;
   frc2::Trigger m_Shoot;
-  frc2::Trigger m_AmpPreset;
+  //frc2::Trigger m_AmpPreset;
   frc2::Trigger m_StowPreset;
   // frc2::Trigger m_AllUp;
   // frc2::Trigger m_ClimbUp;
   // frc2::Trigger m_ClimbDown;
-  // frc2::Trigger m_DustpanUp;
-  // frc2::Trigger m_DustpanDown;
+  //frc2::Trigger m_DustpanUp;
+  //frc2::Trigger m_DustpanDown;
 
   // frc2::Trigger m_TL;
 	// frc2::Trigger m_TC;
@@ -166,7 +166,7 @@ class Robot : public frc::TimedRobot {
 
   frc2::Trigger m_LEDYellow;
   frc2::Trigger m_LEDPurple;
-  // LED getm_LED;
+  LED m_LED;
 
   Arm m_Arm;
 

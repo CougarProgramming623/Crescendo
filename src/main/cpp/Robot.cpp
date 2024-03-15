@@ -122,7 +122,6 @@ void Robot::AutoButtons() {
   // frc2::Trigger m_AllUp;
   // frc2::Trigger m_ClimbUp;
   // frc2::Trigger m_ClimbDown;
-  // frc2::Trigger m_DustpanUp;
   // frc2::Trigger m_DustpanDown;
 
   //BUTTONBOARD 2
