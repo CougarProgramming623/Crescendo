@@ -553,6 +553,8 @@ void Robot::RobotPeriodic() {
 
 
   if(Robot::GetButtonBoard().GetRawButton(16)){
+    DebugOutF("dial value: " + std::to_string(GetButtonBoard().GetRawAxis(6)));
+    DebugOutF("shooter power: " + std::to_string(GetArm().m_FlywheelPower));
     // DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
     // DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
     // DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));

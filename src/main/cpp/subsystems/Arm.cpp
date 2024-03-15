@@ -41,6 +41,7 @@ Arm::Arm():
 {}
 
 void Arm::Init() {
+	SetButtons();
 	DebugOutF("inside arm init");
 	// m_Pivot.SetNeutralMode(NeutralMode::Brake);
 	// m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
