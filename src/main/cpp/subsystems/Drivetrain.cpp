@@ -100,7 +100,7 @@ DriveTrain::DriveTrain()
 }
 
 void DriveTrain::DriveInit(){
-  //m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
+  m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
   SetDefaultCommand(DriveWithJoystick());
 
   // m_JoystickButtonTwo.ToggleOnTrue(new LockOn());
@@ -131,10 +131,6 @@ void DriveTrain::DriveInit(){
   //     frc2::CommandScheduler::GetInstance().Schedule(new DynamicIntake());
   //   })
   // );
-
-
-  //m_DualMotorControlButton.ToggleOnTrue(new DualMotorControl());
-
 
   m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
   // DebugOutF("frd: " + std::to_string(m_FrontRightModule.m_DriveController.motor.GetInverted()));
@@ -192,9 +188,9 @@ void DriveTrain::Periodic(){
   m_Odometry.Update(m_Rotation, m_ModulePositions);
 
   //Robot::GetRobot()->GetVision().relativeDistancex(); useless idk why i did this
-  //DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));
-  //DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetEstimatedPosition().Y().value()));
-  //DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+  DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));
+  DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetEstimatedPosition().Y().value()));
+  DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
   // DebugOutF("visionX: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().X().value()));
   // DebugOutF("visionY: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Y().value()));
@@ -236,10 +232,26 @@ void DriveTrain::resetPose(Pose2d pose) {
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
   Robot* r = Robot::GetRobot();
   return ChassisSpeeds::FromRobotRelativeSpeeds(
-      units::meters_per_second_t(0.1 * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //y
-      units::meters_per_second_t(-0.1 * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND), //x
-      units::radians_per_second_t(0.1 * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND), //rotation
+      units::meters_per_second_t(r->GetNavX().GetVelocityX()), //y
+      units::meters_per_second_t(-r->GetNavX().GetVelocityY()), //x
+      units::radians_per_second_t(r->GetNavX().GetVelocityZ()), //rotation
       frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)))));
+}
+
+void DriveTrain::DriveRobotRelative(frc::ChassisSpeeds robotRelativeSpeeds) {
+  frc::ChassisSpeeds speeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 0.02_s);
+
+  auto swerveModuleStates = m_Kinematics.ToSwerveModuleStates(speeds);
+  SetStates(swerveModuleStates);
+}
+
+void DriveTrain::SetStates(wpi::array<frc::SwerveModuleState, 4> states) {
+  frc::SwerveDriveKinematics<4>::DesaturateWheelSpeeds(&states, Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND);
+
+  m_FrontLeftModule.Set(states[0].speed.value(), states[0].angle.Radians().value());
+  m_FrontRightModule.Set(states[1].speed.value(), states[1].angle.Radians().value());
+  m_BackLeftModule.Set(states[2].speed.value(), states[2].angle.Radians().value());
+  m_BackRightModule.Set(states[3].speed.value(), states[3].angle.Radians().value());
 }
 
 //Sets breakmode

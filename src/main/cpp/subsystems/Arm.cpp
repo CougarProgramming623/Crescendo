@@ -43,15 +43,12 @@ Arm::Arm():
 
 void Arm::Init() {
 	DebugOutF("inside arm init");
-	// m_Pivot.SetNeutralMode(NeutralMode::Brake);
-	// m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-	// m_Climb.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+	SetButtons();
+	m_Pivot.SetNeutralMode(NeutralMode::Brake);
+	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+	m_Climb.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-	DebugOutF("arm override button: " + std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE)));
-
-	// if (Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE)) {
-	// 	DebugOutF("testest");
-	// }
+	DebugOutF("arm override button: " + std::to_string(m_ArmOverride.Get()));
 }
 
 void Arm::SetButtons() {
@@ -60,50 +57,6 @@ void Arm::SetButtons() {
 	}));
 	m_ArmOverride.OnTrue(ManualControls());
 	m_RunFlywheel.OnTrue(new Flywheel());
-
-	// m_GroundPickupMode.OnTrue(new frc2::InstantCommand([&]{
-	// 	//Robot::GetRobot()->GetArm().m_PivotPos = 98.0;
-    //   	//Robot::GetRobot()->GetArm().m_WristPos = 3.0;
-	// 	//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
-	// 	/*new frc2::ParallelCommandGroup(
-	// 		frc2::PrintCommand("Ground Pickup"),
-	// 		//PivotToPos(), 
-    //   		//WristToPos()
-	//   	);*/
-	// }));
-
-	// m_TransitMode.OnTrue(new frc2::InstantCommand([&]{
-	// 	//Robot::GetRobot()->GetArm().m_PivotPos = 66.6;
-    //   	//Robot::GetRobot()->GetArm().m_WristPos = 132.0;
-	// 	SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
-	// 	/*new frc2::ParallelCommandGroup(
-	// 		frc2::PrintCommand(""),
-	// 		//PivotToPos(), 
-    //   		//WristToPos()
-	//   	);*/
-	// }));
-
-	// m_GroundPickupMode.WhenPressed(
-	// 	new frc2::ParallelCommandGroup(
-	// 		frc2::PrintCommand("-45"),
-	// 		PivotToPos(98.0)
-	// 	)
-	// 	// new WristToPos(WRIST_GROUND_ANGLE)
-	// );
-
-	// m_TransitMode.WhenPressed(
-	// 	new frc2::ParallelCommandGroup(
-	// 		frc2::PrintCommand("0"),
-	// 		PivotToPos(0)
-	// 	)		// new WristToPos(WRIST_TRANSIT_ANGLE)
-	// );
-
-	// m_PlacingMode.WhenPressed(
-	// 	new frc2::ParallelCommandGroup(
-	// 		frc2::PrintCommand("45"),
-	// 		PivotToPos(45)
-	// 	)		// new WristToPos(WRIST_PLACING_MID_CUBE_ANGLE)
-	// );	
 }
 
 // while override is active, gives manual joysticks control over the two arm motors
@@ -116,38 +69,34 @@ frc2::FunctionalCommand* Arm::ManualControls()
 		DebugOutF("inside of manual controls");
 		
 		DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
-		// if(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
-		// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
-		// 		DebugOutF("inside of if for shooter up");
-		// 		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.25));
-		// 	} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
-		// 		DebugOutF("inside of if for shooter down");
-		// 		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.25));
-		// 	}
-		// }
-		// m_ShooterMotor1.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.6));
-		// m_ShooterMotor2.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.55));
-
+		if(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
+			if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
+				DebugOutF("inside of if for shooter up");
+				m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.25));
+			} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
+				DebugOutF("inside of if for shooter down");
+				m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.25));
+			}
+		}
 	},[&](bool e) { // onEnd
-		// m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-		// m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
 	},
 	[&] { // isFinished
 		return !Robot::GetRobot()->m_ArmOverride.Get();
-		return false;
 	});
 }
 
-void Arm::SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc) {
-	//LOOK
-	configs::MotionMagicConfigs pivotMotionMagicConfigs;
-	configs::MotionMagicConfigs wristMotionMagicConfigs;
-	pivotMotionMagicConfigs.WithMotionMagicCruiseVelocity(pivotVel);
-	pivotMotionMagicConfigs.WithMotionMagicAcceleration(pivotAcc);
-	wristMotionMagicConfigs.WithMotionMagicCruiseVelocity(wristVel);
-	wristMotionMagicConfigs.WithMotionMagicAcceleration(wristAcc);
-	// m_Pivot.GetConfigurator().Apply(pivotMotionMagicConfigs, 0_s);
-	// m_Wrist.GetConfigurator().Apply(wristMotionMagicConfigs, 0_s);
-	// m_Pivot.GetConfigurator().Apply(pivotMotionMagicConfigs, 0_s);
-	// m_Wrist.GetConfigurator().Apply(wristMotionMagicConfigs, 0_s);
-}
+// void Arm::SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc) {
+// 	//LOOK
+// 	configs::MotionMagicConfigs pivotMotionMagicConfigs;
+// 	configs::MotionMagicConfigs wristMotionMagicConfigs;
+// 	pivotMotionMagicConfigs.WithMotionMagicCruiseVelocity(pivotVel);
+// 	pivotMotionMagicConfigs.WithMotionMagicAcceleration(pivotAcc);
+// 	wristMotionMagicConfigs.WithMotionMagicCruiseVelocity(wristVel);
+// 	wristMotionMagicConfigs.WithMotionMagicAcceleration(wristAcc);
+// 	m_Pivot.GetConfigurator().Apply(pivotMotionMagicConfigs, 0_s);
+// 	m_Wrist.GetConfigurator().Apply(wristMotionMagicConfigs, 0_s);
+// 	m_Pivot.GetConfigurator().Apply(pivotMotionMagicConfigs, 0_s);
+// 	m_Wrist.GetConfigurator().Apply(wristMotionMagicConfigs, 0_s);
+// }

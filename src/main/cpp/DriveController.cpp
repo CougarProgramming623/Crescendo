@@ -8,14 +8,7 @@ using ctre::phoenix::motorcontrol::NeutralMode;
 DriveController::DriveController(int ID):
     motor(ID)
 {
-    // if(!motor.GetInverted() && (ID == 53|| ID == 41)) {
-    //     DebugOutF("motor " + std::to_string(ID) + " needed to be fixed");
-    //     motor.SetInverted(true);
-    // }
     motor.SetNeutralMode(NeutralMode::Brake);
-    //motor.SetInverted(SMTH)                           FIX idk why but some of them rotate clockwise and others counter clockwise
-    //motor.SetInverted(true);
-    // motor.SetSensorPhase(true);                         //FIX also dont know why we do this one
 }
 
 //Set drive voltage

@@ -44,14 +44,8 @@ class Arm : public frc2::SubsystemBase {
 	
 
 	frc2::FunctionalCommand* ManualControls();
-	void SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc);
-
-	// inline double PivotStringPotUnitsToDegrees(double units) {return ((units - STRINGPOT_ZERO) * PIVOT_DEGREES_PER_STRINGPOT_UNITS + STRINGPOT_ZERO_DEGREES); }
-	// inline double PivotStringPotUnitsToRotations(double units) {return PivotDegreesToRotations(PivotStringPotUnitsToDegrees(units));}
+	// void SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc);
 	inline double PivotStringPotUnitsToRotations(double units) {return 0;}
-
-	// inline double PivotDegreesToStringPotUnits(double degrees) {return ((degrees / PIVOT_DEGREES_PER_STRINGPOT_UNITS) + STRINGPOT_ZERO); }
-	// inline double PivotRotationsToStringPotUnits(double rotations) {return PivotDegreesToStringPotUnits(PivotRotationsToDegrees(rotations));}
 	
 	inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
 	inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
@@ -71,8 +65,6 @@ class Arm : public frc2::SubsystemBase {
 
 	frc2::Trigger m_PlacingMode;
 
-	double m_WristPos;
-	double m_PivotPos;
 	double m_FlywheelPower;
 
 	double m_OriginalPivotRotations;
@@ -100,17 +92,6 @@ class Arm : public frc2::SubsystemBase {
   	frc2::Trigger m_DustpanDown;
 	frc2::Trigger m_ClimbUp;
 	frc2::Trigger m_ClimbDown;
-	
-
-	// frc2::Trigger m_ConeMode;
-	// frc2::Trigger m_CubeMode;
-
-	// frc2::Trigger m_IntakeButton;
-	// frc2::Trigger m_OuttakeButton;
 
 	frc::Timer m_Timer;
-
-	frc2::SequentialCommandGroup* m_Top;
-	frc2::SequentialCommandGroup* m_Mid;
-	frc2::SequentialCommandGroup* m_Bot;
 };
