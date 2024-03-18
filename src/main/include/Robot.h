@@ -72,6 +72,7 @@ class Robot : public frc::TimedRobot {
 
   //motor control requests - LOOK, VERY IMPORTANT
   //controls::VoltageOut m_VoltageOutRequest{0_V};
+  controls::PositionDutyCycle m_PositionDutyCycle{units::angle::turn_t(0)};
   controls::DutyCycleOut m_DutyCycleOutRequest{0};
   controls::MotionMagicDutyCycle m_MotionMagicRequest{units::angle::turn_t(0)};
 
