@@ -15,6 +15,8 @@ SteerController::SteerController(int motorID, int EncoderPort, double AngleOffse
     //     motor.SetInverted(true);
     // }
     //motor.SetControl(motorControlMode.WithPosition(units::angle::turn_t((360-(fmod(((encoder.GetVoltage() * ENCODER_VOLTAGE_TO_DEGREE) + (360-AngleOffset)), 360))) / STEER_ENCODER_POSITION_CONSTANT)));
+    m_configs.SensorToMechanismRatio = (float) 150/7;
+    motor.GetConfigurator().Apply(m_configs);
     DebugOutF("initial position: " + std::to_string((encoder.GetVoltage() / frc::RobotController::GetVoltage5V()) - (angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) * (360/MAX_VOLTAGE_WHEN_OFFSET)));
     if(motorID == BACK_LEFT_MODULE_STEER_MOTOR || motorID == FRONT_RIGHT_MODULE_STEER_MOTOR) {
         motor.SetPosition(units::angle::turn_t(-((angleOffsetVoltage / MAX_VOLTAGE_WHEN_OFFSET) - (encoder.GetVoltage() / frc::RobotController::GetVoltage5V()))));

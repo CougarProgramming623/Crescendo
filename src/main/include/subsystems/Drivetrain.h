@@ -79,7 +79,7 @@ class DriveTrain : public frc2::SubsystemBase {
   frc::Servo m_DustpanRotate {1};
   void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
   void DriveInit();
-  void BreakMode(bool on);
+  void BrakeMode(bool on);
   void Periodic() override;
 
   frc::Translation2d m_FrontLeftLocation;
@@ -101,23 +101,14 @@ class DriveTrain : public frc2::SubsystemBase {
   void DriveRobotRelative(ChassisSpeeds robotRelativeSpeeds);
   void SetStates(wpi::array<frc::SwerveModuleState, 4> states);
 
-  // pathplanner::FollowPathWithEvents* TruePath();
-  // pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
-
   inline bool GetIsBalancing() { return m_IsBalancing; }
   inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
-
-  // inline void driveRobotRelative(ChassisSpeeds speeds) {
-  //   Robot::GetRobot()->GetDriveTrain().motorcontrol.Set(speeds);
-  // }
 
   frc2::FunctionalCommand AutoBalanceCommand();
   void AutoBalanceFunction(); 
 
-  //TrajectoryCommand DriveToPos(frc::Pose2d target);
 
-
-//how fast the robot should be able to drive
+  //how fast the robot should be able to drive
   const units::meters_per_second_t kMAX_VELOCITY_METERS_PER_SECOND = units::meters_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI);
 
   std::array<frc::SwerveModulePosition, 4> m_ModulePositions;
@@ -177,7 +168,7 @@ class DriveTrain : public frc2::SubsystemBase {
 
   std::array<frc::SwerveModuleState, 4> m_ModuleStates;
   
- frc::PIDController m_xController;
+  frc::PIDController m_xController;
   frc::PIDController m_yController;
   frc::ProfiledPIDController <units::radians> m_ThetaController;
   frc::HolonomicDriveController m_HolonomicController;

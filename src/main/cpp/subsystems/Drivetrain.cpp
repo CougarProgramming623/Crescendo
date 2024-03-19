@@ -73,12 +73,12 @@ DriveTrain::DriveTrain()
   //       this // Reference to this subsystem to set requirements
   //   );
   AutoBuilder::configureHolonomic(
-        [this]() { return getPose(); }, // Robot pose supplier
-        [this](frc::Pose2d pose){ resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
-        [this]() { return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        [this](frc::ChassisSpeeds speeds){ BaseDrive(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        [this]() { return this->getPose(); }, // Robot pose supplier
+        [this](frc::Pose2d pose){ this->resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
+        [this]() { return this->getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        [this](frc::ChassisSpeeds robotRelativeSpeeds){ this->DriveRobotRelative(robotRelativeSpeeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            PIDConstants(0.04, 0.0, 0.0), // Translation PID constants
+            PIDConstants(1, 0.0, 0.0), // Translation PID constants
             PIDConstants(0.0, 0.0, 0.0), // Rotation PID constants
             kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
             0.871_m, // Drive base radius in meters. Distance from robot center to furthest module.
@@ -124,14 +124,6 @@ void DriveTrain::DriveInit(){
     }
   ));
 
-  // m_JoystickOuttake.OnFalse(
-  //   new frc2::InstantCommand([&]{
-  //     // Robot::GetRobot()->GetArm().GetBottomIntakeMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
-  //     //Robot::GetRobot()->GetArm().GetBottomIntakeMotor().Set(ControlMode::PercentOutput, 0);
-  //     frc2::CommandScheduler::GetInstance().Schedule(new DynamicIntake());
-  //   })
-  // );
-
   m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
   // DebugOutF("frd: " + std::to_string(m_FrontRightModule.m_DriveController.motor.GetInverted()));
   // DebugOutF("frs: " + std::to_string(m_FrontRightModule.m_SteerController.motor.GetInverted()));
@@ -153,8 +145,6 @@ void DriveTrain::Periodic(){
     m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
     m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
   } else {
-    // DebugOutF("steer desired angle in radians: " + std::to_string((double)m_ModuleStates[0].angle.Radians()));
-    // DebugOutF("drive desired speed in meters per second: " + std::to_string((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE).value()));
     m_FrontLeftModule.Set(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE * -1, (double) m_ModuleStates[0].angle.Radians());
   }
 
@@ -187,32 +177,28 @@ void DriveTrain::Periodic(){
 
   m_Odometry.Update(m_Rotation, m_ModulePositions);
 
-  //Robot::GetRobot()->GetVision().relativeDistancex(); useless idk why i did this
-  DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));
-  DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetEstimatedPosition().Y().value()));
-  DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+  // DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));
+  // DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetEstimatedPosition().Y().value()));
+  // DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
   // DebugOutF("visionX: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().X().value()));
   // DebugOutF("visionY: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Y().value()));
   // DebugOutF("visionTheta: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Rotation().Degrees().value()));
 
 
-  // if(COB_GET_ENTRY(GET_VISION.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0){ // FIX uncomment when we have both limelights back
+  // if(COB_GET_ENTRY(GET_VISION.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0) { // FIX uncomment when we have both limelights back
   // // if(COB_GET_ENTRY("/limelight/botpose").GetDoubleArray(std::span<double>()).size() != 0){ //Works with one limelight
-  //   if((m_DriveToPoseFlag != true || m_VisionCounter == 25) && !Robot::GetRobot()->m_AutoFlag)
-  //   {
-  //     if(
-  //      std::abs(m_VisionRelative.X().value()) < 1 &&
-  //       std::abs(m_VisionRelative.Y().value()) < 1 &&
-  //       std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) 
-  //       {
-  //         m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetFieldPose().Translation(), m_Rotation), m_Timer.GetFPGATimestamp()
-  //         - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
-  //         DebugOutF("Vision Update");
-  //         m_VisionCounter = 0;
-  //       } 
-  //  } else { m_VisionCounter++; }
+  //   if((m_DriveToPoseFlag != true || m_VisionCounter == 25) && !Robot::GetRobot()->m_AutoFlag) {
+  //     if(std::abs(m_VisionRelative.X().value()) < 1 && std::abs(m_VisionRelative.Y().value()) < 1 && std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) {
+  //       m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetFieldPose().Translation(), m_Rotation), m_Timer.GetFPGATimestamp() - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
+  //       DebugOutF("Vision Update");
+  //       m_VisionCounter = 0;
+  //     }
+  //   } else {
+  //     m_VisionCounter++;
+  //   }
   // }
+
 }
 //Converts chassis speed object and updates module states
 void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
@@ -232,8 +218,8 @@ void DriveTrain::resetPose(Pose2d pose) {
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
   Robot* r = Robot::GetRobot();
   return ChassisSpeeds::FromRobotRelativeSpeeds(
-      units::meters_per_second_t(r->GetNavX().GetVelocityX()), //y
-      units::meters_per_second_t(-r->GetNavX().GetVelocityY()), //x
+      units::meters_per_second_t(r->GetNavX().GetVelocityX()), //x
+      units::meters_per_second_t(-r->GetNavX().GetVelocityY()), //y
       units::radians_per_second_t(r->GetNavX().GetVelocityZ()), //rotation
       frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)))));
 }
@@ -246,7 +232,7 @@ void DriveTrain::DriveRobotRelative(frc::ChassisSpeeds robotRelativeSpeeds) {
 }
 
 void DriveTrain::SetStates(wpi::array<frc::SwerveModuleState, 4> states) {
-  frc::SwerveDriveKinematics<4>::DesaturateWheelSpeeds(&states, Robot::GetRobot()->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND);
+  frc::SwerveDriveKinematics<4>::DesaturateWheelSpeeds(&states, kMAX_VELOCITY_METERS_PER_SECOND);
 
   m_FrontLeftModule.Set(states[0].speed.value(), states[0].angle.Radians().value());
   m_FrontRightModule.Set(states[1].speed.value(), states[1].angle.Radians().value());
@@ -254,10 +240,10 @@ void DriveTrain::SetStates(wpi::array<frc::SwerveModuleState, 4> states) {
   m_BackRightModule.Set(states[3].speed.value(), states[3].angle.Radians().value());
 }
 
-//Sets breakmode
-void DriveTrain::BreakMode(bool on){
-  m_FrontLeftModule.BreakMode(on);
-  m_FrontRightModule.BreakMode(on);
-  m_BackLeftModule.BreakMode(on);
-  m_BackRightModule.BreakMode(on);
+//Sets the drive motors to brake mode
+void DriveTrain::BrakeMode(bool on){
+  m_FrontLeftModule.BrakeMode(on);
+  m_FrontRightModule.BrakeMode(on);
+  m_BackLeftModule.BrakeMode(on);
+  m_BackRightModule.BrakeMode(on);
  }

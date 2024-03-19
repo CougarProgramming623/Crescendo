@@ -24,9 +24,9 @@ double SwerveModule::GetSteerSensorVoltage(){
     return m_SteerController.encoder.GetVoltage();
 }
 
-//Set break mode of the drive motor
-void SwerveModule::BreakMode(bool on){
-    m_DriveController.BreakMode(on);
+//Set brake mode of the drive motor
+void SwerveModule::BrakeMode(bool on){
+    m_DriveController.BrakeMode(on);
 }
 
 //Get the pose of the module

@@ -18,7 +18,7 @@ class DriveController {
 
         double GetStateVelocity();
 
-        void BreakMode(bool on);
+        void BrakeMode(bool on);
         hardware::TalonFX motor;
 
     private:

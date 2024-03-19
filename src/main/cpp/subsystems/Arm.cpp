@@ -9,15 +9,9 @@
 #include "commands/Flywheel.h"
 #include "Constants.h"
 #include "commands/AutoTest.h"
-//#include <ctre/phoenix6/configs/Configs.hpp>
 
-using ctre::phoenix::motorcontrol::NeutralMode;
 using namespace ctre::phoenix;
-using ctre::phoenix::motorcontrol::can::TalonSRX;
 using namespace ctre::phoenix6;
-//using ctre::phoenix6::configs::MagnetSensorConfigs;
-// using ctre::phoenix6::signals::AbsoluteSensorRangeValue;
-
 
 
 Arm::Arm(): 
@@ -44,9 +38,9 @@ Arm::Arm():
 void Arm::Init() {
 	DebugOutF("inside arm init");
 	SetButtons();
-	m_Pivot.SetNeutralMode(NeutralMode::Brake);
+	m_Pivot.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-	m_Climb.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+	m_Climb.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
 	DebugOutF("arm override button: " + std::to_string(m_ArmOverride.Get()));
 }

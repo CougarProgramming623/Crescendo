@@ -12,7 +12,6 @@ PivotToPos::PivotToPos() {
 
 void PivotToPos::Initialize() {
 	//ARM.GetPivotMotor().SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
-	targetDegrees = Robot::GetRobot()->GetArm().m_PivotPos;
 	// DebugOutF("starting at: " + std::to_string((ARM.GetPivotCANCoder().GetAbsolutePosition() - CANCODER_ZERO)) + " degrees");
 	// DebugOutF("Going to: " + std::to_string(ARM.PivotTicksToDegrees(ARM.PivotDegreesToTicks(targetDegrees))) + " degrees");
 }
