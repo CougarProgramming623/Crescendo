@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
-#include <math.h>
+#include <Math.h>
 
 // #define ROBOT_WHEELBASE
 #define O12
@@ -167,7 +167,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
     #define PIVOT_CAN_DIFFERENCE_BETWEEN_STARTING_AND_LEVEL -1 //check
 
     //Math constants
-    #define PIVOT_GEAR_RATIO 160.0
+    //#define PIVOT_GEAR_RATIO 160.0
     #define PIVOT_TICKS_PER_DEGREE (PIVOT_GEAR_RATIO*2048.0/360.0)
 
     #define WRIST_GEAR_RATIO 156.522

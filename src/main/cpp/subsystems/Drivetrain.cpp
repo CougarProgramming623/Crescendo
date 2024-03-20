@@ -13,6 +13,9 @@
 #include <frc/DriverStation.h>
 #include <frc/geometry/Pose2d.h>
 
+//#include "subsystems/Simulation.h"
+#include <frc/simulation/DifferentialDrivetrainSim.h>
+
 using namespace pathplanner;
 
 using namespace ctre::phoenix6;
@@ -97,6 +100,21 @@ DriveTrain::DriveTrain()
         },
         this // Reference to this subsystem to set requirements
     );
+
+ /*frc::sim::DifferentialDrivetrainSim m_driveSim{
+      frc::DCMotor::Falcon500(2), // 2 NEO motors on each side of the drivetrain.
+      7.29,               // 7.29:1 gearing reduction.
+      7.5_kg_sq_m,        // MOI of 7.5 kg m^2 (from CAD model).
+      60_kg,              // The mass of the robot is 60 kg.
+      3_in,               // The robot uses 3" radius wheels.
+      0.7112_m,           // The track width is 0.7112 meters.
+
+      // The standard deviations for measurement noise:
+      // x and y:          0.001 m
+      // heading:          0.001 rad
+      // l and r velocity: 0.1   m/s
+      // l and r position: 0.005 m
+      {0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005}};*/
 }
 
 void DriveTrain::DriveInit(){
@@ -152,7 +170,6 @@ Is called periodically
 Passes module states to motors and updates odometry
 */
 void DriveTrain::Periodic(){
-
   if((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE) == 0 && ((double) m_ModuleStates[0].angle.Radians() == 0)){
     m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
     m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
@@ -216,7 +233,31 @@ void DriveTrain::Periodic(){
   //  } else { m_VisionCounter++; }
   //   m_Odometry.Update(m_Rotation, m_ModulePositions);
   // }
+  frc::SmartDashboard::PutData("Theta PID Controller", &m_ThetaController);
+
 }
+
+/*void DriveTrain::SimulationPeriodic() {
+    // Set the inputs to the system. Note that we need to convert
+  // the [-1, 1] PWM signal to voltage by multiplying it by the
+  // robot controller voltage.
+  m_driveSim.SetInputs(
+    m_leftMotor.get() * units::volt_t(frc::RobotController::GetInputVoltage()),
+    m_rightMotor.get() * units::volt_t(frc::RobotController::GetInputVoltage()));
+
+  // Advance the model by 20 ms. Note that if you are running this
+  // subsystem in a separate thread or have changed the nominal timestep
+  // of TimedRobot, this value needs to match it.
+  m_driveSim.Update(20_ms);
+
+  // Update all of our sensors.
+  m_leftEncoderSim.SetDistance(m_driveSim.GetLeftPosition().value());
+  m_leftEncoderSim.SetRate(m_driveSim.GetLeftVelocity().value());
+  m_rightEncoderSim.SetDistance(m_driveSim.GetRightPosition().value());
+  m_rightEncoderSim.SetRate(m_driveSim.GetRightVelocity().value());
+  m_gyroSim.SetAngle(-m_driveSim.GetHeading().Degrees());
+}*/
+
 //Converts chassis speed object and updates module states
 void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
   m_ChassisSpeeds = chassisSpeeds;

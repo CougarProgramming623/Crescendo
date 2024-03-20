@@ -1,6 +1,9 @@
 #pragma once
 
+#define _USE_MATH_DEFINES
+
 #include <frc2/command/PrintCommand.h>
+#include <Math.h>
 
 
 inline void DebugOutF(const std::string_view message) {

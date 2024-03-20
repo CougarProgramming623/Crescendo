@@ -31,6 +31,8 @@
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <memory>
 
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -182,6 +184,8 @@ class Robot : public frc::TimedRobot {
   frc::GenericHID m_ButtonBoardTwo = frc::GenericHID(2);
 
   std::string m_AutoPath;
+
+  frc::Field2d m_field;
 
   //MotionMagicTest m_MMT;
 

@@ -2,7 +2,7 @@
 #include "Robot.h"
 #include "Util.h"
 
-#include <math.h>
+#include <Math.h>
 #include "frc/smartdashboard/Smartdashboard.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
@@ -31,7 +31,7 @@ void Vision::PrintValues() {
 
   DebugOutF("Robot Angle: " + std::to_string(Robot::GetRobot()->GetNavX().GetAngle()));
   DebugOutF("April Tag ID: " + std::to_string(m_LimelightTable->GetNumber("tid", 0.0)));
-  DebugOutF("Target Robot Angle: " + std::to_string(Rotation2d(Robot::GetRobot()->GetVision().VisionRobotYaw(m_LimelightTable->GetNumber("tid", 0.0))).Degrees().value()));
+  //DebugOutF("Target Robot Angle: " + std::to_string(Rotation2d(Robot::GetRobot()->GetVision().VisionRobotYaw(m_LimelightTable->GetNumber("tid", 0.0))).Degrees().value()));
 }
 
 void Vision::setPriority(double id) {
@@ -86,19 +86,19 @@ void Vision::PushID() {}
 //1 for front 0 for back
 // std::string Vision::FrontBack(std::string key) {}
 
-units::angle::radian_t Vision::VisionRobotYaw(double ID) {
+/*units::angle::radian_t Vision::VisionRobotYaw(double ID) {
   double x = IDMap[0][(int)ID - 1] - m_AbsolutePose.X().value();
   double y = IDMap[1][(int)ID - 1] - m_AbsolutePose.Y().value();
   // DebugOutF("inside vision robot yaw --> target yaw in radians: " + std::to_string(atan(x / y)));
   return units::angle::radian_t(atan(x / y));
-}
+}*/
 
-units::angle::degree_t Vision::ShooterAngle(double ID) {
+/*units::angle::degree_t Vision::ShooterAngle(double ID) {
   double x = IDMap[0][(int)ID - 1] - m_AbsolutePose.X().value();
   double y = IDMap[1][(int)ID - 1] - m_AbsolutePose.Y().value();
   double distance = sqrt(pow(IDMap[0][(int)ID - 1], 2) + pow(IDMap[1][(int)ID - 1], 2));
   double height = IDMap[2][(int)ID - 1] - robotHeight;
-}
+}*/
 
 double Vision::relativeDistancex(){  
     double targetOffsetAngle_Vertical = m_LimelightTable->GetNumber("ty",0.0);
@@ -116,4 +116,5 @@ double Vision::relativeDistancex(){
 
     double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/tan(angleToGoalRadians);
     DebugOutF("delta x: " + std::to_string(distanceFromLimelightToGoalInches));
+    return distanceFromLimelightToGoalInches;
 }

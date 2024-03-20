@@ -55,6 +55,9 @@
 
 #include <frc/drive/DifferentialDrive.h>
 
+//#include "subsystems/Simulation.h"
+#include <frc/simulation/DifferentialDrivetrainSim.h>
+
 // #include "COB.h"
 // #include "Vision.h"
 // #include "subsystems/Arm.h"
@@ -81,6 +84,7 @@ class DriveTrain : public frc2::SubsystemBase {
   void DriveInit();
   void BreakMode(bool on);
   void Periodic() override;
+  //void SimulationPeriodic() override;
 
   frc::Translation2d m_FrontLeftLocation;
   frc::Translation2d m_FrontRightLocation;
@@ -157,7 +161,7 @@ class DriveTrain : public frc2::SubsystemBase {
   frc2::Trigger m_JoystickOuttake;
   frc2::Trigger m_TestJoystickButton;
 
-  
+
   private:
   
   frc::Timer m_Timer;
@@ -183,4 +187,5 @@ class DriveTrain : public frc2::SubsystemBase {
   frc::HolonomicDriveController m_HolonomicController;
 
   
+  //frc::sim::DifferentialDrivetrainSim m_driveSim;
 };

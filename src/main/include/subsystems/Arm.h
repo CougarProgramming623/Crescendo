@@ -6,7 +6,7 @@
 #include <frc/Joystick.h>
 #include <frc2/command/button/Trigger.h>
 #include <frc/AnalogInput.h>
-#include <math.h>
+#include <Math.h>
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 #include <ctre/phoenix6/TalonFX.hpp>
