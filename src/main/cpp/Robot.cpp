@@ -105,15 +105,31 @@ void Robot::AutoButtons() {
   // m_DustpanUpperLimit = m_ButtonBoard.GetRawAxis(DUSTPANUP_LIMIT);//(BUTTON_L(DUSTPANUP_LIMIT))
   // frc::AnalogInput m_ShooterSpeed;
   
-  // frc2::Trigger m_IntakeSwitch;
   // frc2::Trigger m_FlywheelSwitch;
   // m_ArmOverride = frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
 	// m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
 	// m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
   // m_VisionAim = frc2::Trigger(BUTTON_L(AIM_BUTTON));
   // m_Shoot = frc2::Trigger(BUTTON_L(SHOOT_BUTTON));
-  // m_AmpPreset = frc2::Trigger(BUTTON_L(AMP_BUTTON));
-  // m_StowPreset = frc2::Trigger(BUTTON_L(STOW_BUTTON));
+  	m_ArmOverride =  frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
+    m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
+    m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
+    m_RunFlywheel = frc2::Trigger(BUTTON_L(FLYWHEEL_SWITCH));
+    m_FlywheelPowerLock = frc2::Trigger(BUTTON_L(SHOOTER_LOCK_POWER));
+    m_DustpanUp = frc2::Trigger(BUTTON_L(DUSTPAN_UP));
+    m_DustpanDown = frc2::Trigger(BUTTON_L(DUSTPAN_DOWN));
+    m_ClimbUp = frc2::Trigger(BUTTON_L(CLIMB_UP));
+    m_ClimbDown = frc2::Trigger(BUTTON_L(CLIMB_DOWN));
+    m_IntakeSwitch = frc2::Trigger(BUTTON_L(INTAKE_SWITCH));
+  //m_AmpPreset = frc2::Trigger(BUTTON_L(AMP_BUTTON));
+  //m_StowPreset = frc2::Trigger(BUTTON_L(STOW_BUTTON));
+
+  Robot::GetRobot()->m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
+		GetArm().m_FlywheelPower = Robot::GetRobot()->GetButtonBoard().GetRawAxis(SHOOTER_SPEED);
+	}));
+	m_ArmOverride.OnTrue(GetArm().ManualControls());
+	m_RunFlywheel.OnTrue(new Flywheel());
+	m_IntakeSwitch.OnTrue(new Intake());
 
   // m_VisionAim.OnTrue(new frc2::InstantCommand([&] {
 	// 	frc2::PrintCommand("VISION AIM");
@@ -446,6 +462,7 @@ void Robot::RobotPeriodic() {
 
   m_COBTicks++;
   Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(Robot::GetRobot()->GetNavX().GetPitch() + 0.05);
+  // DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
   // m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
   // DebugOutF("Row: " + std::to_string(SelectedRow) + " , Col: " + std::to_string(SelectedColumn));
 

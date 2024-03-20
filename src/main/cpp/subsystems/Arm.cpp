@@ -7,6 +7,7 @@
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/WaitCommand.h>
 #include "commands/Flywheel.h"
+#include "commands/Intake.h"
 #include "Constants.h"
 //#include <ctre/phoenix6/configs/Configs.hpp>
 
@@ -27,21 +28,13 @@ Arm::Arm():
 	m_Feeder(FEEDER_MOTOR),
 
 	//BUTTONBOARD
-	m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
-	m_ShooterUp(BUTTON_L(SHOOTER_UP)),
-	m_ShooterDown(BUTTON_L(SHOOTER_DOWN)),
-	m_RunFlywheel(BUTTON_L(FLYWHEEL_SWITCH)),
-	m_FlywheelPowerLock(BUTTON_L(SHOOTER_LOCK_POWER)),
-	m_DustpanUp(BUTTON_L(DUSTPAN_UP)),
-	m_DustpanDown(BUTTON_L(DUSTPAN_DOWN)),
-	m_ClimbUp(BUTTON_L(CLIMB_UP)),
-	m_ClimbDown(BUTTON_L(CLIMB_DOWN)),
-	
+	//m_PowerLock(BUTTON_L(SHOOTER_LOCK_POWER)),
 	m_Timer()
 {}
 
 void Arm::Init() {
 	DebugOutF("inside arm init");
+	SetButtons();
 	// m_Pivot.SetNeutralMode(NeutralMode::Brake);
 	// m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 	// m_Climb.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
@@ -54,22 +47,8 @@ void Arm::Init() {
 }
 
 void Arm::SetButtons() {
-	m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
-		m_FlywheelPower = Robot::GetRobot()->GetButtonBoard().GetRawAxis(6);
-	}));
-	m_ArmOverride.OnTrue(ManualControls());
-	m_RunFlywheel.OnTrue(new Flywheel());
+	
 
-	// m_GroundPickupMode.OnTrue(new frc2::InstantCommand([&]{
-	// 	//Robot::GetRobot()->GetArm().m_PivotPos = 98.0;
-    //   	//Robot::GetRobot()->GetArm().m_WristPos = 3.0;
-	// 	//SetMotionMagicValues(PIVOT_DFLT_VEL, PIVOT_DFLT_ACC, WRIST_DFLT_VEL, WRIST_DFLT_ACC);
-	// 	/*new frc2::ParallelCommandGroup(
-	// 		frc2::PrintCommand("Ground Pickup"),
-	// 		//PivotToPos(), 
-    //   		//WristToPos()
-	//   	);*/
-	// }));
 
 	// m_TransitMode.OnTrue(new frc2::InstantCommand([&]{
 	// 	//Robot::GetRobot()->GetArm().m_PivotPos = 66.6;

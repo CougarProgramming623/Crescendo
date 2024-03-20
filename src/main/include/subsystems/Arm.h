@@ -7,6 +7,7 @@
 #include <frc2/command/button/Trigger.h>
 #include <frc/AnalogInput.h>
 #include <math.h>
+#//include "Robot.h"
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 #include <ctre/phoenix6/TalonFX.hpp>
@@ -52,8 +53,8 @@ class Arm : public frc2::SubsystemBase {
 	// inline double PivotDegreesToStringPotUnits(double degrees) {return ((degrees / PIVOT_DEGREES_PER_STRINGPOT_UNITS) + STRINGPOT_ZERO); }
 	// inline double PivotRotationsToStringPotUnits(double rotations) {return PivotDegreesToStringPotUnits(PivotRotationsToDegrees(rotations));}
 	
-	inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
-	inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
+	//inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
+	//inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
 	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
 	//Need to get the ratio of units to length ASAP
 	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
@@ -66,10 +67,6 @@ class Arm : public frc2::SubsystemBase {
 	inline hardware::TalonFX& GetShooterMotor2() {return m_ShooterMotor2;}
 	inline motorcontrol::can::TalonSRX& GetFeeder() {return m_Feeder;}
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
-	inline frc2::Trigger& GetDustpanUp() {return m_DustpanUp; }
-	inline frc2::Trigger& GetDustpanDown() {return m_DustpanDown; }
-	inline frc2::Trigger& GetClimbDown() {return m_ClimbDown; }
-	inline frc2::Trigger& GetClimbUp() {return m_ClimbUp; }
 
 	frc2::Trigger m_PlacingMode;
 
@@ -93,15 +90,7 @@ class Arm : public frc2::SubsystemBase {
 	frc::AnalogInput m_StringPot{4};
 
 	//triggers
-	frc2::Trigger m_ArmOverride;
-	frc2::Trigger m_ShooterUp;
-	frc2::Trigger m_ShooterDown;
-	frc2::Trigger m_FlywheelPowerLock;
-	frc2::Trigger m_RunFlywheel;
-	frc2::Trigger m_DustpanUp;
-  	frc2::Trigger m_DustpanDown;
-	frc2::Trigger m_ClimbUp;
-	frc2::Trigger m_ClimbDown;
+	//frc2::Trigger m_PowerLock;
 	
 
 	// frc2::Trigger m_ConeMode;
