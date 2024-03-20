@@ -120,16 +120,20 @@ void Robot::AutoButtons() {
 
 frc2::CommandPtr Robot::getAutonomousCommand() {
   // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("StraightX");
+  auto path = PathPlannerPath::fromPathFile("StraightX2");
   DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   // Create a path following command using AutoBuilder. This will also trigger event markers.
-  startingPose = Pose2d(path.get()->getAllPathPoints().at(0).position, path.get()->getAllPathPoints().at(0).rotationTarget.value().getTarget());
-  DebugOutF(std::to_string(startingPose.X().value()));
-  DebugOutF(std::to_string(startingPose.Y().value()));
-  //startingPose = path.get()->getStartingDifferentialPose();
-  return AutoBuilder::followPathWithEvents(path);
+  // startingPose = Pose2d(path.get()->getAllPathPoints().at(0).position, path.get()->getAllPathPoints().at(0).rotationTarget.value().getTarget());
+  // DebugOutF(std::to_string(startingPose.X().value()));
+  // DebugOutF(std::to_string(startingPose.Y().value()));
+  startingPose = path.get()->getStartingDifferentialPose();
+  DebugOutF("starting pose: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+  return PathPlannerAuto("StraightX Auto 2").ToPtr();
+  // return AutoBuilder::followPathWithEvents(path);
 }
 
 // /**
@@ -301,10 +305,12 @@ void Robot::AutonomousInit() {
   GetNavX().Reset();
   GetNavX().SetAngleAdjustment(0);
   GetDriveTrain().BrakeMode(true);
-  // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-  // GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-  // GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-  // GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+  GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+  GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+  GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+  GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+
+  m_autonomousCommand = getAutonomousCommand();
 
   GetDriveTrain().GetOdometry()->ResetPosition(
     units::radian_t(Deg2Rad(GetAngle())), 
@@ -314,9 +320,27 @@ void Robot::AutonomousInit() {
       GetDriveTrain().m_BackLeftModule.GetPosition(), 
       GetDriveTrain().m_BackRightModule.GetPosition()),
     startingPose
+  );
+
+  DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+
+  frc2::CommandScheduler::GetInstance().Schedule(
+    new frc2::SequentialCommandGroup(
+        frc2::ParallelRaceGroup(
+          frc2::InstantCommand([&] {
+            Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
+            Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+          }),
+          frc2::WaitCommand(1.5_s)
+        ),
+        frc2::InstantCommand([&] {
+          getAutonomousCommand();
+        })
+      )
     );
 
-  m_autonomousCommand = getAutonomousCommand();
 
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();

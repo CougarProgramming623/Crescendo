@@ -78,10 +78,10 @@ DriveTrain::DriveTrain()
         [this]() { return this->getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](frc::ChassisSpeeds robotRelativeSpeeds){ this->DriveRobotRelative(robotRelativeSpeeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            PIDConstants(1, 0.0, 0.0), // Translation PID constants
+            PIDConstants(1.5, 0.0, 0.0), // Translation PID constants
             PIDConstants(0.0, 0.0, 0.0), // Rotation PID constants
             kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
-            0.871_m, // Drive base radius in meters. Distance from robot center to furthest module.
+            0.5298_m, // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         []() {
@@ -169,7 +169,7 @@ void DriveTrain::Periodic(){
     m_BackRightModule.Set(m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE * -1, (double) m_ModuleStates[3].angle.Radians());
   }
 
-  m_Rotation = frc::Rotation2d(units::radian_t(Deg2Rad(Robot::GetRobot()->GetAngle())));
+  m_Rotation = frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - Robot::GetRobot()->GetNavX().GetAngle(), 360))));
 
   m_ModulePositions = wpi::array<frc::SwerveModulePosition, 4>(m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition());
 
@@ -218,8 +218,8 @@ void DriveTrain::resetPose(Pose2d pose) {
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
   Robot* r = Robot::GetRobot();
   return ChassisSpeeds::FromRobotRelativeSpeeds(
-      units::meters_per_second_t(r->GetNavX().GetVelocityX()), //x
-      units::meters_per_second_t(-r->GetNavX().GetVelocityY()), //y
+      units::meters_per_second_t(r->GetNavX().GetVelocityY()), //x
+      units::meters_per_second_t(r->GetNavX().GetVelocityX()), //y
       units::radians_per_second_t(r->GetNavX().GetVelocityZ()), //rotation
       frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)))));
 }
@@ -234,10 +234,10 @@ void DriveTrain::DriveRobotRelative(frc::ChassisSpeeds robotRelativeSpeeds) {
 void DriveTrain::SetStates(wpi::array<frc::SwerveModuleState, 4> states) {
   frc::SwerveDriveKinematics<4>::DesaturateWheelSpeeds(&states, kMAX_VELOCITY_METERS_PER_SECOND);
 
-  m_FrontLeftModule.Set(states[0].speed.value(), states[0].angle.Radians().value());
-  m_FrontRightModule.Set(states[1].speed.value(), states[1].angle.Radians().value());
-  m_BackLeftModule.Set(states[2].speed.value(), states[2].angle.Radians().value());
-  m_BackRightModule.Set(states[3].speed.value(), states[3].angle.Radians().value());
+  m_FrontLeftModule.Set(states[0].speed.value() * -1, states[0].angle.Radians().value());
+  m_FrontRightModule.Set(states[1].speed.value(), states[1].angle.Radians().value() * -1);
+  m_BackLeftModule.Set(states[2].speed.value(), states[2].angle.Radians().value() * -1);
+  m_BackRightModule.Set(states[3].speed.value() * -1, states[3].angle.Radians().value());
 }
 
 //Sets the drive motors to brake mode
