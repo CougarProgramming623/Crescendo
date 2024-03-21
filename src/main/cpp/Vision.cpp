@@ -34,9 +34,9 @@ void Vision::PrintValues() {
   DebugOutF("Target Robot Angle: " + std::to_string(Rotation2d(Robot::GetRobot()->GetVision().VisionRobotYaw(m_LimelightTable->GetNumber("tid", 0.0))).Degrees().value()));
 }
 
-void Vision::setPriority(double id) {
-  if(id == 3.0 || id == 7.0) {
-    m_LimelightTable->GetEntry("priorityid").SetDouble(id + 1);
+void Vision::setPriority(int id) {
+  if(id == 3 || id == 7) {
+    m_LimelightTable->GetEntry("priorityid").SetInteger(id + 1);
   }
 }
 
@@ -89,6 +89,9 @@ Pose2d Vision::GetFieldPose(){
 double Vision::DistanceFromAprilTag(double ID) {
   double x = IDMap[0][(int)ID - 1] - m_AbsolutePose.X().value();
   double y = IDMap[1][(int)ID - 1] - m_AbsolutePose.Y().value();
+  DebugOutF("(x, y): (" + std::to_string(m_AbsolutePose.X().value()) + ", " + std::to_string(m_AbsolutePose.Y().value()) + ")");
+  DebugOutF("id map x: " + std::to_string(IDMap[0][(int)ID - 1]));
+  DebugOutF("id map y: " + std::to_string(IDMap[1][(int)ID - 1]));
   DebugOutF("deltax: " + std::to_string(x));
   DebugOutF("deltay: " + std::to_string(y));
   return sqrt(pow(x, 2) + pow(y, 2));

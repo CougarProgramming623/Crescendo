@@ -100,7 +100,6 @@ class Robot : public frc::TimedRobot {
   int m_COBTicks;
   //double m_Set;
 
-
   int SelectedRow;
 	int SelectedColumn;
 

@@ -68,6 +68,7 @@ void Robot::RobotInit() {
 }
 
 void Robot::AutoButtons() {
+  //BUTTONBOARD
   m_Print = frc2::Trigger(BUTTON_L(16));
   m_Print2 = frc2::Trigger(BUTTON_L(15));
   m_Print3 = frc2::Trigger(BUTTON_L(14));
@@ -82,13 +83,17 @@ void Robot::AutoButtons() {
     Vision vision = Robot::GetRobot()->GetVision();
     if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
-      Robot::GetRobot()->GetVision().setPriority(id);
+      vision.setPriority(id);
       id = vision.GetLimeLight()->GetNumber("priorityid", 0.0);
       vision.CalcPose();
-      DebugOutF("distance from april tag: " + std::to_string(vision.DistanceFromAprilTag(id) * 39.37));
+      double x = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(0);
+      double y = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(1);
+      double distance = sqrt(pow(x, 2) + pow(y, 2));
+      DebugOutF("x" + std::to_string(x));
+      DebugOutF("y" + std::to_string(y));
+      DebugOutF("distance from april tag: " + std::to_string(distance * 39.37));
     }
   }));
-  //BUTTONBOARD
 }
 
 // frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
@@ -243,20 +248,20 @@ void Robot::AutonomousInit() {
   DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
-  frc2::CommandScheduler::GetInstance().Schedule(
-    new frc2::SequentialCommandGroup(
-      frc2::ParallelRaceGroup(
-        frc2::InstantCommand([&] {
-          Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
-          Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-        }),
-        frc2::WaitCommand(1.5_s)
-      ),
-      frc2::InstantCommand([&] {
-        getAutonomousCommand();
-      })
-    )
-  );
+  // frc2::CommandScheduler::GetInstance().Schedule(
+  //   new frc2::SequentialCommandGroup(
+  //     frc2::ParallelRaceGroup(
+  //       frc2::InstantCommand([&] {
+  //         Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
+  //         Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+  //       }),
+  //       frc2::WaitCommand(1.5_s)
+  //     ),
+  //     frc2::InstantCommand([&] {
+  //       getAutonomousCommand();
+  //     })
+  //   )
+  // );
 
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
@@ -286,10 +291,9 @@ void Robot::AutonomousInit() {
   );*/
 }
 void Robot::AutonomousPeriodic() {
-    // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-    // DebugOutF("Y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-    // DebugOutF("Deg: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-    DebugOutF("(x, y): " + std::to_string(GetDriveTrain().getPose().X().value()) + ", " + std::to_string(GetDriveTrain().getPose().Y().value()));
+    DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+    DebugOutF("Y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+    DebugOutF("Deg: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 }
 
 void Robot::TeleopInit() {
@@ -315,19 +319,11 @@ void Robot::TeleopInit() {
   // m_LED.m_IsTele = true;  // used for LED Timer
   GetNavX().ZeroYaw();
   m_DriveTrain.BrakeMode(true);
-  // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-  // GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-  // GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-  // GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+  GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+  GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+  GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+  GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetNavX().SetAngleAdjustment(0);
-   
-  // frc::Pose2d startingPose = frc::Pose2d(units::meter_t(2.54), units::meter_t(1.75), frc::Rotation2d(units::degree_t(0)));
-  //   GetDriveTrain().GetOdometry()->ResetPosition(units::radian_t(Deg2Rad(GetAngle())), 
-  //       wpi::array<frc::SwerveModulePosition, 4>
-  //           (GetDriveTrain().m_FrontLeftModule.GetPosition(), GetDriveTrain().m_FrontRightModule.GetPosition(), GetDriveTrain().m_BackLeftModule.GetPosition(), GetDriveTrain().m_BackRightModule.GetPosition()), 
-  //       startingPose);
-
-  // m_Arm.PlaceElement(0,0);
 }
 
 /**

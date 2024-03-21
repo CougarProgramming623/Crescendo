@@ -46,13 +46,21 @@ void Arm::ArmInit() {
 	}));
 
 	m_ShooterUp.OnTrue(new frc2::InstantCommand([&] {
-		m_Pivot.Set(-0.3);
+		if(m_StringPot.GetValue() < STRINGPOT_TOP) {
+			m_Pivot.Set(-0.5);
+		} else {
+			m_Pivot.Set(0);
+		}
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
 	
 	m_ShooterDown.OnTrue(new frc2::InstantCommand([&] {
-		m_Pivot.Set(0.3);
+		if(m_StringPot.GetValue() > STRINGPOT_LOW) {
+			m_Pivot.Set(0.5);
+		} else {
+			m_Pivot.Set(0);
+		}
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
@@ -75,7 +83,7 @@ void Arm::ArmInit() {
 
 	m_RunFlywheel.OnTrue(new frc2::InstantCommand([&] {
 		m_ShooterMotor1.Set(m_FlywheelPower);
-		m_ShooterMotor2.Set(m_FlywheelPower - 0.05);
+		m_ShooterMotor2.Set(m_FlywheelPower - 0.1);
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_ShooterMotor1.Set(0);
 		m_ShooterMotor2.Set(0);
