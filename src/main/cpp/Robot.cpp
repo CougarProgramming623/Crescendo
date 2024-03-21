@@ -41,15 +41,14 @@ void Robot::RobotInit() {
   GetNavX().ZeroYaw();
   GetNavX().SetAngleAdjustment(0);
   s_Instance = this;
-  DebugOutF("initalizing drivetrain w/ motors");
+  // DebugOutF("initalizing drivetrain w/ motors");
   m_DriveTrain.DriveInit();
+  m_Arm.ArmInit();
   
   DebugOutF("initalizing motors finished");
   DebugOutF("x: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   DebugOutF("y: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF("theta: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-  // m_Vision.VisionInit(); //Make one
-  m_Arm.Init();
 
   DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
   DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
@@ -69,34 +68,27 @@ void Robot::RobotInit() {
 }
 
 void Robot::AutoButtons() {
+  m_Print = frc2::Trigger(BUTTON_L(16));
+  m_Print2 = frc2::Trigger(BUTTON_L(15));
+  m_Print3 = frc2::Trigger(BUTTON_L(14));
+  m_Print4 = frc2::Trigger(BUTTON_L(13));
+
+
+  m_Print.OnTrue(new frc2::InstantCommand([&] {
+    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+  }));
+
+  m_Print2.OnTrue(new frc2::InstantCommand([&] {
+    Vision vision = Robot::GetRobot()->GetVision();
+    if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+      int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
+      Robot::GetRobot()->GetVision().setPriority(id);
+      id = vision.GetLimeLight()->GetNumber("priorityid", 0.0);
+      vision.CalcPose();
+      DebugOutF("distance from april tag: " + std::to_string(vision.DistanceFromAprilTag(id) * 39.37));
+    }
+  }));
   //BUTTONBOARD
-  // m_DustpanUpperLimit = m_ButtonBoard.GetRawAxis(DUSTPANUP_LIMIT);//(BUTTON_L(DUSTPANUP_LIMIT))
-  // frc::AnalogInput m_ShooterSpeed;
-  
-  // frc2::Trigger m_FlywheelSwitch;
-  // m_ArmOverride = frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
-	// m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
-	// m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
-  // m_VisionAim = frc2::Trigger(BUTTON_L(AIM_BUTTON));
-  // m_Shoot = frc2::Trigger(BUTTON_L(SHOOT_BUTTON));
-  //m_AmpPreset = frc2::Trigger(BUTTON_L(AMP_BUTTON));
-  //m_StowPreset = frc2::Trigger(BUTTON_L(STOW_BUTTON));
-
-  Robot::GetRobot()->m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
-		GetArm().m_FlywheelPower = Robot::GetRobot()->GetButtonBoard().GetRawAxis(SHOOTER_SPEED);
-	}));
-	m_ArmOverride.OnTrue(GetArm().ManualControls());
-	m_RunFlywheel.OnTrue(new Flywheel());
-	m_IntakeSwitch.OnTrue(new Intake());
-
-  // m_VisionAim.OnTrue(new frc2::InstantCommand([&] {
-	// 	frc2::PrintCommand("VISION AIM");
-	// }));
-
-  // frc2::Trigger m_AllUp;
-  // frc2::Trigger m_ClimbUp;
-  // frc2::Trigger m_ClimbDown;
-  // frc2::Trigger m_DustpanDown;
 }
 
 // frc::Pose2d Robot::TransformPose(frc::Pose2d SelectedPose){ //rotating poses do not add correctly
@@ -162,110 +154,28 @@ void Robot::RobotPeriodic() {
 
   m_COBTicks++;
   Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(Robot::GetRobot()->GetNavX().GetPitch() + 0.05);
-  // DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
   // m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
   m_AutoPath = "New New Path";
 
-  if(Robot::GetButtonBoard().GetRawButton(15)){
-    DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
-    DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
-    DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
-    DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
-  }
+  // if(Robot::GetButtonBoard().GetRawButton(15)){
+  //   DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
+  //   DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
+  //   DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
+  //   DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
+  // }
 
-  if(GetButtonBoard().GetRawButton(16)) {
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
-    // DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
-    // DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
-    // DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
-    // DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
-    // DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
-  }
+  // if(GetButtonBoard().GetRawButton(16)) {
+  //   // DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
+  //   // DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
+  //   // DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
+  //   // DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
+  //   // DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
+  // }
 
   bool preset = false;
   double difference = 0;
 
   GetButtonBoard().SetOutputs(0xffffffff);
-
-  if (GetButtonBoard().GetRawButton(19)) {
-    GetArm().GetClimbMotor().SetControl(m_DutyCycleOutRequest.WithOutput(0.5));
-  } else if (GetButtonBoard().GetRawButton(20)) {
-    GetArm().GetClimbMotor().SetControl(m_DutyCycleOutRequest.WithOutput(-0.5));
-  } else if (!GetButtonBoard().GetRawButton(19) && !GetButtonBoard().GetRawButton(20)) {
-    GetArm().GetClimbMotor().SetControl(m_DutyCycleOutRequest.WithOutput(0));
-  }
-
-  if(GetButtonBoard().GetRawButton(7)) {
-    preset = true;
-    // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
-    // GetArm().GetPivotMotor().SetControl(m_DutyCycleOutRequest.WithOutput(GetArm().m_OriginalPivotRotations - GetArm().PivotStringPotUnitsToRotations(GetArm().m_StringPotOffset)));
-    // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
-    // DebugOutF("stringpot value: " + std::to_string(GetArm().GetStringPot().GetValue()));
-    // DebugOutF("preset value: " + CLOSEUPSHOOTSTRINGPOT);
-    difference = GetRobot()->GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
-    DebugOutF("difference: " + std::to_string(difference));
-    if(GetRobot()->GetArm().GetStringPot().GetValue() != CLOSEUPSHOOTSTRINGPOT) {
-      if(difference > 0) {
-        GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-      } else if(difference < 0) {
-        GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
-      }
-    }
-    preset = false;
-  }
-
-  if(GetButtonBoard().GetRawButton(8)) {
-    preset = true;
-    // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - CLOSEUPSHOOTSTRINGPOT;
-    // GetArm().GetPivotMotor().SetControl(m_DutyCycleOutRequest.WithOutput(GetArm().m_OriginalPivotRotations - GetArm().PivotStringPotUnitsToRotations(GetArm().m_StringPotOffset)));
-    // GetArm().m_StringPotOffset = GetArm().GetStringPot().GetValue() - PICKUPSTRINGPOT;
-    if(GetRobot()->GetArm().GetStringPot().GetValue() != PICKUPSTRINGPOT) {
-      difference = GetRobot()->GetArm().GetStringPot().GetValue() - PICKUPSTRINGPOT;
-      if(difference > 0) {
-        GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-      } else if(difference < 0) {
-        GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
-      }
-    }
-    preset = false;
-  }
-
-  if(GetButtonBoard().GetRawButton(18)) {
-    GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-  } else if(GetButtonBoard().GetRawButton(17) && GetArm().GetStringPot().GetValue() < 815) {
-    GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
-  } else if(!GetButtonBoard().GetRawButton(17) && !GetButtonBoard().GetRawButton(18) && !preset) {
-    GetArm().GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-  }
-
-  if(GetButtonBoard().GetRawButton(21)){
-    GetRobot()->GetDriveTrain().m_DustpanRotate.Set(0);
-  }
-  
-  if(GetButtonBoard().GetRawButton(22)) {
-    GetRobot()->GetDriveTrain().m_DustpanRotate.Set(1);
-  }
-
-  if(GetButtonBoard().GetRawButton(5)){
-    GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.75);
-  } else if(!GetButtonBoard().GetRawButton(5)) {
-    GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(1);
-  }
-
-  if(GetButtonBoard().GetRawButton(1)) {
-    double output = GetButtonBoard().GetRawAxis(SHOOTER_SPEED);
-    GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(output - 0.05));
-    GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(output));
-  } else if(!GetButtonBoard().GetRawButton(1)) {
-    GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-    GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-  }
-
-  if(GetButtonBoard().GetRawButton(2)) {
-    GetArm().GetFeeder().Set(ControlMode::PercentOutput, 0.25);
-  } else if(!GetButtonBoard().GetRawButton(2)) {
-    GetArm().GetFeeder().Set(ControlMode::PercentOutput, 0);
-  }
 
   //LED functionality
   // m_LED.SponsorBoardAllianceColor();
@@ -335,19 +245,18 @@ void Robot::AutonomousInit() {
 
   frc2::CommandScheduler::GetInstance().Schedule(
     new frc2::SequentialCommandGroup(
-        frc2::ParallelRaceGroup(
-          frc2::InstantCommand([&] {
-            Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
-            Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-          }),
-          frc2::WaitCommand(1.5_s)
-        ),
+      frc2::ParallelRaceGroup(
         frc2::InstantCommand([&] {
-          getAutonomousCommand();
-        })
-      )
-    );
-
+          Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
+          Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+        }),
+        frc2::WaitCommand(1.5_s)
+      ),
+      frc2::InstantCommand([&] {
+        getAutonomousCommand();
+      })
+    )
+  );
 
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();

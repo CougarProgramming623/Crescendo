@@ -32,18 +32,17 @@ using ctre::phoenix::motorcontrol::ControlMode;
 Intake::Intake() {}
 
 void Intake::Initialize() {
-    ROBOT->GetDustpanUp().OnTrue(new frc2::InstantCommand([&]{
-        ARM.GetFeeder().Set(ControlMode::PercentOutput, 0.7);
-        DRIVE.m_DustpanRotate.Set(0);
-        frc2::WaitCommand(1_s);
-        DRIVE.m_DustpanLaunch.Set(0.75);
-    }));
-    ROBOT->GetDustpanDown().OnTrue(new frc2::InstantCommand([&]{
-        ARM.GetFeeder().Set(ControlMode::PercentOutput, 0);
-        DRIVE.m_DustpanRotate.Set(1);
-        frc2::WaitCommand(1_s);
-        DRIVE.m_DustpanLaunch.Set(1);
-    }));
+    // ARM.GetFeeder().Set(ControlMode::PercentOutput, 0.7);
+    // ARM.GetDustpanPivotServo().Set(0);
+    // frc2::WaitCommand(1_s);
+    // ARM.GetDustpanLaunchServo().Set(0.75);
+
+    // ROBOT->GetDustpanDown().OnTrue(new frc2::InstantCommand([&]{
+    //     ARM.GetFeeder().Set(ControlMode::PercentOutput, 0);
+    //     ARM.GetDustpanPivotServo().Set(1);
+    //     frc2::WaitCommand(1_s);
+    //     ARM.GetDustpanLaunchServo().Set(1);
+    // }));
 }
 
 void Intake::Execute() {}

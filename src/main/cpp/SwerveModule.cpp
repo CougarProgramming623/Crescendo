@@ -21,7 +21,7 @@ double SwerveModule::GetSteerAngle(){
 }
 
 double SwerveModule::GetSteerSensorVoltage(){
-    return m_SteerController.encoder.GetVoltage();
+    return m_SteerController.encoder.GetAverageVoltage();
 }
 
 //Set brake mode of the drive motor

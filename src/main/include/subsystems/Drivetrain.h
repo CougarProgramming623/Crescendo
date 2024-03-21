@@ -75,8 +75,6 @@ class DriveTrain : public frc2::SubsystemBase {
   //hardware::TalonFX m_PivotShooter;
   //hardware::TalonFX m_DustpanAngle;
   //frc2::Trigger m_BigRed;
-  frc::Servo m_DustpanLaunch {0};
-  frc::Servo m_DustpanRotate {1};
   void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
   void DriveInit();
   void BrakeMode(bool on);
@@ -92,6 +90,7 @@ class DriveTrain : public frc2::SubsystemBase {
   inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
   inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return & m_Odometry; }
   inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
+  inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
 
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
@@ -145,14 +144,20 @@ class DriveTrain : public frc2::SubsystemBase {
   int m_VisionCounter;
   frc::Pose2d m_VisionRelative;
 
-  frc2::Trigger m_JoystickOuttake;
-  frc2::Trigger m_TestJoystickButton;
-
   
   private:
+
+  //motors
+  hardware::TalonFX m_Climb;
   
   frc::Timer m_Timer;
 
+  //triggers
+  frc2::Trigger m_ClimbUp;
+	frc2::Trigger m_ClimbDown;
+  frc2::Trigger m_VisionAim;
+  frc2::Trigger m_JoystickOuttake;
+  frc2::Trigger m_TestJoystickButton;
   frc2::Trigger m_JoystickButtonTwo;
   frc2::Trigger m_DuaLMotorControlButton;
   frc2::Trigger m_NavXResetButton;

@@ -39,12 +39,14 @@ using namespace ctre::phoenix;
 class Arm : public frc2::SubsystemBase {
 
 	public:
+
 	Arm();
-	void Init();
+	void ArmInit();
 	void SetButtons();
 	
 
 	frc2::FunctionalCommand* ManualControls();
+
 	// void SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc);
 	inline double PivotStringPotUnitsToRotations(double units) {return 0;}
 
@@ -60,30 +62,24 @@ class Arm : public frc2::SubsystemBase {
 	
 	//getters
 	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
-	inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
 	inline hardware::TalonFX& GetShooterMotor1() {return m_ShooterMotor1;}
 	inline hardware::TalonFX& GetShooterMotor2() {return m_ShooterMotor2;}
 	inline motorcontrol::can::TalonSRX& GetFeeder() {return m_Feeder;}
+	inline frc::Servo& GetDustpanLaunchServo() {return m_DustpanLaunch;}
+	inline frc::Servo& GetDustpanPivotServo() {return m_DustpanPivot;}
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
+	
 
 	frc2::Trigger m_PlacingMode;
 
-	double m_FlywheelPower;
+	double m_FlywheelPower = 0.5;
 
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
 
-	private:
-	
-	//motors
-	hardware::TalonFX m_Pivot;
-	hardware::TalonFX m_Climb;
-	hardware::TalonFX m_ShooterMotor1;
-	hardware::TalonFX m_ShooterMotor2;
-	motorcontrol::can::TalonSRX m_Feeder;
 
-	//potentiometer
-	frc::AnalogInput m_StringPot{4};
+
+	private:
 
 	//triggers
 	frc2::Trigger m_ArmOverride;
@@ -93,8 +89,21 @@ class Arm : public frc2::SubsystemBase {
 	frc2::Trigger m_RunFlywheel;
 	frc2::Trigger m_DustpanUp;
   	frc2::Trigger m_DustpanDown;
-	frc2::Trigger m_ClimbUp;
-	frc2::Trigger m_ClimbDown;
+	frc2::Trigger m_IntakeSwitch;
+	frc2::Trigger m_ServoShoot;
+	
+	//motors
+	hardware::TalonFX m_Pivot;
+	
+	hardware::TalonFX m_ShooterMotor1;
+	hardware::TalonFX m_ShooterMotor2;
+	motorcontrol::can::TalonSRX m_Feeder;
+	//servos
+	frc::Servo m_DustpanLaunch {0};
+  	frc::Servo m_DustpanPivot {1};
+
+	//potentiometer
+	frc::AnalogInput m_StringPot{4};
 
 	frc::Timer m_Timer;
 };

@@ -15,7 +15,6 @@ void Flywheel::Execute() {
         r->GetArm().GetShooterMotor1().SetControl(r->m_DutyCycleOutRequest.WithOutput(0));
         r->GetArm().GetShooterMotor2().SetControl(r->m_DutyCycleOutRequest.WithOutput(0));
     }
-
 }
 
 void Flywheel::End(bool interrupted) {

@@ -40,8 +40,8 @@ class Robot : public frc::TimedRobot {
   static inline Robot* GetRobot() { return s_Instance; }
   inline Arm& GetArm() { return m_Arm; }
   inline frc::GenericHID& GetButtonBoard() { return m_ButtonBoard; }
-  inline frc::GenericHID& GetButtonBoardTwo() { return m_ButtonBoardTwo; }
   inline frc::GenericHID& GetJoystick() { return m_Joystick; }
+  inline frc::GenericHID& GetButtonBoardTwo() { return m_ButtonBoardTwo; }
 
   void RobotInit() override;
   void AutoButtons();
@@ -53,11 +53,6 @@ class Robot : public frc::TimedRobot {
   void TeleopInit() override;
   void TeleopPeriodic() override;
   void TestPeriodic() override;
-
-  inline frc2::Trigger& GetDustpanUp() {return m_DustpanUp; }
-	inline frc2::Trigger& GetDustpanDown() {return m_DustpanDown; }
-	inline frc2::Trigger& GetClimbDown() {return m_ClimbDown; }
-	inline frc2::Trigger& GetClimbUp() {return m_ClimbUp; }
 
   inline AHRS& GetNavX() { return m_NavX; }
   inline void zeroGyroscope() {m_NavX.ZeroYaw();}
@@ -95,52 +90,13 @@ class Robot : public frc::TimedRobot {
   double previousValueT = 0;
 
   //BUTTONBOARD
-
-  // frc::AnalogInput m_DustpanUpperLimit;
-  // frc::AnalogInput m_ShooterSpeed;
-  
-  	frc2::Trigger m_ArmOverride;
-    frc2::Trigger m_ShooterUp;
-    frc2::Trigger m_ShooterDown;
-    frc2::Trigger m_FlywheelPowerLock;
-    frc2::Trigger m_RunFlywheel;
-    frc2::Trigger m_DustpanUp;
-  	frc2::Trigger m_DustpanDown;
-    frc2::Trigger m_ClimbUp;
-    frc2::Trigger m_ClimbDown;
-    frc2::Trigger m_IntakeSwitch;
-    frc2::Trigger m_VisionAim;
-
-  // frc2::Trigger m_TL;
-	// frc2::Trigger m_TC;
-	// frc2::Trigger m_TR;
-	// frc2::Trigger m_ML;
-	// frc2::Trigger m_MC;
-	// frc2::Trigger m_MR;
-	// frc2::Trigger m_BL;
-	// frc2::Trigger m_BC;
-	// frc2::Trigger m_BR;
-
-	// frc2::Trigger m_LeftGrid;
-	// frc2::Trigger m_CenterGrid;
-	// frc2::Trigger m_RightGrid;
-
-  // frc2::Trigger m_BigRed;
-  // frc2::Trigger m_GroundPickup;
-
-  // frc2::Trigger m_SingleSub;
-  // frc2::Trigger m_SingleSubCube;
-  // frc2::Trigger m_DoubleSub;
-
-  // frc2::Trigger m_MidCone;
-  // frc2::Trigger m_MidCube;
-  // frc2::Trigger m_PlacingMode;
-
-  frc2::Trigger m_NavXReset;
-  frc2::Trigger m_AutoBalance;
   frc2::Trigger m_VisionPoseReset;
 
   frc2::Trigger m_Print;
+  frc2::Trigger m_Print2;
+  frc2::Trigger m_Print3;
+  frc2::Trigger m_Print4;
+
   int m_COBTicks;
   //double m_Set;
 
@@ -162,7 +118,9 @@ class Robot : public frc::TimedRobot {
 
   AHRS m_NavX;
 
+  frc::Joystick m_ButtonBoard = frc::Joystick(0);
   frc::Joystick m_Joystick = frc::Joystick(1);
+  frc::Joystick m_ButtonBoardTwo = frc::Joystick(2);
 
   // Have it null by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
@@ -183,8 +141,7 @@ class Robot : public frc::TimedRobot {
   Vision m_Vision;
 
   COB m_COB;
-  frc::GenericHID m_ButtonBoard = frc::GenericHID(0);
-  frc::GenericHID m_ButtonBoardTwo = frc::GenericHID(2);
+  
 
   std::string m_AutoPath;
 

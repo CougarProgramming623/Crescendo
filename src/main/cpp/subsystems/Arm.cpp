@@ -17,46 +17,75 @@ using namespace ctre::phoenix6;
 
 Arm::Arm(): 
 	m_Pivot(PIVOT_MOTOR),
-	m_Climb(CLIMB_MOTOR),
 	m_ShooterMotor1(SHOOTER1_MOTOR),
 	m_ShooterMotor2(SHOOTER2_MOTOR),
 	m_Feeder(FEEDER_MOTOR),
 
 	//BUTTONBOARD
 	// m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
-	m_ArmOverride([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(ARM_OVERRIDE);}),
-	m_ShooterUp([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(SHOOTER_UP);}),
-    m_ShooterDown([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(SHOOTER_DOWN);}),
-	m_RunFlywheel([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(FLYWHEEL_SWITCH);}),
-
-    // m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
-    // m_RunFlywheel = frc2::Trigger(BUTTON_L(FLYWHEEL_SWITCH));
-    // m_FlywheelPowerLock = frc2::Trigger(BUTTON_L(SHOOTER_LOCK_POWER));
-    // m_DustpanUp = frc2::Trigger(BUTTON_L(DUSTPAN_UP));
-    // m_DustpanDown = frc2::Trigger(BUTTON_L(DUSTPAN_DOWN));
-    // m_ClimbUp = frc2::Trigger(BUTTON_L(CLIMB_UP));
-    // m_ClimbDown = frc2::Trigger(BUTTON_L(CLIMB_DOWN));
-    // m_IntakeSwitch = frc2::Trigger(BUTTON_L(INTAKE_SWITCH));
-	//m_PowerLock(BUTTON_L(SHOOTER_LOCK_POWER)),
+	m_ArmOverride([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE);}),
+	m_ShooterUp([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP);}),
+    m_ShooterDown([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN);}),
+	m_RunFlywheel([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(FLYWHEEL_SWITCH);}),
+	m_FlywheelPowerLock([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_LOCK_POWER);}),
+	m_DustpanUp([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(DUSTPAN_UP);}),
+	m_DustpanDown([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(DUSTPAN_DOWN);}),
+	m_IntakeSwitch([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_SWITCH);}),
+	m_ServoShoot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SERVO_SHOOT);}),
 	m_Timer()
 {}
 
-void Arm::Init() {
+void Arm::ArmInit() {
 	DebugOutF("inside arm init");
-	SetButtons();
 	m_Pivot.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-	m_Climb.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-	DebugOutF("arm override button: " + std::to_string(m_ArmOverride.Get()));
-}
-
-void Arm::SetButtons() {
 	m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
+		DebugOutF("getting the dial value");
 		m_FlywheelPower = Robot::GetRobot()->GetButtonBoard().GetRawAxis(6);
 	}));
-	m_ArmOverride.OnTrue(ManualControls());
-	m_RunFlywheel.OnTrue(new Flywheel());
+
+	m_ShooterUp.OnTrue(new frc2::InstantCommand([&] {
+		m_Pivot.Set(-0.3);
+	})).OnFalse(new frc2::InstantCommand([&] {
+		m_Pivot.Set(0);
+	}));
+	
+	m_ShooterDown.OnTrue(new frc2::InstantCommand([&] {
+		m_Pivot.Set(0.3);
+	})).OnFalse(new frc2::InstantCommand([&] {
+		m_Pivot.Set(0);
+	}));
+
+	m_DustpanUp.OnTrue(new frc2::InstantCommand([&] {
+		m_DustpanPivot.Set(0);
+	}));
+
+	m_DustpanDown.OnTrue(new frc2::InstantCommand([&] {
+		m_DustpanPivot.Set(1);
+	}));
+
+	m_ServoShoot.OnTrue(new frc2::InstantCommand([&] {
+		m_DustpanLaunch.Set(0.75);
+	})).OnFalse(new frc2::InstantCommand([&] {
+		m_DustpanLaunch.Set(1);
+	}));
+
+	// m_ArmOverride.OnTrue(ManualControls());
+
+	m_RunFlywheel.OnTrue(new frc2::InstantCommand([&] {
+		m_ShooterMotor1.Set(m_FlywheelPower);
+		m_ShooterMotor2.Set(m_FlywheelPower - 0.05);
+	})).OnFalse(new frc2::InstantCommand([&] {
+		m_ShooterMotor1.Set(0);
+		m_ShooterMotor2.Set(0);
+	}));
+
+	m_IntakeSwitch.OnTrue(new frc2::InstantCommand([&] {
+		m_Feeder.Set(motorcontrol::ControlMode::PercentOutput, 0.35);
+	})).OnFalse(new frc2::InstantCommand([&] {
+		m_Feeder.Set(motorcontrol::ControlMode::PercentOutput, 0);
+	}));
 }
 
 // while override is active, gives manual joysticks control over the two arm motors
@@ -65,25 +94,23 @@ frc2::FunctionalCommand* Arm::ManualControls()
 	
 	return new frc2::FunctionalCommand([&] { // onInit
 	}, [&] { // onExecute
-
 		DebugOutF("inside of manual controls");
-		
-		// DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
-		// if(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
-		// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
-		// 		DebugOutF("inside of if for shooter up");
-		// 		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.25));
-		// 	} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
-		// 		DebugOutF("inside of if for shooter down");
-		// 		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.25));
-		// 	}
-		// }
+		if(m_ShooterUp.Get()) {
+			
+		} else {
+			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+		}
+
+		if(m_ShooterDown.Get()) {
+			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
+		} else {
+			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+		}
 	},[&](bool e) { // onEnd
 		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
 	},
 	[&] { // isFinished
-		return !Robot::GetRobot()->m_ArmOverride.Get();
+		return m_ArmOverride.Get();
 	});
 }
 

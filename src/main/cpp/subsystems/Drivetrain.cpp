@@ -38,12 +38,16 @@ DriveTrain::DriveTrain()
       m_yController(0.7, 0.4, 0.3),
       m_ThetaController(12, 0, .1, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
       m_HolonomicController(m_xController, m_yController, m_ThetaController),
+      m_Climb(CLIMB_MOTOR),
       m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
       m_JoystickButtonTwo([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
       m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
       m_DuaLMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
       m_JoystickOuttake([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
       m_ExtraJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
+      m_ClimbUp([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLIMB_UP);}),
+	    m_ClimbDown([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLIMB_DOWN);}),
+      m_VisionAim([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(AIM_BUTTON);}),
       m_Timer(),
       m_EventMap()
 {
@@ -101,11 +105,9 @@ DriveTrain::DriveTrain()
 
 void DriveTrain::DriveInit(){
   m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
+  m_Climb.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+
   SetDefaultCommand(DriveWithJoystick());
-
-  // m_JoystickButtonTwo.ToggleOnTrue(new LockOn());
-
-  //m_ExtraJoystickButton.WhileHeld(new DriveToPosCommand());
 
   m_NavXResetButton.OnTrue(
     new frc2::InstantCommand([&]{
@@ -125,14 +127,30 @@ void DriveTrain::DriveInit(){
   ));
 
   m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
-  // DebugOutF("frd: " + std::to_string(m_FrontRightModule.m_DriveController.motor.GetInverted()));
-  // DebugOutF("frs: " + std::to_string(m_FrontRightModule.m_SteerController.motor.GetInverted()));
-  // DebugOutF("fld: " + std::to_string(m_FrontLeftModule.m_DriveController.motor.GetInverted()));
-  // DebugOutF("fls: " + std::to_string(m_FrontLeftModule.m_SteerController.motor.GetInverted()));
-  // DebugOutF("brd: " + std::to_string(m_BackRightModule.m_DriveController.motor.GetInverted()));
-  // DebugOutF("brs: " + std::to_string(m_BackRightModule.m_SteerController.motor.GetInverted()));
-  // DebugOutF("bld: " + std::to_string(m_BackLeftModule.m_DriveController.motor.GetInverted()));
-  // DebugOutF("bls: " + std::to_string(m_BackLeftModule.m_SteerController.motor.GetInverted()));
+
+  m_ClimbUp.OnTrue(new frc2::InstantCommand([&] {
+    DebugOutF("climbing up on");
+    m_Climb.Set(0.5);
+    // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.5));
+  })).OnFalse(new frc2::InstantCommand([&] {
+    DebugOutF("climbing up off");
+    m_Climb.Set(0);
+    // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+  }));
+
+  m_ClimbDown.OnTrue(new frc2::InstantCommand([&] {
+    DebugOutF("climbing down on");
+    m_Climb.Set(-0.5);
+    // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.5));
+  })).OnFalse(new frc2::InstantCommand([&] {
+    DebugOutF("climbing down off");
+    m_Climb.Set(0);
+    // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+  }));
+
+  // m_VisionAim.OnTrue(new frc2::InstantCommand([&] {
+    
+  // }));
 }
 
 /*

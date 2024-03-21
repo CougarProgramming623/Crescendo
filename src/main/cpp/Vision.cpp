@@ -35,8 +35,8 @@ void Vision::PrintValues() {
 }
 
 void Vision::setPriority(double id) {
-  if(id == 5.0 || id == 8.0) {
-    m_LimelightTable->GetEntry("priorityid").SetDouble(id - 1);
+  if(id == 3.0 || id == 7.0) {
+    m_LimelightTable->GetEntry("priorityid").SetDouble(id + 1);
   }
 }
 
@@ -68,8 +68,10 @@ void Vision::CalcPose(){
 
 Pose2d Vision::GetFieldPose(){
   if(m_LimelightTable->GetNumber("tv", 0.0) == 1.0 && m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).size() != 0) {
-    m_TempPose = Pose2d(units::meter_t(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(0)), 
-      units::meter_t(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)),
+    m_TempPose = 
+      Pose2d(
+        units::meter_t(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(0)), 
+        units::meter_t(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(1)),
       Rotation2d(units::radian_t(Deg2Rad(m_LimelightTable->GetNumberArray("botpose_wpiblue", std::span<double>()).at(5))))
     );
     //DebugOutF(" tx: " + std::to_string(m_LimelightTable->GetNumber("tx", 0.0)));
@@ -81,10 +83,16 @@ Pose2d Vision::GetFieldPose(){
   return m_TempPose;
 }
 
-void Vision::PushID() {}
-
 //1 for front 0 for back
 // std::string Vision::FrontBack(std::string key) {}
+
+double Vision::DistanceFromAprilTag(double ID) {
+  double x = IDMap[0][(int)ID - 1] - m_AbsolutePose.X().value();
+  double y = IDMap[1][(int)ID - 1] - m_AbsolutePose.Y().value();
+  DebugOutF("deltax: " + std::to_string(x));
+  DebugOutF("deltay: " + std::to_string(y));
+  return sqrt(pow(x, 2) + pow(y, 2));
+}
 
 units::angle::radian_t Vision::VisionRobotYaw(double ID) {
   double x = IDMap[0][(int)ID - 1] - m_AbsolutePose.X().value();

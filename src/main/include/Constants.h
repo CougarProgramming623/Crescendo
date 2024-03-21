@@ -281,8 +281,8 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 //BUTTONBOARD 0
 #define DUSTPANUP_LIMIT 0 //x axis
 #define SHOOTER_SPEED 1 //y axis
-#define INTAKE_SWITCH 1
-#define FLYWHEEL_SWITCH 2
+#define FLYWHEEL_SWITCH 1
+#define INTAKE_SWITCH 2
 #define AIM_BUTTON 3
 #define SHOOT_BUTTON 4
 #define SERVO_SHOOT 5

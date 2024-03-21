@@ -28,6 +28,7 @@ class Vision {
         void setPriority(double id);
         units::angle::radian_t VisionRobotYaw(double ID);
         units::angle::degree_t ShooterAngle(double ID);
+        double DistanceFromAprilTag(double ID);
 
         const double IDMap[3][16] = {
         {15.0832, 16.1845, 16.5816, 16.5816, 14.7035, 1.8425, -0.0381, -0.0381, 0.356308, 1.44881, 11.8987, 11.8987, 11.2134, 5.30729, 4.64034, 4.64034},//x
