@@ -33,10 +33,10 @@ using ctre::phoenix::motorcontrol::NeutralMode;
 void Climb::Initialize() {
 }
 void Climb::Execute() {
-        ARM.GetClimbUp().OnTrue(new frc2::InstantCommand([&]{
+        ROBOT->GetClimbUp().OnTrue(new frc2::InstantCommand([&]{
             ARM.GetClimbMotor().Set(0.5);
 	    }));
-        ARM.GetDustpanDown().OnTrue(new frc2::InstantCommand([&]{
+        ROBOT->GetDustpanDown().OnTrue(new frc2::InstantCommand([&]{
             ARM.GetClimbMotor().Set(-0.5);
 	    }));
 }

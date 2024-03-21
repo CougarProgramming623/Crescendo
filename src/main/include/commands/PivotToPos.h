@@ -15,6 +15,8 @@ class PivotToPos : public frc2::CommandHelper<frc2::Command, PivotToPos> {
 		bool IsFinished() override;	
 
 		double targetDegrees;
+		int StringPotValue;
+		double targetRotations;
 		double startingDegrees;
 		double ticksToMove;
 };

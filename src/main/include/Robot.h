@@ -25,6 +25,8 @@
 #include "Vision.h"
 #include "subsystems/Arm.h"
 #include "LED.h"
+#include <commands/Flywheel.h>
+#include <commands/Intake.h>
 #include <frc/geometry/Pose2d.h>
 //#include "./subsystems/Intake.h"
 
@@ -52,6 +54,11 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void TestPeriodic() override;
 
+  inline frc2::Trigger& GetDustpanUp() {return m_DustpanUp; }
+	inline frc2::Trigger& GetDustpanDown() {return m_DustpanDown; }
+	inline frc2::Trigger& GetClimbDown() {return m_ClimbDown; }
+	inline frc2::Trigger& GetClimbUp() {return m_ClimbUp; }
+
   inline AHRS& GetNavX() { return m_NavX; }
   inline void zeroGyroscope() {m_NavX.ZeroYaw();}
   inline double getYaw() {return m_NavX.GetYaw();}
@@ -72,6 +79,7 @@ class Robot : public frc::TimedRobot {
 
   //motor control requests - LOOK, VERY IMPORTANT
   //controls::VoltageOut m_VoltageOutRequest{0_V};
+  controls::PositionDutyCycle m_PositionDutyCycle{units::angle::turn_t(0)};
   controls::DutyCycleOut m_DutyCycleOutRequest{0};
   controls::MotionMagicDutyCycle m_MotionMagicRequest{units::angle::turn_t(0)};
 
@@ -91,20 +99,17 @@ class Robot : public frc::TimedRobot {
   // frc::AnalogInput m_DustpanUpperLimit;
   // frc::AnalogInput m_ShooterSpeed;
   
-  // frc2::Trigger m_IntakeSwitch;
-  // frc2::Trigger m_FlywheelSwitch;
-  frc2::Trigger m_ArmOverride;
-	frc2::Trigger m_ShooterUp;
-	frc2::Trigger m_ShooterDown;
-  frc2::Trigger m_VisionAim;
-  frc2::Trigger m_Shoot;
-  //frc2::Trigger m_AmpPreset;
-  frc2::Trigger m_StowPreset;
-  // frc2::Trigger m_AllUp;
-  // frc2::Trigger m_ClimbUp;
-  // frc2::Trigger m_ClimbDown;
-  //frc2::Trigger m_DustpanUp;
-  //frc2::Trigger m_DustpanDown;
+  	frc2::Trigger m_ArmOverride;
+    frc2::Trigger m_ShooterUp;
+    frc2::Trigger m_ShooterDown;
+    frc2::Trigger m_FlywheelPowerLock;
+    frc2::Trigger m_RunFlywheel;
+    frc2::Trigger m_DustpanUp;
+  	frc2::Trigger m_DustpanDown;
+    frc2::Trigger m_ClimbUp;
+    frc2::Trigger m_ClimbDown;
+    frc2::Trigger m_IntakeSwitch;
+    frc2::Trigger m_VisionAim;
 
   // frc2::Trigger m_TL;
 	// frc2::Trigger m_TC;

@@ -7,6 +7,7 @@
 #include <frc2/command/button/Trigger.h>
 #include <frc/AnalogInput.h>
 #include <math.h>
+#//include "Robot.h"
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 #include <ctre/phoenix6/TalonFX.hpp>
@@ -46,10 +47,16 @@ class Arm : public frc2::SubsystemBase {
 	frc2::FunctionalCommand* ManualControls();
 	// void SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc);
 	inline double PivotStringPotUnitsToRotations(double units) {return 0;}
-	
-	inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
-	inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
 
+	// inline double PivotDegreesToStringPotUnits(double degrees) {return ((degrees / PIVOT_DEGREES_PER_STRINGPOT_UNITS) + STRINGPOT_ZERO); }
+	// inline double PivotRotationsToStringPotUnits(double rotations) {return PivotDegreesToStringPotUnits(PivotRotationsToDegrees(rotations));}
+	
+	//inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
+	//inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
+	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
+	//Need to get the ratio of units to length ASAP
+	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
+	inline double PivotStringPotUnitsToRotations(int val) {return PIVOT_LOW  + (((GetStringPot().GetValue() - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
 	
 	//getters
 	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
@@ -58,10 +65,6 @@ class Arm : public frc2::SubsystemBase {
 	inline hardware::TalonFX& GetShooterMotor2() {return m_ShooterMotor2;}
 	inline motorcontrol::can::TalonSRX& GetFeeder() {return m_Feeder;}
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
-	inline frc2::Trigger& GetDustpanUp() {return m_DustpanUp; }
-	inline frc2::Trigger& GetDustpanDown() {return m_DustpanDown; }
-	inline frc2::Trigger& GetClimbDown() {return m_ClimbDown; }
-	inline frc2::Trigger& GetClimbUp() {return m_ClimbUp; }
 
 	frc2::Trigger m_PlacingMode;
 

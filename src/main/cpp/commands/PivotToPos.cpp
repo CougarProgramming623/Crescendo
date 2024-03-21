@@ -6,7 +6,7 @@
 
 PivotToPos::PivotToPos() {
 	// targetDegrees = degPos;
-	// AddRequirements(&Robot::GetRobot()->GetArm());
+	AddRequirements(&Robot::GetRobot()->GetArm());
 	
 }
 
@@ -17,6 +17,9 @@ void PivotToPos::Initialize() {
 }
 
 void PivotToPos::Execute() {
+	StringPotValue = ARM.StringPotLengthToStringPotUnits(ARM.PivotDegreesToStringPotLength(targetDegrees));
+	targetRotations = ARM.PivotStringPotUnitsToRotations(StringPotValue); 
+	ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_PositionDutyCycle.WithPosition(units::angle::turn_t(targetRotations)));
 	//ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
 	//ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
 	//DebugOutF(std::to_string(abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition())));

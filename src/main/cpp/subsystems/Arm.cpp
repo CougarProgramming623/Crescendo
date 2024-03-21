@@ -7,6 +7,7 @@
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/WaitCommand.h>
 #include "commands/Flywheel.h"
+#include "commands/Intake.h"
 #include "Constants.h"
 #include "commands/AutoTest.h"
 
@@ -22,16 +23,21 @@ Arm::Arm():
 	m_Feeder(FEEDER_MOTOR),
 
 	//BUTTONBOARD
-	m_ArmOverride(BUTTON_L(ARM_OVERRIDE)),
-	m_ShooterUp(BUTTON_L(SHOOTER_UP)),
-	m_ShooterDown(BUTTON_L(SHOOTER_DOWN)),
-	m_RunFlywheel(BUTTON_L(FLYWHEEL_SWITCH)),
-	m_FlywheelPowerLock(BUTTON_L(SHOOTER_LOCK_POWER)),
-	m_DustpanUp(BUTTON_L(DUSTPAN_UP)),
-	m_DustpanDown(BUTTON_L(DUSTPAN_DOWN)),
-	m_ClimbUp(BUTTON_L(CLIMB_UP)),
-	m_ClimbDown(BUTTON_L(CLIMB_DOWN)),
-	
+	// m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
+	m_ArmOverride([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(ARM_OVERRIDE);}),
+	m_ShooterUp([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(SHOOTER_UP);}),
+    m_ShooterDown([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(SHOOTER_DOWN);}),
+	m_RunFlywheel([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(FLYWHEEL_SWITCH);}),
+
+    // m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
+    // m_RunFlywheel = frc2::Trigger(BUTTON_L(FLYWHEEL_SWITCH));
+    // m_FlywheelPowerLock = frc2::Trigger(BUTTON_L(SHOOTER_LOCK_POWER));
+    // m_DustpanUp = frc2::Trigger(BUTTON_L(DUSTPAN_UP));
+    // m_DustpanDown = frc2::Trigger(BUTTON_L(DUSTPAN_DOWN));
+    // m_ClimbUp = frc2::Trigger(BUTTON_L(CLIMB_UP));
+    // m_ClimbDown = frc2::Trigger(BUTTON_L(CLIMB_DOWN));
+    // m_IntakeSwitch = frc2::Trigger(BUTTON_L(INTAKE_SWITCH));
+	//m_PowerLock(BUTTON_L(SHOOTER_LOCK_POWER)),
 	m_Timer()
 {}
 
@@ -62,16 +68,16 @@ frc2::FunctionalCommand* Arm::ManualControls()
 
 		DebugOutF("inside of manual controls");
 		
-		DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
-		if(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
-			if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
-				DebugOutF("inside of if for shooter up");
-				m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.25));
-			} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
-				DebugOutF("inside of if for shooter down");
-				m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.25));
-			}
-		}
+		// DebugOutF(std::to_string(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP))); //+ std::to_string(m_StringPot.GetValue() > STRINGPOT_ZERO));
+		// if(m_StringPot.GetValue() > STRINGPOT_ZERO && m_StringPot.GetValue() < STRINGPOT_TOP) {
+		// 	if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP)) {
+		// 		DebugOutF("inside of if for shooter up");
+		// 		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.25));
+		// 	} else if(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN)) {
+		// 		DebugOutF("inside of if for shooter down");
+		// 		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.25));
+		// 	}
+		// }
 	},[&](bool e) { // onEnd
 		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
 		m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
