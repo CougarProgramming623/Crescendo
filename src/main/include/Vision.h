@@ -19,6 +19,7 @@ class Vision {
         void CalcPose();
         void PushID();
         double relativeDistancex();
+        double GetIDMapValue(int coord, int id);
 
         Pose2d GetFieldPose();
 
