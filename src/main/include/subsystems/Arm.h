@@ -43,6 +43,12 @@ class Arm : public frc2::SubsystemBase {
 	Arm();
 	void ArmInit();
 	void SetButtons();
+	void MoveToStringPotValue(int target);
+	int ConvertDistanceToValue();
+
+	frc::Servo m_DustpanLaunch {0};
+
+	
 	
 
 	frc2::FunctionalCommand* ManualControls();
@@ -58,7 +64,7 @@ class Arm : public frc2::SubsystemBase {
 	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
 	//Need to get the ratio of units to length ASAP
 	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
-	inline double PivotStringPotUnitsToRotations(int val) {return PIVOT_LOW  + (((GetStringPot().GetValue() - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
+	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((GetStringPot().GetValue() - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
 	
 	//getters
 	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
@@ -91,6 +97,7 @@ class Arm : public frc2::SubsystemBase {
   	frc2::Trigger m_DustpanDown;
 	frc2::Trigger m_IntakeSwitch;
 	frc2::Trigger m_ServoShoot;
+	frc2::Trigger m_Aim;
 	
 	//motors
 	hardware::TalonFX m_Pivot;
@@ -99,7 +106,6 @@ class Arm : public frc2::SubsystemBase {
 	hardware::TalonFX m_ShooterMotor2;
 	motorcontrol::can::TalonSRX m_Feeder;
 	//servos
-	frc::Servo m_DustpanLaunch {0};
   	frc::Servo m_DustpanPivot {1};
 
 	//potentiometer

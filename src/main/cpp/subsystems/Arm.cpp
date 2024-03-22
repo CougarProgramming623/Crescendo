@@ -32,6 +32,7 @@ Arm::Arm():
 	m_DustpanDown([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(DUSTPAN_DOWN);}),
 	m_IntakeSwitch([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_SWITCH);}),
 	m_ServoShoot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SERVO_SHOOT);}),
+	m_Aim([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(AIM_BUTTON);}),
 	m_Timer()
 {}
 
@@ -54,6 +55,7 @@ void Arm::ArmInit() {
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
+	
 	
 	m_ShooterDown.OnTrue(new frc2::InstantCommand([&] {
 		if(m_StringPot.GetValue() > STRINGPOT_LOW) {
@@ -94,7 +96,36 @@ void Arm::ArmInit() {
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_Feeder.Set(motorcontrol::ControlMode::PercentOutput, 0);
 	}));
+	
+	m_Aim.OnTrue(new frc2::InstantCommand([&] {
+		DebugOutF(std::to_string(GetStringPot().GetValue()));
+		MoveToStringPotValue(450);
+	})).OnFalse(new frc2::InstantCommand([&] {
+		m_Pivot.Set(0);
+	}));
+
 }
+	int Arm::ConvertDistanceToValue(){
+		int d = 10;
+		int val = int(1 * pow(d,4) + 1 * pow(d,3) + 1 * pow(d,2) + 1 * d + 3);
+		return val;
+
+	}
+	void Arm::MoveToStringPotValue(int target){
+		while(target != GetStringPot().GetValue()){
+			DebugOutF(std::to_string(StringPotUnitsToRotations(GetStringPot().GetValue())));
+			DebugOutF(std::to_string(GetStringPot().GetValue()));
+			if((target > GetStringPot().GetValue() - 5) || (target > GetStringPot().GetValue() + 5)){
+				m_Pivot.Set(-1);
+			}
+			else if((target < GetStringPot().GetValue() - 5) || (target > GetStringPot().GetValue() + 5)){
+				m_Pivot.Set(1);
+			}
+			if(abs(target - GetStringPot().GetValue()) < 20 && abs(target - GetStringPot().GetValue()) > 0 ){
+				m_Pivot.Set(0.3);
+			}
+		}
+	}
 
 // while override is active, gives manual joysticks control over the two arm motors
 frc2::FunctionalCommand* Arm::ManualControls()

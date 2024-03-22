@@ -70,7 +70,7 @@ DriveTrain::DriveTrain()
 
             auto alliance = DriverStation::GetAlliance();
             if (alliance) {
-                return alliance.value() == DriverStation::Alliance::kRed;
+                return alliance.value() == DriverStation::Alliance::kBlue;
             }
             return false;
         },

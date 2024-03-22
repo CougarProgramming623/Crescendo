@@ -27,7 +27,7 @@ frc::Color redWhiteArray[] = {frc::Color::kWhite, frc::Color::kRed};
 LED::LED()  :
     // m_EyesYellow(frc2::Trigger(BUTTON_L(15))),
     // m_EyesPurple(frc2::Trigger(BUTTON_L(16))),
-    m_EyesWhite([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);})
+    m_ButtonLeds([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(8);})
 {
     DebugOutF("LED constructor");
 }
@@ -57,15 +57,17 @@ void LED::Init(){
     //     })
     // );
 
-    // m_EyesWhite.OnTrue(new frc2::InstantCommand([&]{
-    //         //DebugOutF("white");
-    //         EyesSolid(frc::Color::kWhite);
-    //         SponsorBoardSolid(frc::Color::kWhite);
-    //         SetData();
-
+    // m_ButtonLeds.WhileTrue(new frc2::InstantCommand([&]{
+    //     DebugOutF("changing state");
+    //     Robot::GetRobot()->GetButtonBoard().SetOutput(8, 0xFFFFFFFF);
     //     })
     // );
-} 
+
+    if (Robot::GetRobot()->GetButtonBoard().GetRawButton(3)) {
+        DebugOutF("changing state");
+        Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0xFFFFFFFF); 
+    }
+}
 
 void LED::SetData(){ m_AddressableLED.SetData(m_LEDBuffer); }
 

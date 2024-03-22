@@ -244,8 +244,9 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 // #define WRIST_TOTAL_DEGREES (WRIST_TOTAL_TICKS/WRIST_GEAR_RATIO/2048)*360
 
 #define PIVOT_GEAR_RATIO 50
-#define PIVOT_TOTAL_ROTATIONS 2.53
-#define PIVOT_LOW -1
+#define PIVOT_HIGH 2.782
+#define PIVOT_TOTAL_ROTATIONS 3.07
+#define PIVOT_LOW 5.852
 //#define PIVOT_TOTAL_DEGREES ((PIVOT_TOTAL_ROTATIONS/PIVOT_GEAR_RATIO * 360) + STRINGPOT_ZERO_DEGREES)
 
 //#define STRINGPOT_ZERO -1
@@ -295,28 +296,6 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define CLIMB_DOWN 20
 #define DUSTPAN_UP 21
 #define DUSTPAN_DOWN 22
-
-//BUTTONBOARD 2
-#define GRID_TL 2
-#define GRID_TC 7 
-#define GRID_TR 12
-#define GRID_ML 3 
-#define GRID_MC 8 
-#define GRID_MR 10
-#define GRID_BL 4
-#define GRID_BC 9
-#define GRID_BR 14
-
-#define GROUND_PICKUP_MODE 5 //red
-#define TRANSIT_MODE 13 //green
-#define PLACING_MODE 15 //yellow
-
-#define LEFT_GRID 1 
-#define CENTER_GRID 6 
-#define RIGHT_GRID 11
-
-#define LED_YELLOW 19
-#define LED_PURPLE 18
 
 #endif
 

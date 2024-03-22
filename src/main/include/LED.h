@@ -52,5 +52,5 @@ class LED{
 
         frc2::Trigger m_EyesYellow;
         frc2::Trigger m_EyesPurple;
-        frc2::Trigger m_EyesWhite;
+        frc2::Trigger m_ButtonLeds;
 };

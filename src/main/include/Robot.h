@@ -33,6 +33,8 @@
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <memory>
 
+#include <frc/Timer.h>
+
 
 class Robot : public frc::TimedRobot {
  public:
