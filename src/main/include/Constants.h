@@ -318,6 +318,10 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define LED_YELLOW 19
 #define LED_PURPLE 18
 
+#define LIMELIGHT_HEIGHT 0.238125  //m from the bottom
+#define LIMELIGHT_YTHETA 60 //off the horizontal
+#define LIMELIGHT_DISPLACEMENT 0.1524 // m from the front
+
 #endif
 
 // #define TLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(0)))

@@ -85,13 +85,20 @@ void Robot::AutoButtons() {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
       vision.setPriority(id);
       id = vision.GetLimeLight()->GetNumber("priorityid", 0.0);
-      vision.CalcPose();
-      double x = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(0);
-      double y = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(1);
-      double distance = sqrt(pow(x, 2) + pow(y, 2));
-      DebugOutF("x" + std::to_string(x));
-      DebugOutF("y" + std::to_string(y));
-      DebugOutF("distance from april tag: " + std::to_string(distance * 39.37));
+      //vision.CalcPose();
+      //double x = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(0);
+      //double y = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(1);
+      //double distance = sqrt(pow(x, 2) + pow(y, 2));
+      //DebugOutF("x" + std::to_string(x));
+      //DebugOutF("y" + std::to_string(y));
+      //DebugOutF("distance from april tag: " + std::to_string(distance * 39.37));
+
+      double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
+      double height = vision.GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
+      double distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
+      DebugOutF("theta" + std::to_string(theta));
+      DebugOutF("height" + std::to_string(height));
+      DebugOutF("distance" + std::to_string(distance));
     }
   }));
 }

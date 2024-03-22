@@ -128,3 +128,8 @@ double Vision::relativeDistancex(){
     double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/tan(angleToGoalRadians);
     DebugOutF("delta x: " + std::to_string(distanceFromLimelightToGoalInches));
 }
+
+double Vision::GetIDMapValue(int coord, int id)
+{
+  return IDMap[coord][id - 1];
+}
