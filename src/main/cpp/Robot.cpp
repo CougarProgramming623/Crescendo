@@ -323,94 +323,27 @@ void Robot::AutonomousInit() {
     m_autonomousCommand->Schedule();
   }
 
-  // frc2::CommandScheduler::GetInstance().Schedule(
-  //   new frc2::SequentialCommandGroup(
-  //     frc2::ParallelDeadlineGroup(
-  //       frc2::WaitCommand(1.5_s),
-  //       // frc2::InstantCommand([&] {
-  //       // }),
-  //       frc2::InstantCommand([&] {
-  //         // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
-  //         // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-  //         Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
-  //         Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
-  //         frc2::WaitCommand(1_s);
-  //         
-  //         frc2::WaitCommand(1_s);
-  //         Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
-  //         Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
-  //       })
-  //     )
-  //     // frc2::InstantCommand([&] {
-  //     //   getAutonomousCommand();
-  //     // })
-  //   )
-  // );
-/*
-   frc2::CommandScheduler::GetInstance().Schedule(
-    new frc2::SequentialCommandGroup(
-      frc2::ParallelRaceGroup(
-        frc2::InstantCommand([&] {
-          Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.15 - 0.1));
-          Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.15));
-        }),
-        frc2::WaitCommand(2.0_s)
-        // frc2::PrintCommand(duration_cast<microseconds>high_resolution_clock::now().count())),
-
-        // frc2::InstantCommand([&] {
-        //   auto beg = std::chrono::high_resolution_clock::now();
-        // })
-      ),
-      frc2::WaitCommand(2_s),
-        frc2::InstantCommand([&] {
-          Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(0.75);
-          DebugOutF("shot");
-        }),
-        frc2::WaitCommand(2.0_s),
-        frc2::InstantCommand([&] {
-          Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-          Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-          Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1);
-        }),
-        frc2::PrintCommand("test outside"),
-        frc2::WaitCommand(2.5_s),
-        frc2::InstantCommand([&] {
-          // GetDriveTrain().DriveRobotRelative(frc::ChassisSpeeds::Discretize(3_mps, 3_mps, 10_rad_per_s, 1_s));
-          getAutonomousCommand();
-          DebugOutF("running path");
-            //*(getAutonomousCommand().Unwrap())
-        })
-    )
-   );*/
-
-  // m_autonomousCommand = getAutonomousCommand();
-  // if (m_autonomousCommand) {
-  //   frc2::WaitCommand(5.0_s);
-  //   m_autonomousCommand->Schedule();
-  // }
-
-  /*m_AutoPath = "Test";
-  m_autonomousCommand = getAutonomousCommand();
+  // Only shoot and don't move:
+  
   frc2::CommandScheduler::GetInstance().Schedule(
     new frc2::SequentialCommandGroup(
-      frc2::ParallelCommandGroup(
-        frc2::ParallelCommandGroup(
-          frc2::WaitCommand(1.5_s),
-          frc2::InstantCommand([&] {
-            GetRobot()->GetDriveTrain().m_DustpanLaunch.Set(0.75);
-          })
-        ),
-        frc2::InstantCommand([] {
-          DebugOutF("where shooter motors were");
+      frc2::ParallelDeadlineGroup(
+        frc2::WaitCommand(1.5_s),
+        frc2::InstantCommand([&] {
           // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
           // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+          Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
+          Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
+          frc2::WaitCommand(1_s);
+          
+          frc2::WaitCommand(1_s);
+          Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
+          Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
         })
-      ),
-      frc2::InstantCommand([] {
-        Robot::GetRobot()->m_autonomousCommand;
-      })
+      )
     )
-  );*/
+  );
+  
 }
 void Robot::AutonomousPeriodic() {
     // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));

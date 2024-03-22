@@ -9,11 +9,11 @@ void Flywheel::Initialize() {}
 
 void Flywheel::Execute() {
     if (r->GetArm().m_FlywheelPower != 0) {
-        // r->GetArm().GetShooterMotor1().SetControl(r->m_DutyCycleOutRequest.WithOutput(r->GetArm().m_FlywheelPower));
-        // r->GetArm().GetShooterMotor2().SetControl(r->m_DutyCycleOutRequest.WithOutput(r->GetArm().m_FlywheelPower - 0.05));
+        r->GetArm().GetShooterMotor1().SetControl(r->m_DutyCycleOutRequest.WithOutput(r->GetArm().m_FlywheelPower));
+        r->GetArm().GetShooterMotor2().SetControl(r->m_DutyCycleOutRequest.WithOutput(r->GetArm().m_FlywheelPower - 0.05));
 
-        r->GetArm().GetShooterMotor1().SetControl(r->m_DutyCycleOutRequest.WithOutput(0.2));
-        r->GetArm().GetShooterMotor2().SetControl(r->m_DutyCycleOutRequest.WithOutput(0.2 - 0.05));
+        // r->GetArm().GetShooterMotor1().SetControl(r->m_DutyCycleOutRequest.WithOutput(0.2));
+        // r->GetArm().GetShooterMotor2().SetControl(r->m_DutyCycleOutRequest.WithOutput(0.2 - 0.05));
     } else {
         r->GetArm().GetShooterMotor1().SetControl(r->m_DutyCycleOutRequest.WithOutput(0));
         r->GetArm().GetShooterMotor2().SetControl(r->m_DutyCycleOutRequest.WithOutput(0));
