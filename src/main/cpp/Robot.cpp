@@ -324,26 +324,26 @@ void Robot::AutonomousInit() {
   }
 
   // Only shoot and don't move:
-  
-  frc2::CommandScheduler::GetInstance().Schedule(
-    new frc2::SequentialCommandGroup(
-      frc2::ParallelDeadlineGroup(
-        frc2::WaitCommand(1.5_s),
-        frc2::InstantCommand([&] {
-          // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
-          // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-          Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
-          Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
-          frc2::WaitCommand(1_s);
+  // /*
+  // frc2::CommandScheduler::GetInstance().Schedule(
+  //   new frc2::SequentialCommandGroup(
+  //     frc2::ParallelDeadlineGroup(
+  //       frc2::WaitCommand(1.5_s),
+  //       frc2::InstantCommand([&] {
+  //         // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
+  //         // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+  //         Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
+  //         Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
+  //         frc2::WaitCommand(1_s);
           
-          frc2::WaitCommand(1_s);
-          Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
-          Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
-        })
-      )
-    )
-  );
-  
+  //         frc2::WaitCommand(1_s);
+  //         Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
+  //         Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
+  //       })
+  //     )
+  //   )
+  // );
+  // */
 }
 void Robot::AutonomousPeriodic() {
     // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
