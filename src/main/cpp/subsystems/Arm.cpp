@@ -114,8 +114,8 @@ void Arm::ArmInit() {
 	}
 	void Arm::MoveToStringPotValue(int target){
 		while(target != GetStringPot().GetValue()){
-			DebugOutF(std::to_string(StringPotUnitsToRotations(GetStringPot().GetValue())));
-			DebugOutF(std::to_string(GetStringPot().GetValue()));
+			// DebugOutF(std::to_string(StringPotUnitsToRotations(GetStringPot().GetValue())));
+			// DebugOutF("stringpot value: " + std::to_string(GetStringPot().GetValue()));
 			if((target > GetStringPot().GetValue() - 5) || (target > GetStringPot().GetValue() + 5)){
 				m_Pivot.Set(-1);
 			}

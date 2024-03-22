@@ -73,71 +73,25 @@ void Robot::RobotInit() {
   m_ArmCommand = nullptr;
 }
 
+
 void Robot::AutoButtons() {
   //BUTTONBOARD
-  // m_DustpanUpperLimit = m_ButtonBoard.GetRawAxis(DUSTPANUP_LIMIT);//(BUTTON_L(DUSTPANUP_LIMIT))
-  // frc::AnalogInput m_ShooterSpeed;
-  
-  // frc2::Trigger m_IntakeSwitch;
-  // frc2::Trigger m_FlywheelSwitch;
-  // m_ArmOverride = frc2::Trigger(BUTTON_L(ARM_OVERRIDE));
-	// m_ShooterUp = frc2::Trigger(BUTTON_L(SHOOTER_UP));
-	// m_ShooterDown = frc2::Trigger(BUTTON_L(SHOOTER_DOWN));
-  // m_VisionAim = frc2::Trigger(BUTTON_L(AIM_BUTTON));
-  // m_Shoot = frc2::Trigger(BUTTON_L(SHOOT_BUTTON));
-  // m_AmpPreset = frc2::Trigger(BUTTON_L(AMP_BUTTON));
-  // m_StowPreset = frc2::Trigger(BUTTON_L(STOW_BUTTON));
+  m_Print = frc2::Trigger(BUTTON_L(16));
+  m_Print2 = frc2::Trigger(BUTTON_L(15));
+  m_Print3 = frc2::Trigger(BUTTON_L(14));
+  m_Print4 = frc2::Trigger(BUTTON_L(13));
 
-  // m_VisionAim.OnTrue(new frc2::InstantCommand([&] {
-	// 	frc2::PrintCommand("VISION AIM");
-	// }));
-
-  // frc2::Trigger m_AllUp;
-  // frc2::Trigger m_ClimbUp;
-  // frc2::Trigger m_ClimbDown;
-  // frc2::Trigger m_DustpanDown;
-
-  //BUTTONBOARD 2
-  // m_TL = frc2::Trigger(BUTTON_L_TWO(GRID_TL));
-  // m_TL          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TL));
-  // m_TC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TC));
-  // m_TR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_TR));
-  // m_ML          = frc2::JoystickButton(BUTTON_L_TWO(GRID_ML));
-  // m_MC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_MC));
-  // m_MR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_MR));
-  // m_BL          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BL));
-  // m_BC          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BC));
-  // m_BR          = frc2::JoystickButton(BUTTON_L_TWO(GRID_BR));
-  //m_BigRed      = frc2::Trigger(BUTTON_L(BIG_RED));
-
-  // m_SingleSub   = frc2::Trigger(BUTTON_L(5));
-  // m_DoubleSub = frc2::Trigger(BUTTON_L_TWO(13));
-  // m_SingleSubCube = frc2::Trigger(BUTTON_L(7));
-
-  // m_LeftGrid    = frc2::Trigger(BUTTON_L_TWO(LEFT_GRID));
-  // m_CenterGrid  = frc2::Trigger(BUTTON_L_TWO(CENTER_GRID));
-  // m_RightGrid   = frc2::Trigger(BUTTON_L_TWO(RIGHT_GRID));
-
-  // m_MidCone = frc2::JoystickButton(BUTTON_L_TWO(TRANSIT_MODE));
-	// m_MidCube = frc2::JoystickButton(BUTTON_L_TWO(GROUND_PICKUP_MODE));
-  // m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(PLACING_MODE));
-  // m_GroundPickup = frc2::Trigger(BUTTON_L_TWO(GROUND_PICKUP_MODE));
-
- //m_NavXReset = frc2::Trigger(BUTTON_L(8)); //PUT Define
-  // GetArm().m_PlacingMode = frc2::Trigger(BUTTON_L_TWO(15));
-  //m_AutoBalance = frc2::Trigger(BUTTON_L(3));
-  //m_Print = frc2::Trigger(BUTTON_L(2));
-
-  m_Print.OnTrue(new frc2::InstantCommand([&] {
+  m_Print.WhileTrue(new frc2::InstantCommand([&] {
     DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
   }));
 
   m_Print2.OnTrue(new frc2::InstantCommand([&] {
+    DebugOutF("button clicked");
     Vision vision = Robot::GetRobot()->GetVision();
     if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
-      vision.setPriority(id);
-      id = vision.GetLimeLight()->GetNumber("priorityid", 0.0);
+      // vision.setPriority(id);
+      // id = vision.GetLimeLight()->GetNumber("priorityid", 0.0);
       //vision.CalcPose();
       //double x = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(0);
       //double y = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(1);
@@ -145,13 +99,13 @@ void Robot::AutoButtons() {
       //DebugOutF("x" + std::to_string(x));
       //DebugOutF("y" + std::to_string(y));
       //DebugOutF("distance from april tag: " + std::to_string(distance * 39.37));
-
       double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
       double height = vision.GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
       double distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
-      DebugOutF("theta" + std::to_string(theta));
-      DebugOutF("height" + std::to_string(height));
-      DebugOutF("distance" + std::to_string(distance));
+      DebugOutF("ty: " + std::to_string(vision.GetLimeLight()->GetNumber("ty", 0.0)));
+      DebugOutF("theta: " + std::to_string(theta));
+      DebugOutF("height: " + std::to_string(height));
+      DebugOutF("distance: " + std::to_string(distance));
     }
   }));
 }

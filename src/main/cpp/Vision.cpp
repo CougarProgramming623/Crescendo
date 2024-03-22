@@ -36,7 +36,9 @@ void Vision::PrintValues() {
 
 void Vision::setPriority(int id) {
   if(id == 3 || id == 7) {
-    m_LimelightTable->GetEntry("priorityid").SetInteger(id + 1);
+    // m_LimelightTable->GetEntry("priorityid").SetInteger(id + 1);
+    m_LimelightTable->PutNumber("priorityid", id + 1);
+    DebugOutF(std::to_string(m_LimelightTable->GetNumber("priorityid", 0.0)));
   }
 }
 
@@ -129,7 +131,6 @@ double Vision::relativeDistancex(){
     DebugOutF("delta x: " + std::to_string(distanceFromLimelightToGoalInches));
 }
 
-double Vision::GetIDMapValue(int coord, int id)
-{
+double Vision::GetIDMapValue(int coord, int id) {
   return IDMap[coord][id - 1];
 }
