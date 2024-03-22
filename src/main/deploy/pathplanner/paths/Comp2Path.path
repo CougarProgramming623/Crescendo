@@ -3,43 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5712565499205073,
-        "y": 4.0827353738040815
+        "x": 6.080101294461848,
+        "y": 6.6584733863912176
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5712565499205073,
-        "y": 3.5827353738040815
+        "x": 5.318140339984383,
+        "y": 6.673260096520193
       },
       "isLocked": false,
-      "linkedName": "pt2End"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3002262486006457,
-        "y": 5.027125137583609
+        "x": 1.0642591887035628,
+        "y": 6.6584733863912176
       },
       "prevControl": {
-        "x": 3.4578653138787767,
-        "y": 4.769990780722303
+        "x": 1.5738959209399903,
+        "y": 6.657879542610938
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Pick up",
-      "waypointRelativePos": 0.0,
+      "name": "Flywheel",
+      "waypointRelativePos": 0,
       "command": {
         "type": "sequential",
         "data": {
@@ -47,19 +41,13 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake"
+                "name": "Flywheel"
               }
             },
             {
-              "type": "named",
+              "type": "wait",
               "data": {
-                "name": "Dustpan up"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Launch"
+                "waitTime": 1.5
               }
             }
           ]
@@ -68,7 +56,7 @@
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.05,
       "command": {
         "type": "sequential",
         "data": {
@@ -85,10 +73,10 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxVelocity": 0.3,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 1.0,
+    "maxAngularAcceleration": 1.0
   },
   "goalEndState": {
     "velocity": 0,

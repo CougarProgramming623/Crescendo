@@ -26,6 +26,7 @@
 #include "subsystems/Arm.h"
 #include "LED.h"
 #include <commands/Flywheel.h>
+#include <commands/Shoot.h>
 #include <commands/Intake.h>
 #include <frc/geometry/Pose2d.h>
 //#include "./subsystems/Intake.h"

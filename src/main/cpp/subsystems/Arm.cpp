@@ -69,6 +69,7 @@ void Arm::ArmInit() {
 
 	m_DustpanUp.OnTrue(new frc2::InstantCommand([&] {
 		m_DustpanPivot.Set(0);
+		DebugOutF("test outside");
 	}));
 
 	m_DustpanDown.OnTrue(new frc2::InstantCommand([&] {

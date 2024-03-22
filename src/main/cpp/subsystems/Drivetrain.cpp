@@ -57,9 +57,10 @@ DriveTrain::DriveTrain()
         [this]() { return this->getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](frc::ChassisSpeeds robotRelativeSpeeds){ this->DriveRobotRelative(robotRelativeSpeeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            PIDConstants(3.0, 0.0, 0.0), // Translation PID constants
+            PIDConstants(0.5, 0.0, 0.0), // Translation PID constants
             PIDConstants(0.0, 0.0, 0.0), // Rotation PID constants
-            kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
+            // kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
+            units::meters_per_second_t(0.3),
             0.5298_m, // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
@@ -220,9 +221,9 @@ ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
 }
 
 void DriveTrain::DriveRobotRelative(frc::ChassisSpeeds robotRelativeSpeeds) {
-  frc::ChassisSpeeds speeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 0.02_s);
+  frc::ChassisSpeeds speeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 1_s);
 
-  auto swerveModuleStates = m_Kinematics.ToSwerveModuleStates(speeds);
+  auto swerveModuleStates = m_Kinematics.ToSwerveModuleStates(-speeds);
   SetStates(swerveModuleStates);
 }
 
