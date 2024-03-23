@@ -33,6 +33,9 @@ Arm::Arm():
 	m_IntakeSwitch([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_SWITCH);}),
 	m_ServoShoot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SERVO_SHOOT);}),
 	m_Aim([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(AIM_BUTTON);}),
+	m_CloseShootPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLOSE_SHOOT_BUTTON);}),
+	m_PickupPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PICKUP_BUTTON);}),
+	m_ProtectedBlockPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PROTECTED_BLOCK_SHOOT);}),
 	m_Timer()
 {}
 
@@ -98,19 +101,43 @@ void Arm::ArmInit() {
 		m_Feeder.Set(motorcontrol::ControlMode::PercentOutput, 0);
 	}));
 	
-	m_Aim.OnTrue(new frc2::InstantCommand([&] {
-		DebugOutF(std::to_string(GetStringPot().GetValue()));
-		MoveToStringPotValue(450);
+	// m_Aim.OnTrue(new frc2::InstantCommand([&] {
+	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
+	// 	double 
+	// 	MoveToStringPotValue(450);
+	// })).OnFalse(new frc2::InstantCommand([&] {
+	// 	m_Pivot.Set(0);
+	// }));
+
+	m_CloseShootPivot.OnTrue(new frc2::InstantCommand([&] {
+		DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
+		MoveToStringPotValue(555);
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
 
-}
-	int Arm::ConvertDistanceToValue(){
-		int d = 10;
-		int val = int(1 * pow(d,4) + 1 * pow(d,3) + 1 * pow(d,2) + 1 * d + 3);
-		return val;
+	m_PickupPivot.OnTrue(new frc2::InstantCommand([&] {
+		DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
+		MoveToStringPotValue(420);
+	})).OnFalse(new frc2::InstantCommand([&] {
+		m_Pivot.Set(0);
+	}));
 
+	// m_ProtectedBlockPivot.OnTrue(new frc2::InstantCommand([&] {
+	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
+	// 	MoveToStringPotValue(idk); //NEEDS TO BE LOOKED AT
+	// })).OnFalse(new frc2::InstantCommand([&] {
+	// 	m_Pivot.Set(0);
+	// }));
+
+}
+	int Arm::ConvertDistanceToValue() {
+		Vision vision = Robot::GetRobot()->GetVision();
+		if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+			int d = vision.DistanceFromAprilTag(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tid", 0.0));
+			int val = int(1 * pow(d,4) + 1 * pow(d,3) + 1 * pow(d,2) + 1 * d + 3);
+			return val;
+		}
 	}
 	void Arm::MoveToStringPotValue(int target){
 		while(target != GetStringPot().GetValue()){

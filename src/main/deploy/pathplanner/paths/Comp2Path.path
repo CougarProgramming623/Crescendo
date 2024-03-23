@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.080101294461848,
-        "y": 6.6584733863912176
+        "x": 3.99,
+        "y": 5.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.318140339984383,
-        "y": 6.673260096520193
+        "x": 3.228039045522536,
+        "y": 5.514786710128975
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.0642591887035628,
-        "y": 6.6584733863912176
+        "x": 1.38,
+        "y": 5.5
       },
       "prevControl": {
-        "x": 1.5738959209399903,
-        "y": 6.657879542610938
+        "x": 1.8896367322364274,
+        "y": 5.49940615621972
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,7 +35,7 @@
       "name": "Flywheel",
       "waypointRelativePos": 0,
       "command": {
-        "type": "sequential",
+        "type": "race",
         "data": {
           "commands": [
             {
@@ -47,7 +47,7 @@
             {
               "type": "wait",
               "data": {
-                "waitTime": 1.5
+                "waitTime": 4.0
               }
             }
           ]

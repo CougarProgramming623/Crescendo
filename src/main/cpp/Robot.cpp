@@ -82,7 +82,7 @@ void Robot::AutoButtons() {
   m_Print4 = frc2::Trigger(BUTTON_L(13));
 
   m_Print.WhileTrue(new frc2::InstantCommand([&] {
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+    // DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
   }));
 
   m_Print2.OnTrue(new frc2::InstantCommand([&] {
@@ -185,6 +185,25 @@ void Robot::RobotPeriodic() {
   // m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
   m_AutoPath = "New New Path";
 
+  Robot::GetRobot()->GetButtonBoard().SetOutputs(0xFFFFFFFF);
+  if(Robot::GetRobot()->GetButtonBoard().GetRawButton(16)) {
+    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+  }
+  // if(GetVision().GetLimeLight()->GetNumber("tv", 0.0) == 1 && flash) {
+  //   Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0xFFFFFFFF); 
+  //   flash = false;
+  // } else {
+  //   frc2::CommandScheduler::GetInstance().Schedule(
+  //     frc2::ParallelCommandGroup(
+  //       frc2::InstantCommand([&] {
+  //         Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0);
+  //         flash = true;
+  //       }),
+  //       frc2::WaitCommand(0.5_s)
+  //     ).ToPtr()
+  //   );
+  // }
+
 
 
   // if(Robot::GetButtonBoard().GetRawButton(15)){
@@ -204,8 +223,6 @@ void Robot::RobotPeriodic() {
 
   bool preset = false;
   double difference = 0;
-
-  GetButtonBoard().SetOutputs(0xffffffff);
 
   //LED functionality
   // m_LED.SponsorBoardAllianceColor();
@@ -257,6 +274,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
+  // m_autonomousCommand.value().HasRequirement(&Robot::GetRobot()->GetDriveTrain());
   m_autonomousCommand = getAutonomousCommand();
 
   GetDriveTrain().GetOdometry()->ResetPosition(
@@ -273,9 +291,9 @@ void Robot::AutonomousInit() {
   DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
-  }
+  // if (m_autonomousCommand) {
+  //   m_autonomousCommand->Schedule();
+  // }
 
   // Only shoot and don't move:
   // /*

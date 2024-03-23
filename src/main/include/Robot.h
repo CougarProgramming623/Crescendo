@@ -112,6 +112,9 @@ class Robot : public frc::TimedRobot {
   int m_ColOffset;
 
  private:
+  
+  bool flash;
+  
   frc::Pose2d startingPose;
 
   frc2::ParallelCommandGroup* m_ArmCommand;

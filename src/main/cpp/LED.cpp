@@ -63,10 +63,10 @@ void LED::Init(){
     //     })
     // );
 
-    if (Robot::GetRobot()->GetButtonBoard().GetRawButton(3)) {
-        DebugOutF("changing state");
-        Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0xFFFFFFFF); 
-    }
+    // if(Robot::GetRobot()->GetButtonBoard().GetRawButton(3)) {
+    //     DebugOutF("changing state");
+    //     Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0xFFFFFFFF);
+    // }
 }
 
 void LED::SetData(){ m_AddressableLED.SetData(m_LEDBuffer); }

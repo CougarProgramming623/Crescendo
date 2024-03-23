@@ -251,7 +251,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 
 //#define STRINGPOT_ZERO -1
 #define STRINGPOT_LOW 348
-#define STRINGPOT_TOP 555
+#define STRINGPOT_TOP 704
 #define STRINGPOT_TOTAL_RANGE 207
 //#define STRINGPOT_ZERO_DEGREES -1
 
@@ -288,7 +288,9 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define SHOOT_BUTTON 4
 #define SERVO_SHOOT 5
 #define SHOOTER_LOCK_POWER 6
-#define ALLUP_BUTTON 7
+#define CLOSE_SHOOT_BUTTON 7
+#define PROTECTED_BLOCK_SHOOT 8
+#define PICKUP_BUTTON 12
 #define ARM_OVERRIDE 16
 #define SHOOTER_DOWN 17
 #define SHOOTER_UP 18
