@@ -1,4 +1,4 @@
-#include "./commands/PivotToPos.h"
+#include "commands/PivotToPos.h"
 #include "Robot.h"
 
 
@@ -45,6 +45,7 @@ void PivotToPos::Execute() {
 	// StringPotValue = ARM.StringPotLengthToStringPotUnits(ARM.PivotDegreesToStringPotLength(targetDegrees));
 	targetRotations = ARM.PivotStringPotUnitsToRotations(targetValue);
 	ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_PositionDutyCycle.WithPosition(units::angle::turn_t(targetValue)));
+	
 	// ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
 	//ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
 	//DebugOutF(std::to_string(abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition())));

@@ -173,10 +173,10 @@ void Robot::RobotPeriodic() {
   Robot::GetCOB().GetTable().GetEntry("/COB/deltaY").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.Y().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/deltaT").SetDouble(std::abs(-fmod(360 - GetDriveTrain().m_VisionRelative.Rotation().Degrees().value(), 360)));
 
-  Robot::GetCOB().GetTable().GetEntry("/COB/BackLeftDeviceTemp").SetString(GetDriveTrain().m_BackLeftModule.m_SteerController.motor.GetDeviceTemp().ToString());
-  Robot::GetCOB().GetTable().GetEntry("/COB/BackRightDeviceTemp").SetString(GetDriveTrain().m_BackRightModule.m_SteerController.motor.GetDeviceTemp().ToString());
-  Robot::GetCOB().GetTable().GetEntry("/COB/FrontLeftDeviceTemp").SetString(GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.GetDeviceTemp().ToString());
-  Robot::GetCOB().GetTable().GetEntry("/COB/FrontRightDeviceTemp").SetString(GetDriveTrain().m_FrontRightModule.m_SteerController.motor.GetDeviceTemp().ToString());
+  Robot::GetCOB().GetTable().GetEntry("/COB/BackLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+  Robot::GetCOB().GetTable().GetEntry("/COB/BackRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+  Robot::GetCOB().GetTable().GetEntry("/COB/FrontLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+  Robot::GetCOB().GetTable().GetEntry("/COB/FrontRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
   
   
   // m_Vision.PushID();
