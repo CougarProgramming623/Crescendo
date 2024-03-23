@@ -64,7 +64,7 @@ class Arm : public frc2::SubsystemBase {
 	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
 	//Need to get the ratio of units to length ASAP
 	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
-	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((GetStringPot().GetValue() - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
+	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((GetStringPot().GetAverageValue() - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
 	
 	//getters
 	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}

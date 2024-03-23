@@ -42,6 +42,7 @@ class Robot : public frc::TimedRobot {
   Robot();
   static inline Robot* GetRobot() { return s_Instance; }
   inline Arm& GetArm() { return m_Arm; }
+  inline PivotToPos& GetPivotPos() {return m_PivotToPos;}
   inline frc::GenericHID& GetButtonBoard() { return m_ButtonBoard; }
   inline frc::GenericHID& GetJoystick() { return m_Joystick; }
   inline frc::GenericHID& GetButtonBoardTwo() { return m_ButtonBoardTwo; }
@@ -137,6 +138,8 @@ class Robot : public frc::TimedRobot {
   LED m_LED;
 
   Arm m_Arm;
+
+  PivotToPos m_PivotToPos;
 
   frc::Timer m_AutoTimer;
   DriveTrain m_DriveTrain;//Drivetrain "Master" object to access all instances(objects) of the drivetrain class

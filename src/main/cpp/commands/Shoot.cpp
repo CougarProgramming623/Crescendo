@@ -14,6 +14,7 @@ void Shoot::Execute() {
     //     r->GetArm().GetDustpanLaunchServo().Set(0.75);
     // }
 
+    frc2::WaitCommand(2.0_s);
     r->GetArm().GetDustpanLaunchServo().Set(0.75);
 }
 

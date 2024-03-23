@@ -41,6 +41,9 @@ Arm::Arm():
 
 void Arm::ArmInit() {
 	DebugOutF("inside arm init");
+	m_StringPot.SetAverageBits(4);
+    usleep(500);
+
 	m_Pivot.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
@@ -50,7 +53,7 @@ void Arm::ArmInit() {
 	}));
 
 	m_ShooterUp.OnTrue(new frc2::InstantCommand([&] {
-		if(m_StringPot.GetValue() < STRINGPOT_TOP) {
+		if(m_StringPot.GetAverageValue() < STRINGPOT_TOP) {
 			m_Pivot.Set(-0.5);
 		} else {
 			m_Pivot.Set(0);
@@ -61,7 +64,7 @@ void Arm::ArmInit() {
 	
 	
 	m_ShooterDown.OnTrue(new frc2::InstantCommand([&] {
-		if(m_StringPot.GetValue() > STRINGPOT_LOW) {
+		if(m_StringPot.GetAverageValue() > STRINGPOT_LOW) {
 			m_Pivot.Set(0.5);
 		} else {
 			m_Pivot.Set(0);
@@ -72,7 +75,6 @@ void Arm::ArmInit() {
 
 	m_DustpanUp.OnTrue(new frc2::InstantCommand([&] {
 		m_DustpanPivot.Set(0);
-		DebugOutF("test outside");
 	}));
 
 	m_DustpanDown.OnTrue(new frc2::InstantCommand([&] {
@@ -102,29 +104,19 @@ void Arm::ArmInit() {
 	}));
 	
 	// m_Aim.OnTrue(new frc2::InstantCommand([&] {
-	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
+	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetAverageValue()));
 	// 	double 
 	// 	MoveToStringPotValue(450);
 	// })).OnFalse(new frc2::InstantCommand([&] {
 	// 	m_Pivot.Set(0);
 	// }));
 
-	m_CloseShootPivot.OnTrue(new frc2::InstantCommand([&] {
-		DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
-		MoveToStringPotValue(555);
-	})).OnFalse(new frc2::InstantCommand([&] {
-		m_Pivot.Set(0);
-	}));
+	m_CloseShootPivot.ToggleOnTrue(PivotToPos(555).ToPtr());
 
-	m_PickupPivot.OnTrue(new frc2::InstantCommand([&] {
-		DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
-		MoveToStringPotValue(420);
-	})).OnFalse(new frc2::InstantCommand([&] {
-		m_Pivot.Set(0);
-	}));
+	m_PickupPivot.ToggleOnTrue(PivotToPos(420).ToPtr());
 
 	// m_ProtectedBlockPivot.OnTrue(new frc2::InstantCommand([&] {
-	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
+	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetAverageValue()));
 	// 	MoveToStringPotValue(idk); //NEEDS TO BE LOOKED AT
 	// })).OnFalse(new frc2::InstantCommand([&] {
 	// 	m_Pivot.Set(0);
@@ -139,21 +131,21 @@ void Arm::ArmInit() {
 			return val;
 		}
 	}
-	void Arm::MoveToStringPotValue(int target){
-		while(target != GetStringPot().GetValue()){
-			// DebugOutF(std::to_string(StringPotUnitsToRotations(GetStringPot().GetValue())));
-			// DebugOutF("stringpot value: " + std::to_string(GetStringPot().GetValue()));
-			if((target > GetStringPot().GetValue() - 5) || (target > GetStringPot().GetValue() + 5)){
-				m_Pivot.Set(-1);
-			}
-			else if((target < GetStringPot().GetValue() - 5) || (target > GetStringPot().GetValue() + 5)){
-				m_Pivot.Set(1);
-			}
-			if(abs(target - GetStringPot().GetValue()) < 20 && abs(target - GetStringPot().GetValue()) > 0 ){
-				m_Pivot.Set(0.3);
-			}
-		}
-	}
+	// void Arm::MoveToStringPotValue(int target){
+	// 	if(target != GetStringPot().GetAverageValue()) {
+	// 		// DebugOutF(std::to_string(StringPotUnitsToRotations(GetStringPot().GetAverageValue())));
+	// 		// DebugOutF("stringpot value: " + std::to_string(GetStringPot().GetAverageValue()));
+	// 		if((target > GetStringPot().GetAverageValue() - 5) || (target > GetStringPot().GetAverageValue() + 5)){
+	// 			m_Pivot.Set(-1);
+	// 		}
+	// 		else if((target < GetStringPot().GetAverageValue() - 5) || (target > GetStringPot().GetAverageValue() + 5)){
+	// 			m_Pivot.Set(1);
+	// 		}
+	// 		if(abs(target - GetStringPot().GetAverageValue()) < 20 && abs(target - GetStringPot().GetAverageValue()) > 0 ){
+	// 			m_Pivot.Set(0.3);
+	// 		}
+	// 	}
+	// }
 
 // while override is active, gives manual joysticks control over the two arm motors
 frc2::FunctionalCommand* Arm::ManualControls()

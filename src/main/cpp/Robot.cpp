@@ -35,7 +35,8 @@ Robot* Robot::s_Instance = nullptr;
 
 Robot::Robot() :
 m_NavX(frc::SerialPort::Port(2), AHRS::SerialDataType(0), uint8_t(66)),
-m_LED()
+m_LED(),
+m_PivotToPos(420)
 {
   DebugOutF("inside robot constructor");
   s_Instance = this;
@@ -82,7 +83,7 @@ void Robot::AutoButtons() {
   m_Print4 = frc2::Trigger(BUTTON_L(13));
 
   m_Print.WhileTrue(new frc2::InstantCommand([&] {
-    // DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+    DebugOutF("Stringpot Value: " + std::to_string(Robot::GetRobot()->GetPivotPos().stringpot));
   }));
 
   m_Print2.OnTrue(new frc2::InstantCommand([&] {
@@ -187,7 +188,7 @@ void Robot::RobotPeriodic() {
 
   Robot::GetRobot()->GetButtonBoard().SetOutputs(0xFFFFFFFF);
   if(Robot::GetRobot()->GetButtonBoard().GetRawButton(16)) {
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetAverageValue()));
   }
   // if(GetVision().GetLimeLight()->GetNumber("tv", 0.0) == 1 && flash) {
   //   Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0xFFFFFFFF); 
@@ -296,26 +297,26 @@ void Robot::AutonomousInit() {
   // }
 
   // Only shoot and don't move:
-  // /*
-  // frc2::CommandScheduler::GetInstance().Schedule(
-  //   new frc2::SequentialCommandGroup(
-  //     frc2::ParallelDeadlineGroup(
-  //       frc2::WaitCommand(1.5_s),
-  //       frc2::InstantCommand([&] {
-  //         // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
-  //         // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-  //         Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
-  //         Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
-  //         frc2::WaitCommand(1_s);
-          
-  //         frc2::WaitCommand(1_s);
-  //         Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
-  //         Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
-  //       })
-  //     )
-  //   )
-  // );
-  // */
+  
+  frc2::CommandScheduler::GetInstance().Schedule(
+    new frc2::SequentialCommandGroup(
+      frc2::ParallelDeadlineGroup(
+        frc2::WaitCommand(7.0_s),
+        frc2::InstantCommand([&] {
+          // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
+          // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
+          Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
+          Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
+        }),
+        Shoot()
+      ),
+      frc2::InstantCommand([&] {
+      Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0);
+      Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0);
+      })
+    )
+  );
+  
 }
 void Robot::AutonomousPeriodic() {
     // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));

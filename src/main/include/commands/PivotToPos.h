@@ -8,15 +8,17 @@
 
 class PivotToPos : public frc2::CommandHelper<frc2::Command, PivotToPos> {
 	public:
-		explicit PivotToPos();
+		explicit PivotToPos(int target);
 		void Initialize() override;
 		void Execute() override;
   		void End(bool interrupted) override;
 		bool IsFinished() override;	
 
-		double targetDegrees;
+		// double targetDegrees;
+		int targetValue;
 		int StringPotValue;
-		double targetRotations;
-		double startingDegrees;
-		double ticksToMove;
+		int stringpot;
+		// double targetRotations;
+		// double startingDegrees;
+		// double ticksToMove;
 };
