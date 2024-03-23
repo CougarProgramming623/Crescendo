@@ -97,7 +97,7 @@ void DriveTrain::DriveInit() {
 
   m_ClimbUp.OnTrue(new frc2::InstantCommand([&] {
     DebugOutF("climbing up on");
-    m_Climb.Set(0.5);
+    m_Climb.Set(1);
     // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.5));
   })).OnFalse(new frc2::InstantCommand([&] {
     DebugOutF("climbing up off");
@@ -107,7 +107,7 @@ void DriveTrain::DriveInit() {
 
   m_ClimbDown.OnTrue(new frc2::InstantCommand([&] {
     DebugOutF("climbing down on");
-    m_Climb.Set(-0.5);
+    m_Climb.Set(-1);
     // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.5));
   })).OnFalse(new frc2::InstantCommand([&] {
     DebugOutF("climbing down off");

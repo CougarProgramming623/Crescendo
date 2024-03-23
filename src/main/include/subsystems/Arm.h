@@ -54,17 +54,14 @@ class Arm : public frc2::SubsystemBase {
 	frc2::FunctionalCommand* ManualControls();
 
 	// void SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc);
-	inline double PivotStringPotUnitsToRotations(double units) {return 0;}
-
 	// inline double PivotDegreesToStringPotUnits(double degrees) {return ((degrees / PIVOT_DEGREES_PER_STRINGPOT_UNITS) + STRINGPOT_ZERO); }
 	// inline double PivotRotationsToStringPotUnits(double rotations) {return PivotDegreesToStringPotUnits(PivotRotationsToDegrees(rotations));}
-	
 	//inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
 	//inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
 	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
 	//Need to get the ratio of units to length ASAP
 	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
-	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((GetStringPot().GetValue() - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
+	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((val - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
 	
 	//getters
 	inline hardware::TalonFX& GetPivotMotor() {return m_Pivot;}
@@ -74,6 +71,8 @@ class Arm : public frc2::SubsystemBase {
 	inline frc::Servo& GetDustpanLaunchServo() {return m_DustpanLaunch;}
 	inline frc::Servo& GetDustpanPivotServo() {return m_DustpanPivot;}
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
+	inline frc2::Trigger& GetShooterUpButton() {return m_ShooterUp;}
+	inline frc2::Trigger& GetShooterDownButton() {return m_ShooterDown;}
 	
 
 	frc2::Trigger m_PlacingMode;
@@ -83,7 +82,7 @@ class Arm : public frc2::SubsystemBase {
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
 
-
+	frc2::InstantCommand m_ManualAdjustPivot;
 
 	private:
 

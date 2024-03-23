@@ -37,12 +37,13 @@ Arm::Arm():
 	m_PickupPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PICKUP_BUTTON);}),
 	m_ProtectedBlockPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PROTECTED_BLOCK_SHOOT);}),
 	m_Timer()
-{}
+{
+	// m_Pivot.SetPosition(units::angle::turn_t(0));
+}
 
 void Arm::ArmInit() {
 	DebugOutF("inside arm init");
-	//m_StringPot.SetAverageBits(4);
-    //usleep(500);
+	m_StringPot.SetAverageBits(3);
 
 	m_Pivot.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
@@ -111,17 +112,25 @@ void Arm::ArmInit() {
 	// 	m_Pivot.Set(0);
 	// }));
 
-	m_CloseShootPivot.OnTrue(new frc2::InstantCommand([&] {
-		DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
-		MoveToStringPotValue(555);
-	})).OnFalse(new frc2::InstantCommand([&] {
+	// m_CloseShootPivot.OnTrue(new frc2::InstantCommand([&] {
+	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
+	// 	MoveToStringPotValue(555);
+	// })).OnFalse(new frc2::InstantCommand([&] {
+	// 	m_Pivot.Set(0);
+	// }));
+
+	// m_PickupPivot.OnTrue(new frc2::InstantCommand([&] {
+	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
+	// 	MoveToStringPotValue(420);
+	// })).OnFalse(new frc2::InstantCommand([&] {
+	// 	m_Pivot.Set(0);
+	// }));
+
+	m_CloseShootPivot.OnTrue(PivotToPos(555).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
 
-	m_PickupPivot.OnTrue(new frc2::InstantCommand([&] {
-		DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
-		MoveToStringPotValue(420);
-	})).OnFalse(new frc2::InstantCommand([&] {
+	m_ProtectedBlockPivot.OnTrue(PivotToPos(420).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
 

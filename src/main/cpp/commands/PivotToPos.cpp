@@ -5,12 +5,14 @@
 #define ARM Robot::GetRobot()->GetArm()
 
 PivotToPos::PivotToPos(int target) {
+	DebugOutF("Going into constructor");
 	targetValue = target;
 	AddRequirements(&Robot::GetRobot()->GetArm());
 	
 }
 
 void PivotToPos::Initialize() {
+	DebugOutF("Going into init");
 	//ARM.GetPivotMotor().SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
 	// DebugOutF("starting at: " + std::to_string((ARM.GetPivotCANCoder().GetAbsolutePosition() - CANCODER_ZERO)) + " degrees");
 	// DebugOutF("Going to: " + std::to_string(ARM.PivotTicksToDegrees(ARM.PivotDegreesToTicks(targetDegrees))) + " degrees");
@@ -18,7 +20,12 @@ void PivotToPos::Initialize() {
 }
 
 void PivotToPos::Execute() {
-	stringpot = ARM.GetStringPot().GetValue();
+	DebugOutF("Going into execute");
+	stringpot = ARM.GetStringPot().GetAverageValue();
+	int difference = stringpot - targetValue;
+	double kp = 0.02;
+	double targetSpeed = kp * difference;
+	ARM.GetPivotMotor().Set(targetSpeed);
 	// if(targetValue != stringpot) {
 	// 	// if(abs(targetValue - stringpot) < 20 && abs(targetValue - stringpot) > 0 ){
 	// 	// 	ARM.GetPivotMotor().Set(0.3);
@@ -26,7 +33,7 @@ void PivotToPos::Execute() {
 	// 	DebugOutF("target: " + std::to_string(targetValue));
 	// 	DebugOutF("current: " + std::to_string(stringpot));
 	// 	if((targetValue > (stringpot - 20)) || (targetValue > (stringpot + 20))){
-	// 		ARM.GetPivotMotor().Set(-0.7);
+	// 		ARM.GetPedivotMotor().Set(-0.7);
 	// 	}
 	// 	else if((targetValue < (stringpot - 20)) || (targetValue < (stringpot + 20))){
 	// 		ARM.GetPivotMotor().Set(0.7);
@@ -43,8 +50,10 @@ void PivotToPos::Execute() {
 
 	// }
 	// StringPotValue = ARM.StringPotLengthToStringPotUnits(ARM.PivotDegreesToStringPotLength(targetDegrees));
-	targetRotations = ARM.PivotStringPotUnitsToRotations(targetValue);
-	ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_PositionDutyCycle.WithPosition(units::angle::turn_t(targetValue)));
+	// DebugOutF("Value being fed " + std::to_string(targetValue));
+	// targetRotations = ARM.StringPotUnitsToRotations(targetValue);
+	// ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_PositionDutyCycle.WithPosition(units::angle::turn_t(targetValue)));
+	// DebugOutF(std::to_string(targetRotations));
 	
 	// ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
 	//ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
@@ -53,11 +62,12 @@ void PivotToPos::Execute() {
 
 void PivotToPos::End(bool interrupted){
 	DebugOutF("Pivot finished");
+	ARM.GetPivotMotor().Set(0);
 	// ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
 	//ARM.GetPivotMotor().Set(ControlMode::PercentOutput, 0);
 }
 
 bool PivotToPos::IsFinished() {
-	return abs(targetValue - ARM.GetStringPot().GetAverageValue()) < 5;
+	return targetValue == ARM.GetStringPot().GetValue() || ARM.GetShooterUpButton().Get() || ARM.GetShooterDownButton().Get();
 	//return abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition()) < 4000;
 }
