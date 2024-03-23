@@ -252,7 +252,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 //#define STRINGPOT_ZERO -1
 #define STRINGPOT_LOW 348
 #define STRINGPOT_TOP 704
-#define STRINGPOT_TOTAL_RANGE 207
+#define STRINGPOT_TOTAL_RANGE 356
 //#define STRINGPOT_ZERO_DEGREES -1
 
 #define PIVOT_ROTATIONS_PER_STRINGPOT_UNITS (PIVOT_TOTAL_ROTATIONS/STRINGPOT_TOTAL_RANGE)

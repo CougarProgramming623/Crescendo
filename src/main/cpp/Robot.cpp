@@ -305,14 +305,18 @@ void Robot::AutonomousInit() {
         frc2::InstantCommand([&] {
           // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
           // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-          Robot::GetRobot()->GetArm().GetShooterMotor1().Set(-0.7 + 0.05);
-          Robot::GetRobot()->GetArm().GetShooterMotor2().Set(-0.7);
+          Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0.7 - 0.05);
+          Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0.7);
         }),
-        Shoot()
+        frc2::SequentialCommandGroup(
+          frc2::WaitCommand(2.0_s),
+          Shoot()
+        )
       ),
       frc2::InstantCommand([&] {
       Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0);
       Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0);
+      Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1);
       })
     )
   );

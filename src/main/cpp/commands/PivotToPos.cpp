@@ -18,22 +18,34 @@ void PivotToPos::Initialize() {
 }
 
 void PivotToPos::Execute() {
-	stringpot = ARM.GetStringPot().GetAverageValue();
-	if(targetValue != stringpot) {
-		if((targetValue > stringpot - 5) || (targetValue > stringpot + 5)){
-			ARM.GetPivotMotor().Set(-1);
-		}
-		else if((targetValue < stringpot - 5) || (targetValue > stringpot + 5)){
-			ARM.GetPivotMotor().Set(1);
-		}
-		if(abs(targetValue - stringpot) < 20 && abs(targetValue - stringpot) > 0 ){
-			ARM.GetPivotMotor().Set(0.3);
-		}
-	}
+	stringpot = ARM.GetStringPot().GetValue();
+	// if(targetValue != stringpot) {
+	// 	// if(abs(targetValue - stringpot) < 20 && abs(targetValue - stringpot) > 0 ){
+	// 	// 	ARM.GetPivotMotor().Set(0.3);
+	// 	// }
+	// 	DebugOutF("target: " + std::to_string(targetValue));
+	// 	DebugOutF("current: " + std::to_string(stringpot));
+	// 	if((targetValue > (stringpot - 20)) || (targetValue > (stringpot + 20))){
+	// 		ARM.GetPivotMotor().Set(-0.7);
+	// 	}
+	// 	else if((targetValue < (stringpot - 20)) || (targetValue < (stringpot + 20))){
+	// 		ARM.GetPivotMotor().Set(0.7);
+	// 	}
+	// 	else{
+	// 		if (targetValue > (stringpot - 10) || targetValue > (stringpot + 10)) {
+	// 			ARM.GetPivotMotor().Set(-0.1);
+	// 		} else if (stringpot < (targetValue - 10) || targetValue < (stringpot + 10)) {
+	// 			ARM.GetPivotMotor().Set(0.1);
+	// 		} else {
+	// 			ARM.GetPivotMotor().Set(0);
+	// 		}
+	// 	}
+
+	// }
 	// StringPotValue = ARM.StringPotLengthToStringPotUnits(ARM.PivotDegreesToStringPotLength(targetDegrees));
-	// targetRotations = ARM.PivotStringPotUnitsToRotations(StringPotValue); 
-	// ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_PositionDutyCycle.WithPosition(units::angle::turn_t(targetRotations)));
-	//ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
+	targetRotations = ARM.PivotStringPotUnitsToRotations(targetValue);
+	ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_PositionDutyCycle.WithPosition(units::angle::turn_t(targetValue)));
+	// ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_MotionMagicRequest.WithPosition(units::angle::turn_t(ARM.PivotDegreesToTicks(targetDegrees))));
 	//ARM.GetPivotMotor().Set(ControlMode::MotionMagic, ARM.PivotDegreesToTicks(targetDegrees));
 	//DebugOutF(std::to_string(abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition())));
 }

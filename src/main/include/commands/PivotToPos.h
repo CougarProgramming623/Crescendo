@@ -16,9 +16,8 @@ class PivotToPos : public frc2::CommandHelper<frc2::Command, PivotToPos> {
 
 		// double targetDegrees;
 		int targetValue;
-		int StringPotValue;
 		int stringpot;
-		// double targetRotations;
+		double targetRotations;
 		// double startingDegrees;
 		// double ticksToMove;
 };
