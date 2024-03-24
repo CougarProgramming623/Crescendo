@@ -126,11 +126,15 @@ void Arm::ArmInit() {
 	// 	m_Pivot.Set(0);
 	// }));
 
-	m_CloseShootPivot.OnTrue(PivotToPos(555).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
+	m_CloseShootPivot.OnTrue(PivotToPos(CLOSEUPSHOOTSTRINGPOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
 
-	m_ProtectedBlockPivot.OnTrue(PivotToPos(420).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
+	m_ProtectedBlockPivot.OnTrue(PivotToPos(PICKUPSTRINGPOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
+		m_Pivot.Set(0);
+	}));
+
+	m_PickupPivot.OnTrue(PivotToPos(PROTECTEDBLOCKSHOOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
 

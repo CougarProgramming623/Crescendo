@@ -263,6 +263,7 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 
 #define CLOSEUPSHOOTSTRINGPOT 555
 #define PICKUPSTRINGPOT 420
+#define PROTECTEDBLOCKSHOOT 356
 
 
 // #define STRINGPOT_TOTAL_RANGE 512.0

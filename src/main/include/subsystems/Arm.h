@@ -48,9 +48,6 @@ class Arm : public frc2::SubsystemBase {
 
 	frc::Servo m_DustpanLaunch {0};
 
-	
-	
-
 	frc2::FunctionalCommand* ManualControls();
 
 	// void SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc);
@@ -81,8 +78,6 @@ class Arm : public frc2::SubsystemBase {
 
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
-
-	frc2::InstantCommand m_ManualAdjustPivot;
 
 	private:
 
