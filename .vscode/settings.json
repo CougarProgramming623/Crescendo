@@ -14,7 +14,6 @@
     "**/.factorypath": true,
     "**/*~": true
   },
-  "C_Cpp.default.configurationProvider": "vscode-wpilib",
   "C_Cpp.errorSquiggles": "enabled",
   "files.associations": {
     "*.inc": "cpp",
@@ -92,6 +91,21 @@
     "typeindex": "cpp",
     "typeinfo": "cpp",
     "valarray": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "charconv": "cpp",
+    "__bit_reference": "cpp",
+    "__config": "cpp",
+    "__debug": "cpp",
+    "__errc": "cpp",
+    "__hash_table": "cpp",
+    "__locale": "cpp",
+    "__mutex_base": "cpp",
+    "__node_handle": "cpp",
+    "__split_buffer": "cpp",
+    "__threading_support": "cpp",
+    "__verbose_abort": "cpp",
+    "ios": "cpp",
+    "locale": "cpp",
+    "execution": "cpp"
   }
 }

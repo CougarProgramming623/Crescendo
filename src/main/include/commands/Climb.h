@@ -16,20 +16,19 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/ParallelCommandGroup.h>
 
+
 using namespace ctre::phoenix6;
 
-class Shooter : public frc2::CommandHelper<frc2::Command, Shooter> {
+class Climb : public frc2::CommandHelper<frc2::Command, Climb> {
     
 public:
-  Shooter();
+  explicit Climb();
   void Initialize() override;
   void Execute() override;
   void End(bool interrupted) override;
   bool IsFinished() override;
 
 private:
-  double power1;
-  //double power2;
-  double set;
+
   
 };

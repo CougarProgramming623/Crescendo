@@ -1,5 +1,9 @@
 #pragma once
 
+#include <frc/TimedRobot.h>
+#include <frc2/command/CommandPtr.h>
+#include <frc/SerialPort.h>
+
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/geometry/Rotation2d.h>
 
@@ -30,7 +34,7 @@
 #include "SwerveModule.h"
 #include <frc2/command/SubsystemBase.h>
 #include "commands/DriveWithJoystick.h"
-#include "commands/Shooter.h"
+//#include "commands/Shooter.h"
 //#include <./commands/TrajectoryCommand.h>
 //#include <./commands/DriveToPosCommand.h>
 #include <frc/Timer.h>
@@ -46,21 +50,34 @@
 #include <frc2/command/PrintCommand.h>
 #include <frc2/command/Command.h>
 #include <unordered_map>
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/util/ReplanningConfig.h>
+
+#include <frc/drive/DifferentialDrive.h>
+
+// #include "COB.h"
+// #include "Vision.h"
+// #include "subsystems/Arm.h"
+// #include "LED.h"
+
+// #include <Robot.h>
+//#include <memory>
+
+using namespace frc;
 
 //using ctre::phoenix::motorcontrol::can::TalonFX;
 
 class DriveTrain : public frc2::SubsystemBase {
  public:
   DriveTrain();
-  hardware::TalonFX m_ShooterMotor1;
-	hardware::TalonFX m_ShooterMotor2;
+  //hardware::TalonFX m_ShooterMotor1;
+	//hardware::TalonFX m_ShooterMotor2;
   //hardware::TalonFX m_PivotShooter;
   //hardware::TalonFX m_DustpanAngle;
   //frc2::Trigger m_BigRed;
-  //frc::Servo m_DustpanLaunch {2};
   void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
   void DriveInit();
-  void BreakMode(bool on);
+  void BrakeMode(bool on);
   void Periodic() override;
 
   frc::Translation2d m_FrontLeftLocation;
@@ -71,24 +88,26 @@ class DriveTrain : public frc2::SubsystemBase {
   bool m_DriveToPoseFlag = false;
 
   inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
-  inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return &m_Odometry; }
+  inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return & m_Odometry; }
   inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
+  inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
 
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
-  // pathplanner::FollowPathWithEvents* TruePath();
-  // pathplanner::FollowPathWithEvents* TrueAuto(PathPlannerTrajectory traj);
+  Pose2d getPose();
+  void resetPose(Pose2d pose);
+  ChassisSpeeds getRobotRelativeSpeeds();
+  void DriveRobotRelative(ChassisSpeeds robotRelativeSpeeds);
+  void SetStates(wpi::array<frc::SwerveModuleState, 4> states);
 
   inline bool GetIsBalancing() { return m_IsBalancing; }
   inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
 
   frc2::FunctionalCommand AutoBalanceCommand();
-  void AutoBalanceFunction();
-
-  //TrajectoryCommand DriveToPos(frc::Pose2d target);
+  void AutoBalanceFunction(); 
 
 
-//how fast the robot should be able to drive
+  //how fast the robot should be able to drive
   const units::meters_per_second_t kMAX_VELOCITY_METERS_PER_SECOND = units::meters_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI);
 
   std::array<frc::SwerveModulePosition, 4> m_ModulePositions;
@@ -102,6 +121,11 @@ class DriveTrain : public frc2::SubsystemBase {
   //hardware::TalonFX m_ShooterMotor1;
   //hardware::TalonFX m_ShooterMotor2;
 
+  SwerveModulePosition m_FrontLeftOriginalPosition;
+  SwerveModulePosition m_FrontRightOriginalPosition;
+  SwerveModulePosition m_BackLeftOriginalPosition;
+  SwerveModulePosition m_BackRightOriginalPosition;
+
   //theoretical maximum angular velocity - can be replaced with measure amount
   const units::radians_per_second_t kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = units::radians_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI / std::sqrt(Pow((DRIVETRAIN_TRACKWIDTH_METERS / 2), 2) + Pow((DRIVETRAIN_WHEELBASE_METERS / 2), 2)));
 
@@ -109,26 +133,30 @@ class DriveTrain : public frc2::SubsystemBase {
 
   int m_SelectedGrid;
 
-  frc::Pose2d m_PoseMatrix[3][3] = {
-    {TLPOSE, TCPOSE, TRPOSE},
-    {MLPOSE, MCPOSE, MRPOSE},
-    {BLPOSE, BCPOSE, BRPOSE},
-  };
+  // frc::Pose2d m_PoseMatrix[3][3] = {
+  //   {TLPOSE, TCPOSE, TRPOSE},
+  //   {MLPOSE, MCPOSE, MRPOSE},
+  //   {BLPOSE, BCPOSE, BRPOSE},
+  // };
 
   frc::Pose2d m_TransformedPose;
   
   int m_VisionCounter;
   frc::Pose2d m_VisionRelative;
 
-    frc2::Trigger m_JoystickOuttake;
-
-
+  
   private:
 
-
-
+  //motors
+  hardware::TalonFX m_Climb;
+  
   frc::Timer m_Timer;
 
+  //triggers
+  frc2::Trigger m_ClimbUp;
+	frc2::Trigger m_ClimbDown;
+  frc2::Trigger m_VisionAim;
+  frc2::Trigger m_JoystickOuttake;
   frc2::Trigger m_TestJoystickButton;
   frc2::Trigger m_JoystickButtonTwo;
   frc2::Trigger m_DuaLMotorControlButton;
@@ -145,7 +173,7 @@ class DriveTrain : public frc2::SubsystemBase {
 
   std::array<frc::SwerveModuleState, 4> m_ModuleStates;
   
- frc::PIDController m_xController;
+  frc::PIDController m_xController;
   frc::PIDController m_yController;
   frc::ProfiledPIDController <units::radians> m_ThetaController;
   frc::HolonomicDriveController m_HolonomicController;

@@ -3,12 +3,12 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/geometry/Rotation2d.h>
+#include <Robot.h>
 
 
-class AutoLock : public frc2::CommandHelper<frc2::Command, AutoLock> {
+class YawLock : public frc2::CommandHelper<frc2::Command, YawLock> {
  public:
-  explicit AutoLock();
-  //~DriveWithJoystick();
+  explicit YawLock();
 
   void Initialize() override;
   void Execute() override;

@@ -2,12 +2,13 @@
 
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
+#include <frc/AnalogInput.h>
+#include "Constants.h"
 
-class DynamicIntake : public frc2::CommandHelper<frc2::Command, DynamicIntake> {
+
+class AutoTest : public frc2::CommandHelper<frc2::Command, AutoTest> {
 	public:
-		explicit DynamicIntake();
 		void Initialize() override;
 		void Execute() override;
   		void End(bool interrupted) override;
-		bool IsFinished() override;
 };

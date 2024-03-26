@@ -14,13 +14,12 @@ class SwerveModule {
 
         double GetSteerAngle();
 
+        double GetSteerSensorVoltage();
+
         frc::SwerveModulePosition GetPosition();
 
         void Set(double driveVoltage, double steerAngle);
-        void BreakMode(bool on);
-
-        // inline DriveController GetDriveController(){ return m_DriveController; }
-        // inline SteerController GetSteerController(){ return m_SteerController; }
+        void BrakeMode(bool on);
     
         DriveController m_DriveController;
         SteerController m_SteerController;

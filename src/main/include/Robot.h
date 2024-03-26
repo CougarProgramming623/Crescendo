@@ -24,10 +24,17 @@
 #include "COB.h"
 #include "Vision.h"
 #include "subsystems/Arm.h"
-#include "subsystems/MotionMagicTest.h"
 #include "LED.h"
+#include <commands/Flywheel.h>
+#include <commands/Shoot.h>
+#include <commands/Intake.h>
 #include <frc/geometry/Pose2d.h>
-#include "commands/Intake.h"
+//#include "./subsystems/Intake.h"
+
+#include <pathplanner/lib/auto/NamedCommands.h>
+#include <memory>
+
+#include <frc/Timer.h>
 
 
 class Robot : public frc::TimedRobot {
@@ -35,13 +42,13 @@ class Robot : public frc::TimedRobot {
   Robot();
   static inline Robot* GetRobot() { return s_Instance; }
   inline Arm& GetArm() { return m_Arm; }
+  inline PivotToPos& GetPivotPos() {return m_PivotToPos;}
   inline frc::GenericHID& GetButtonBoard() { return m_ButtonBoard; }
-  inline frc::GenericHID& GetButtonBoardTwo() { return m_ButtonBoardTwo; }
   inline frc::GenericHID& GetJoystick() { return m_Joystick; }
+  inline frc::GenericHID& GetButtonBoardTwo() { return m_ButtonBoardTwo; }
 
   void RobotInit() override;
   void AutoButtons();
-  frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
   void RobotPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
@@ -63,13 +70,19 @@ class Robot : public frc::TimedRobot {
   
   inline COB& GetCOB() { return m_COB; }
   inline Vision& GetVision() { return m_Vision; }
-  inline Shooter& GetShooter() { return m_Shooter; }
-  //inline Intake& GetIntake() { return m_Intake;}
+
+  frc2::CommandPtr getAutonomousCommand();
+  frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
+  void MotorInversionCheck();
+  // void MotorInversionCorrection(ctre::phoenix6::hardware::TalonFX motor, int ID, bool invert);
 
   //motor control requests - LOOK, VERY IMPORTANT
-  controls::VoltageOut m_VoltageOutRequest{0_V};
+  //controls::VoltageOut m_VoltageOutRequest{0_V};
+  controls::PositionDutyCycle m_PositionDutyCycle{units::angle::turn_t(0)};
   controls::DutyCycleOut m_DutyCycleOutRequest{0};
   controls::MotionMagicDutyCycle m_MotionMagicRequest{units::angle::turn_t(0)};
+
+  bool inversionPrint = true;
 
   double previousErrorX = 0;
   double previousErrorY = 0;
@@ -80,40 +93,16 @@ class Robot : public frc::TimedRobot {
   double previousValueY = 0;
   double previousValueT = 0;
 
-  frc2::Trigger m_TL;
-	frc2::Trigger m_TC;
-	frc2::Trigger m_TR;
-	frc2::Trigger m_ML;
-	frc2::Trigger m_MC;
-	frc2::Trigger m_MR;
-	frc2::Trigger m_BL;
-	frc2::Trigger m_BC;
-	frc2::Trigger m_BR;
-
-	frc2::Trigger m_LeftGrid;
-	frc2::Trigger m_CenterGrid;
-	frc2::Trigger m_RightGrid;
-
-  frc2::Trigger m_BigRed;
-  frc2::Trigger m_GroundPickup;
-
-  frc2::Trigger m_SingleSub;
-  frc2::Trigger m_SingleSubCube;
-  frc2::Trigger m_DoubleSub;
-
-  frc2::Trigger m_MidCone;
-  frc2::Trigger m_MidCube;
-  frc2::Trigger m_PlacingMode;
-
-  frc2::Trigger m_NavXReset;
-  frc2::Trigger m_AutoBalance;
+  //BUTTONBOARD
   frc2::Trigger m_VisionPoseReset;
-  frc2::Trigger m_ServoRun;
 
   frc2::Trigger m_Print;
+  frc2::Trigger m_Print2;
+  frc2::Trigger m_Print3;
+  frc2::Trigger m_Print4;
+
   int m_COBTicks;
   //double m_Set;
-
 
   int SelectedRow;
 	int SelectedColumn;
@@ -124,6 +113,10 @@ class Robot : public frc::TimedRobot {
   int m_ColOffset;
 
  private:
+  
+  bool flash;
+  
+  frc::Pose2d startingPose;
 
   frc2::ParallelCommandGroup* m_ArmCommand;
 
@@ -131,11 +124,13 @@ class Robot : public frc::TimedRobot {
 
   AHRS m_NavX;
 
+  frc::Joystick m_ButtonBoard = frc::Joystick(0);
   frc::Joystick m_Joystick = frc::Joystick(1);
+  frc::Joystick m_ButtonBoardTwo = frc::Joystick(2);
 
   // Have it null by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
-  frc2::Command* m_autonomousCommand = nullptr;
+  std::optional<frc2::CommandPtr> m_autonomousCommand;
 
 
   frc2::Trigger m_LEDYellow;
@@ -144,16 +139,17 @@ class Robot : public frc::TimedRobot {
 
   Arm m_Arm;
 
+  PivotToPos m_PivotToPos;
+
   frc::Timer m_AutoTimer;
   DriveTrain m_DriveTrain;//Drivetrain "Master" object to access all instances(objects) of the drivetrain class
-  Shooter m_Shooter;//Shooter "Master" object to access all instances(objects) of the shooter class
+  //Shooter m_Shooter;//Shooter "Master" object to access all instances(objects) of the shooter class
   //Intake m_Intake;//Intake "Master" object to access all instances(objects) of the intake class
 
   Vision m_Vision;
 
   COB m_COB;
-  frc::GenericHID m_ButtonBoard = frc::GenericHID(0);
-  frc::GenericHID m_ButtonBoardTwo = frc::GenericHID(2);
+  
 
   std::string m_AutoPath;
 

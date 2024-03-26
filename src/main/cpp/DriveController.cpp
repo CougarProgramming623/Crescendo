@@ -1,23 +1,25 @@
 #include "DriveController.h"
 #include "Constants.h"
-//using ctre::phoenix::motorcontrol::ControlMode;
-using ctre::phoenix::motorcontrol::NeutralMode;
+#include "Robot.h"
+// using ctre::phoenix::motorcontrol::ControlMode;
+// using ctre::phoenix::motorcontrol::NeutralMode;
+using namespace ctre::phoenix6;
 
 //Constructor
-DriveController::DriveController(int ID)
-:
+DriveController::DriveController(int ID) :
     motor(ID)
 {
-
-    motor.SetNeutralMode(NeutralMode::Brake);
-    //motor.SetInverted(SMTH)                           FIX idk why but some of them rotate clockwise and others counter clockwise
-    motor.SetInverted(true);
-    //motor.SetSensorPhase(true);                         //FIX also dont know why we do this one
+    motor.SetNeutralMode(signals::NeutralModeValue::Brake);
 }
 
 //Set drive voltage
-void  DriveController::SetReferenceVoltage(double voltage){
-    //motor.Set(ControlMode::PercentOutput, voltage / nominalVoltage);
+void DriveController::SetReferenceVoltage(double voltage){
+    // if(invert) {
+    //     motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(voltage / nominalVoltage * -1));
+    // } else {
+    motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(voltage / nominalVoltage));
+    // }
+    
 }   
 
 //Get module velocity in meters per second
@@ -25,10 +27,10 @@ double DriveController::GetStateVelocity(){
     return motor.GetVelocity().GetValueAsDouble() * DRIVE_ENCODER_VELOCITY_CONSTANT;
 }
 
-//Set break mode
-void DriveController::BreakMode(bool on){
+//set the drive motors to brake mode
+void DriveController::BrakeMode(bool on){
     if(on)
-        motor.SetNeutralMode(NeutralMode::Brake);
+        motor.SetNeutralMode(signals::NeutralModeValue::Brake);
     else    
-        motor.SetNeutralMode(NeutralMode::Coast);
+        motor.SetNeutralMode(signals::NeutralModeValue::Coast);
 }

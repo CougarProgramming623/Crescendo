@@ -21,10 +21,13 @@ class SteerController {
         
         hardware::TalonFX motor;
         controls::PositionDutyCycle motorControlMode{units::angle::turn_t(0)};
+        configs::FeedbackConfigs m_configs;
         
         frc::AnalogInput encoder;
+
+        bool invert = false;
         
-        double angleOffsetDegrees;
+        double angleOffsetVoltage;
         double referenceAngleRadians;
         double resetIteration;
 

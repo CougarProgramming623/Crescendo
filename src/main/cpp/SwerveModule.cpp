@@ -20,9 +20,13 @@ double SwerveModule::GetSteerAngle(){
     return m_SteerController.GetStateAngle();
 }
 
-//Set break mode of the drive motor
-void SwerveModule::BreakMode(bool on){
-    m_DriveController.BreakMode(on);
+double SwerveModule::GetSteerSensorVoltage(){
+    return m_SteerController.encoder.GetAverageVoltage();
+}
+
+//Set brake mode of the drive motor
+void SwerveModule::BrakeMode(bool on){
+    m_DriveController.BrakeMode(on);
 }
 
 //Get the pose of the module
@@ -31,13 +35,15 @@ frc::SwerveModulePosition SwerveModule::GetPosition(){
 }
 
 //Set the module to drive at a voltage at an angle in radians
-void SwerveModule::Set(double driveVoltage, double steerAngle){
+void SwerveModule::Set(double driveVoltage, double steerAngle) {
     steerAngle  = fmod(steerAngle, 2.0 * M_PI);
     if(steerAngle < 0.0){
         steerAngle += (2.0 * M_PI);
     }
 
+    // DebugOutF("steer angle of the robot in radians: " + std::to_string(GetSteerAngle()));
     double difference = steerAngle - GetSteerAngle();
+    // DebugOutF("steer difference between desired and current: " + std::to_string(difference));
 
     if(difference >= M_PI) {
         steerAngle -= (2.0 * M_PI);
@@ -57,6 +63,8 @@ void SwerveModule::Set(double driveVoltage, double steerAngle){
     if(steerAngle < 0.0) {
         steerAngle += (2.0 * M_PI);
     }
+
+    // DebugOutF("steer angle at point 2 in radians: " + std::to_string(steerAngle));
 
     m_SteerController.SetReferenceAngle(steerAngle);
     m_DriveController.SetReferenceVoltage(driveVoltage);

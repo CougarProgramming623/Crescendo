@@ -18,12 +18,13 @@ class DriveController {
 
         double GetStateVelocity();
 
-        void BreakMode(bool on);
+        void BrakeMode(bool on);
         hardware::TalonFX motor;
 
     private:
         double nominalVoltage = 12;  //FIX it is double.NaN in the java and i still dont know what that means
         double currentLimit;    //FIX it is double.NaN in the java and i still dont know what that means
+        bool invert = false;
 
 
 };  

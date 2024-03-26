@@ -5,14 +5,14 @@
 #pragma once
 #include <math.h>
 
-//#define ROBOT_WHEELBASE
 // #define ROBOT_WHEELBASE
-#define O12
+// #define O12
+#define ANATOLI
 
 #define DRIVE_REDUCTION ((14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0))
 #define STEER_REDUCTION ((14.0 /50.0) * (10.0 / 60.0))
 
-#define STEER_ENCODER_POSITION_CONSTANT (2.0 * M_PI / 2048 * STEER_REDUCTION)
+#define STEER_ENCODER_POSITION_CONSTANT (2.0 * M_PI) //STEER_REDUCTION
 #define STEER_ENCODER_VELOCITY_CONSTANT (STEER_ENCODER_POSITION_CONSTANT * 10.0)
 
 #define ENCODER_RESET_MAX_ANGULAR_VELOCITY (Deg2Rad(0.5))
@@ -71,25 +71,29 @@
      */
     #define DRIVETRAIN_WHEELBASE_METERS 0.61595
 
-    #define FRONT_LEFT_MODULE_DRIVE_MOTOR 54
-    #define FRONT_LEFT_MODULE_STEER_MOTOR 58
-    #define FRONT_LEFT_MODULE_STEER_OFFSET -204.9//-204.7//-183.2//-203.6 //-207.8//JJ-180 //-198.2 //-207.8
+    #define FRONT_LEFT_MODULE_DRIVE_MOTOR 41
+    #define FRONT_LEFT_MODULE_STEER_MOTOR 36
+    #define FRONT_LEFT_MODULE_STEER_OFFSET 4.27//
     #define FRONT_LEFT_MODULE_ENCODER_PORT 2
 
-    #define FRONT_RIGHT_MODULE_DRIVE_MOTOR 38
-    #define FRONT_RIGHT_MODULE_STEER_MOTOR 61
-    #define FRONT_RIGHT_MODULE_STEER_OFFSET -182.8//-181.2//-180.1//-181.9 //-178.47//JJ-179 //-180.97 //-178.47
+    #define FRONT_RIGHT_MODULE_DRIVE_MOTOR 42
+    #define FRONT_RIGHT_MODULE_STEER_MOTOR 34
+    #define FRONT_RIGHT_MODULE_STEER_OFFSET 3.67//
     #define FRONT_RIGHT_MODULE_ENCODER_PORT 1
 
-    #define BACK_LEFT_MODULE_DRIVE_MOTOR 32
-    #define BACK_LEFT_MODULE_STEER_MOTOR 35
-    #define BACK_LEFT_MODULE_STEER_OFFSET -208.4//-146.9//-238.0//-146.9//-200.9//-164.0 //-161.51//-178.25// -180.43
+    #define BACK_LEFT_MODULE_DRIVE_MOTOR 37
+    #define BACK_LEFT_MODULE_STEER_MOTOR 52
+    #define BACK_LEFT_MODULE_STEER_OFFSET 3.42//
     #define BACK_LEFT_MODULE_ENCODER_PORT 3
 
-    #define BACK_RIGHT_MODULE_DRIVE_MOTOR 51
-    #define BACK_RIGHT_MODULE_STEER_MOTOR 60
-    #define BACK_RIGHT_MODULE_STEER_OFFSET -293.4//-299.3//-176.5//-297.6 //-296.93//JJ-359//-294.17 //-296.93
+    #define BACK_RIGHT_MODULE_DRIVE_MOTOR 53
+    #define BACK_RIGHT_MODULE_STEER_MOTOR 59
+    #define BACK_RIGHT_MODULE_STEER_OFFSET 2.47//
     #define BACK_RIGHT_MODULE_ENCODER_PORT 0
+
+    #define MAX_VOLTAGE_WHEN_OFFSET 4.76
+
+    #define CLIMB_MOTOR 31
 
 
     // #define LIMELIGHT_HEIGHT    -1   //cm
@@ -97,13 +101,81 @@
     // //#define TARGET_HEIGHT_SHORT 31.4   // Grid //cm
     // #define LIMELIGHT_ANGLE  -1     // degrees
 
+#endif
+
+
+#ifdef ANATOLI
+    /**
+     * The front-to-back distance between the drivetrain wheels.
+     * Should be measured from center to center.
+     */
+    #define DRIVETRAIN_WHEELBASE_METERS 0.61595
+    #define DRIVETRAIN_TRACKWIDTH_METERS 0.61595
+
+    #define FRONT_LEFT_MODULE_DRIVE_MOTOR 41
+    #define FRONT_LEFT_MODULE_STEER_MOTOR 36
+    #define FRONT_LEFT_MODULE_STEER_OFFSET 4.16//4.209//4.27
+    #define FRONT_LEFT_MODULE_ENCODER_PORT 2
+
+    #define FRONT_RIGHT_MODULE_DRIVE_MOTOR 42
+    #define FRONT_RIGHT_MODULE_STEER_MOTOR 34
+    #define FRONT_RIGHT_MODULE_STEER_OFFSET 3.70//3.66//3.67
+    #define FRONT_RIGHT_MODULE_ENCODER_PORT 1
+
+    #define BACK_LEFT_MODULE_DRIVE_MOTOR 37
+    #define BACK_LEFT_MODULE_STEER_MOTOR 52
+    #define BACK_LEFT_MODULE_STEER_OFFSET 3.41//3.42//1.47//3.42
+    #define BACK_LEFT_MODULE_ENCODER_PORT 3
+
+    #define BACK_RIGHT_MODULE_DRIVE_MOTOR 53
+    #define BACK_RIGHT_MODULE_STEER_MOTOR 59
+    #define BACK_RIGHT_MODULE_STEER_OFFSET 2.43//2.468//2.47
+    #define BACK_RIGHT_MODULE_ENCODER_PORT 0
+
+    #define MAX_VOLTAGE_WHEN_OFFSET 4.76
+
+    #define CLIMB_MOTOR 31
+
+#endif
+
+#ifdef ANATOLI
+    /**
+     * The front-to-back distance between the drivetrain wheels.
+     * Should be measured from center to center.
+     */
+    #define DRIVETRAIN_WHEELBASE_METERS 0.61595
+    #define DRIVETRAIN_TRACKWIDTH_METERS 0.61595
+
+    #define FRONT_LEFT_MODULE_DRIVE_MOTOR 41
+    #define FRONT_LEFT_MODULE_STEER_MOTOR 36
+    #define FRONT_LEFT_MODULE_STEER_OFFSET 4.209//4.27
+    #define FRONT_LEFT_MODULE_ENCODER_PORT 2
+
+    #define FRONT_RIGHT_MODULE_DRIVE_MOTOR 42
+    #define FRONT_RIGHT_MODULE_STEER_MOTOR 34
+    #define FRONT_RIGHT_MODULE_STEER_OFFSET 3.66//3.67
+    #define FRONT_RIGHT_MODULE_ENCODER_PORT 1
+
+    #define BACK_LEFT_MODULE_DRIVE_MOTOR 37
+    #define BACK_LEFT_MODULE_STEER_MOTOR 52
+    #define BACK_LEFT_MODULE_STEER_OFFSET 3.42//1.47//3.42
+    #define BACK_LEFT_MODULE_ENCODER_PORT 3
+
+    #define BACK_RIGHT_MODULE_DRIVE_MOTOR 53
+    #define BACK_RIGHT_MODULE_STEER_MOTOR 59
+    #define BACK_RIGHT_MODULE_STEER_OFFSET 2.468//2.47
+    #define BACK_RIGHT_MODULE_ENCODER_PORT 0
+
+    #define MAX_VOLTAGE_WHEN_OFFSET 4.76
+
+    #define CLIMB_MOTOR 31
 
 #endif
 
 #define TARGET_HEIGHT_TALL  69    // Loading Zone //cm
 #define TARGET_HEIGHT_SHORT 31.59125 //cm on the cone roughly 12.5 in
 
-#define DRIVE_ENCODER_POSITION_CONSTANT (M_PI * WHEEL_DIAMETER * DRIVE_REDUCTION / 2048)
+#define DRIVE_ENCODER_POSITION_CONSTANT (M_PI * WHEEL_DIAMETER) //DRIVE_REDUCTION
 #define DRIVE_ENCODER_VELOCITY_CONSTANT (DRIVE_ENCODER_POSITION_CONSTANT * 10)
 
 #define ENCODER_VOLTAGE_TO_DEGREE (360/4.809)
@@ -139,14 +211,16 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #ifdef ARM_SUBSYSTEM
 
 //motor and sensor IDs
-#define WRIST_MOTOR 39
-#define PIVOT_MOTOR 30
+#define PIVOT_MOTOR 39
+#define SHOOTER1_MOTOR 30
+#define SHOOTER2_MOTOR 33
+#define FEEDER_MOTOR 22
 
-#define TOP_INTAKE_MOTOR -1 //check
-#define BOTTOM_INTAKE_MOTOR 15
-#define STRINGPOT_ANALOG_INPUT_ID 4
-#define STRINGPOT 4 
-#define PIVOT_CAN_ID 0
+//#define TOP_INTAKE_MOTOR -1 //check
+//#define BOTTOM_INTAKE_MOTOR 15
+// #define STRINGPOT_ANALOG_INPUT_ID 4
+#define STRINGPOT_ANALOG_INPUT_ID 0
+//#define PIVOT_CAN_ID 0
 
 //setpoints
 #define PIVOT_CAN_DIFFERENCE_BETWEEN_STARTING_AND_LEVEL -1 //check
@@ -164,13 +238,39 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define CANCODER_MAX 237.6
 #define CANCODER_ZERO 126.3
 
-#define WRIST_TOTAL_TICKS 265679.39932
-#define WRIST_TOTAL_DEGREES (WRIST_TOTAL_TICKS/WRIST_GEAR_RATIO/2048)*360
-#define STRINGPOT_TOTAL_RANGE 512.0
-#define STRINGPOT_TOP 978 //1125.0
-#define STRINGPOT_BOTTOM 1490 //1637.0
-#define STRINGPOT_ZERO 1210 //1349.0
-#define WRIST_DEGREES_PER_STRINGPOT_UNITS (WRIST_TOTAL_DEGREES/STRINGPOT_TOTAL_RANGE)
+
+
+// #define WRIST_TOTAL_TICKS 265679.39932
+// #define WRIST_TOTAL_DEGREES (WRIST_TOTAL_TICKS/WRIST_GEAR_RATIO/2048)*360
+
+#define PIVOT_GEAR_RATIO 50
+#define PIVOT_HIGH -1.28
+#define PIVOT_TOTAL_ROTATIONS 3.06
+#define PIVOT_LOW 1.78
+//#define PIVOT_TOTAL_DEGREES ((PIVOT_TOTAL_ROTATIONS/PIVOT_GEAR_RATIO * 360) + STRINGPOT_ZERO_DEGREES)
+
+//#define STRINGPOT_ZERO -1
+#define STRINGPOT_LOW 348
+#define STRINGPOT_TOP 704
+#define STRINGPOT_TOTAL_RANGE 356
+//#define STRINGPOT_ZERO_DEGREES -1
+
+#define PIVOT_ROTATIONS_PER_STRINGPOT_UNITS (PIVOT_TOTAL_ROTATIONS/STRINGPOT_TOTAL_RANGE)
+
+#define ARM_LENGTH 30.75
+
+#define DIFF_BASE_PIVOT_STRINGPOT 10
+
+#define CLOSEUPSHOOTSTRINGPOT 555
+#define PICKUPSTRINGPOT 420
+#define PROTECTEDBLOCKSHOOT 356
+
+
+// #define STRINGPOT_TOTAL_RANGE 512.0
+// #define STRINGPOT_TOP 978 //1125.0
+//#define STRINGPOT_BOTTOM 1490 //1637.0
+// #define STRINGPOT_ZERO 1210 //1349.0
+//#define WRIST_DEGREES_PER_STRINGPOT_UNITS (WRIST_TOTAL_DEGREES/STRINGPOT_TOTAL_RANGE)
 
 #define PIVOT_DFLT_VEL 8000 //8400 working value
 #define PIVOT_DFLT_ACC 10000 //8000 working value
@@ -181,59 +281,61 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 
 //button IDs
 //BUTTONBOARD 0
-#define CONE_MODE 15 //left
-#define CUBE_MODE 16 //right
-#define SHOOTER_MOTOR_1 33
-#define SHOOTER_MOTOR_2 30
-#define SERVO_RUN 15
-#define DUSTPAN_ANGLE -1
-#define SHOOTER_PIVOT -1
-
-#define PIVOT_CONTROL 1 
-#define WRIST_CONTROL 0 
-
-#define INTAKE_BUTTON 20
-#define OUTTAKE_BUTTON 21
-
-#define SHOOTER_MOVE 22
-
-#define ARM_OVERRIDE 4 
-#define ARM_OVERRIDE_2 2
-
-#define BIG_RED 22
+#define DUSTPANUP_LIMIT 0 //x axis
+#define SHOOTER_SPEED 1 //y axis
+#define FLYWHEEL_SWITCH 1
+#define INTAKE_SWITCH 2
+#define AIM_BUTTON 3
+#define SHOOT_BUTTON 4
+#define SERVO_SHOOT 5
+#define SHOOTER_LOCK_POWER 6
+#define CLOSE_SHOOT_BUTTON 7
+#define PROTECTED_BLOCK_SHOOT 8
+#define PICKUP_BUTTON 12
+#define ARM_OVERRIDE 16
+#define SHOOTER_DOWN 17
+#define SHOOTER_UP 18
+#define CLIMB_UP 19
+#define CLIMB_DOWN 20
+#define DUSTPAN_UP 21
+#define DUSTPAN_DOWN 22
 
 //BUTTONBOARD 2
-#define GRID_TL 13
-#define GRID_TC 7 
-#define GRID_TR 12
-#define GRID_ML 3 
-#define GRID_MC 8 
-#define GRID_MR 10
-#define GRID_BL 4
-#define GRID_BC 9
-#define GRID_BR 14
+// #define GRID_TL 2
+// #define GRID_TC 7 
+// #define GRID_TR 12
+// #define GRID_ML 3 
+// #define GRID_MC 8 
+// #define GRID_MR 10
+// #define GRID_BL 4
+// #define GRID_BC 9
+// #define GRID_BR 14
 
-#define GROUND_PICKUP_MODE 5 //red
-#define TRANSIT_MODE 13 //green
-#define PLACING_MODE 15 //yellow
+// #define GROUND_PICKUP_MODE 5 //red
+// #define TRANSIT_MODE 13 //green
+// #define PLACING_MODE 15 //yellow
 
-#define LEFT_GRID 1 
-#define CENTER_GRID 6 
-#define RIGHT_GRID 11
+// #define LEFT_GRID 1 
+// #define CENTER_GRID 6 
+// #define RIGHT_GRID 11
 
-#define LED_YELLOW 19
-#define LED_PURPLE 18
+// #define LED_YELLOW 19
+// #define LED_PURPLE 18
+
+#define LIMELIGHT_HEIGHT 0.238125  //m from the bottom
+#define LIMELIGHT_YTHETA 60 //off the horizontal
+#define LIMELIGHT_DISPLACEMENT 0.1524 // m from the front
 
 #endif
 
-#define TLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(0)))
-#define TCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(0)))
-#define TRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(0)))
+// #define TLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(0)))
+// #define TCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(0)))
+// #define TRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(0)))
 
-#define MLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
-#define MCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.072), frc::Rotation2d(units::degree_t(180)))
-#define MRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))
+// #define MLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
+// #define MCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.072), frc::Rotation2d(units::degree_t(180)))
+// #define MRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))
 
-#define BLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
-#define BCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(180)))
-#define BRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))
+// #define BLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
+// #define BCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(180)))
+// #define BRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))
