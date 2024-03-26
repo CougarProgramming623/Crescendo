@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Flywheel",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "race",
         "data": {
