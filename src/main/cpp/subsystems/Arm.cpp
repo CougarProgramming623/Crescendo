@@ -36,6 +36,7 @@ Arm::Arm():
 	m_CloseShootPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLOSE_SHOOT_BUTTON);}),
 	m_PickupPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PICKUP_BUTTON);}),
 	m_ProtectedBlockPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PROTECTED_BLOCK_SHOOT);}),
+	m_ChangeDifferential([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(TEST_BIG_YELLOW_BUTTON);}),
 	m_Timer()
 {
 	// m_Pivot.SetPosition(units::angle::turn_t(0));
@@ -49,8 +50,13 @@ void Arm::ArmInit() {
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
 	m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
-		DebugOutF("getting the dial value");
-		m_FlywheelPower = Robot::GetRobot()->GetButtonBoard().GetRawAxis(6);
+		m_FlywheelPower = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(0) + 1)/2;
+		DebugOutF("getting the dial value, power: " + std::to_string(m_FlywheelPower));
+	}));
+
+	m_ChangeDifferential.OnTrue(new frc2::InstantCommand([&] {
+		m_Differential = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(1) + 1)/4;
+		DebugOutF("getting the dial value, differential: " + std::to_string(m_Differential));
 	}));
 
 	m_ShooterUp.WhileTrue(new frc2::InstantCommand([&] {
@@ -92,7 +98,7 @@ void Arm::ArmInit() {
 
 	m_RunFlywheel.OnTrue(new frc2::InstantCommand([&] {
 		m_ShooterMotor1.Set(m_FlywheelPower);
-		m_ShooterMotor2.Set(m_FlywheelPower - 0.1);
+		m_ShooterMotor2.Set(m_FlywheelPower - m_Differential);
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_ShooterMotor1.Set(0);
 		m_ShooterMotor2.Set(0);
@@ -130,11 +136,11 @@ void Arm::ArmInit() {
 		m_Pivot.Set(0);
 	}));
 
-	m_ProtectedBlockPivot.OnTrue(PivotToPos(PICKUPSTRINGPOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
+	m_PickupPivot.OnTrue(PivotToPos(PICKUPSTRINGPOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
 
-	m_PickupPivot.OnTrue(PivotToPos(PROTECTEDBLOCKSHOOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
+	m_ProtectedBlockPivot.OnTrue(PivotToPos(PROTECTEDBLOCKSHOOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
 

@@ -75,6 +75,7 @@ class Arm : public frc2::SubsystemBase {
 	frc2::Trigger m_PlacingMode;
 
 	double m_FlywheelPower = 1;
+	double m_Differential = 0.05;
 
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
@@ -95,6 +96,7 @@ class Arm : public frc2::SubsystemBase {
 	frc2::Trigger m_PickupPivot;
 	frc2::Trigger m_ProtectedBlockPivot;
 	frc2::Trigger m_CloseShootPivot;
+	frc2::Trigger m_ChangeDifferential;
 	
 	//motors
 	hardware::TalonFX m_Pivot;

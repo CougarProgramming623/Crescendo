@@ -182,8 +182,8 @@ void DriveTrain::Periodic(){
 
 }
 //Converts chassis speed object and updates module states
-void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds){
-  m_ChassisSpeeds = chassisSpeeds;
+void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds) {
+  m_ChassisSpeeds = frc::ChassisSpeeds::Discretize(chassisSpeeds, 0.02_s);
   auto [fl, fr, bl, br] = m_Kinematics.ToSwerveModuleStates(m_ChassisSpeeds);
   m_ModuleStates = {fl, fr, bl, br};
 }
@@ -206,9 +206,9 @@ ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
 }
 
 void DriveTrain::DriveRobotRelative(frc::ChassisSpeeds robotRelativeSpeeds) {
-  frc::ChassisSpeeds speeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 1_s);
+  frc::ChassisSpeeds speeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 0.02_s);
 
-  auto swerveModuleStates = m_Kinematics.ToSwerveModuleStates(-speeds);
+  auto swerveModuleStates = m_Kinematics.ToSwerveModuleStates(speeds);
   SetStates(swerveModuleStates);
 }
 
