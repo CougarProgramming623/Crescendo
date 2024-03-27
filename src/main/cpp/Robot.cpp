@@ -83,7 +83,21 @@ void Robot::AutoButtons() {
   m_Print4 = frc2::Trigger(BUTTON_L(13));
 
   m_Print.WhileTrue(new frc2::InstantCommand([&] {
-    DebugOutF("Stringpot Value: " + std::to_string(Robot::GetRobot()->GetPivotPos().stringpot));
+    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+
+    
+    Vision vision = Robot::GetRobot()->GetVision();
+    if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+      int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
+      double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
+      double height = vision.GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
+      double distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
+      // DebugOutF("ty: " + std::to_string(vision.GetLimeLight()->GetNumber("ty", 0.0)));
+      // DebugOutF("theta: " + std::to_string(theta));
+      // DebugOutF("height: " + std::to_string(height));
+      DebugOutF("distance: " + std::to_string(distance));
+    }
+    DebugOutF("shooter speed: " + std::to_string(GetArm().m_FlywheelPower));
   }));
 
   m_Print2.OnTrue(new frc2::InstantCommand([&] {
@@ -91,15 +105,6 @@ void Robot::AutoButtons() {
     Vision vision = Robot::GetRobot()->GetVision();
     if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
-      // vision.setPriority(id);
-      // id = vision.GetLimeLight()->GetNumber("priorityid", 0.0);
-      //vision.CalcPose();
-      //double x = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(0);
-      //double y = vision.GetLimeLight()->GetNumberArray("targetpose_robotspace", std::span<double>()).at(1);
-      //double distance = sqrt(pow(x, 2) + pow(y, 2));
-      //DebugOutF("x" + std::to_string(x));
-      //DebugOutF("y" + std::to_string(y));
-      //DebugOutF("distance from april tag: " + std::to_string(distance * 39.37));
       double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
       double height = vision.GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
       double distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
@@ -194,10 +199,7 @@ void Robot::RobotPeriodic() {
   // m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
   m_AutoPath = "New New Path";
 
-  Robot::GetRobot()->GetButtonBoard().SetOutputs(0xFFFFFFFF);
-  if(Robot::GetRobot()->GetButtonBoard().GetRawButton(16)) {
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetAverageValue()));
-  }
+  Robot::GetRobot()->GetButtonBoard().SetOutputs(0);
   // if(GetVision().GetLimeLight()->GetNumber("tv", 0.0) == 1 && flash) {
   //   Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0xFFFFFFFF); 
   //   flash = false;

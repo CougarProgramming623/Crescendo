@@ -14,12 +14,7 @@ DriveController::DriveController(int ID) :
 
 //Set drive voltage
 void DriveController::SetReferenceVoltage(double voltage){
-    // if(invert) {
-    //     motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(voltage / nominalVoltage * -1));
-    // } else {
-    motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(voltage / nominalVoltage));
-    // }
-    
+    motor.SetControl(Robot::GetRobot()->m_VoltageOutRequest.WithOutput(units::volt_t(voltage)));
 }   
 
 //Get module velocity in meters per second
