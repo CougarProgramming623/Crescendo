@@ -23,7 +23,7 @@ void PivotToPos::Execute() {
 	DebugOutF("Going into execute");
 	stringpot = ARM.GetStringPot().GetAverageValue();
 	int difference = stringpot - targetValue;
-	double kp = 0.02;
+	double kp = 0.1;
 	double targetSpeed = kp * difference;
 	ARM.GetPivotMotor().Set(targetSpeed);
 	// if(targetValue != stringpot) {

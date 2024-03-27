@@ -84,8 +84,6 @@ void Robot::AutoButtons() {
 
   m_Print.WhileTrue(new frc2::InstantCommand([&] {
     DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
-
-    
     Vision vision = Robot::GetRobot()->GetVision();
     if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);

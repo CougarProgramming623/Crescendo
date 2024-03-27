@@ -8,6 +8,7 @@
 #include <frc2/command/WaitCommand.h>
 #include "commands/Flywheel.h"
 #include "commands/Intake.h"
+#include "commands/ConstantPivot.h"
 #include "Constants.h"
 #include "commands/AutoTest.h"
 
@@ -48,6 +49,8 @@ void Arm::ArmInit() {
 
 	m_Pivot.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
+	m_Aim.ToggleOnTrue(ConstantPivot().ToPtr());
 
 	m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
 		m_FlywheelPower = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(0) + 1)/2;
@@ -143,67 +146,31 @@ void Arm::ArmInit() {
 	m_ProtectedBlockPivot.OnTrue(PivotToPos(PROTECTEDBLOCKSHOOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
-
-	// m_ProtectedBlockPivot.OnTrue(new frc2::InstantCommand([&] {
-	// 	DebugOutF("current value: " + std::to_string(GetStringPot().GetValue()));
-	// 	MoveToStringPotValue(idk); //NEEDS TO BE LOOKED AT
-	// })).OnFalse(new frc2::InstantCommand([&] {
-	// 	m_Pivot.Set(0);
-	// }));
-
 }
-	int Arm::ConvertDistanceToValue() {
-		Vision vision = Robot::GetRobot()->GetVision();
-		if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
-			int d = vision.DistanceFromAprilTag(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tid", 0.0));
-			int val = int(1 * pow(d,4) + 1 * pow(d,3) + 1 * pow(d,2) + 1 * d + 3);
-			return val;
-		}
-	}
-	void Arm::MoveToStringPotValue(int target){
-		while(abs(target - GetStringPot().GetValue()) > 5) {
-			// DebugOutF(std::to_string(StringPotUnitsToRotations(GetStringPot().GetValue())));
-			// DebugOutF("stringpot value: " + std::to_string(GetStringPot().GetValue()));
-			if((target > GetStringPot().GetValue() - 5) || (target > GetStringPot().GetValue() + 5)){
-				m_Pivot.Set(-1);
-			}
-			else if((target < GetStringPot().GetValue() - 5) || (target > GetStringPot().GetValue() + 5)){
-				m_Pivot.Set(1);
-			}
-			if(abs(target - GetStringPot().GetValue()) < 5){
-				break;
-			}
-			if(abs(target - GetStringPot().GetValue()) < 20 && abs(target - GetStringPot().GetValue()) > 0 ){
-				m_Pivot.Set(0.3);
-			}
-		}
-	}
 
 // while override is active, gives manual joysticks control over the two arm motors
-frc2::FunctionalCommand* Arm::ManualControls()
-{
-	
-	return new frc2::FunctionalCommand([&] { // onInit
-	}, [&] { // onExecute
-		DebugOutF("inside of manual controls");
-		if(m_ShooterUp.Get()) {
-			
-		} else {
-			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-		}
+// frc2::FunctionalCommand* Arm::ManualControls() {
+// 	return new frc2::FunctionalCommand([&] { // onInit
+// 	}, [&] { // onExecute
+// 		DebugOutF("inside of manual controls");
+// 		if(m_ShooterUp.Get()) {
 
-		if(m_ShooterDown.Get()) {
-			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
-		} else {
-			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-		}
-	},[&](bool e) { // onEnd
-		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-	},
-	[&] { // isFinished
-		return m_ArmOverride.Get();
-	});
-}
+// 		} else {
+// 			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+// 		}
+
+// 		if(m_ShooterDown.Get()) {
+// 			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.3));
+// 		} else {
+// 			m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+// 		}
+// 	},[&](bool e) { // onEnd
+// 		m_Pivot.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
+// 	},
+// 	[&] { // isFinished
+// 		return m_ArmOverride.Get();
+// 	});
+// }
 
 // void Arm::SetMotionMagicValues(double pivotVel, double pivotAcc, double wristVel, double wristAcc) {
 // 	//LOOK

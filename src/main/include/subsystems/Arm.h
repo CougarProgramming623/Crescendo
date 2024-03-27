@@ -43,8 +43,8 @@ class Arm : public frc2::SubsystemBase {
 	Arm();
 	void ArmInit();
 	void SetButtons();
-	void MoveToStringPotValue(int target);
-	int ConvertDistanceToValue();
+	// void MoveToStringPotValue(int target);
+	//int ConvertDistanceToValue();
 
 	frc::Servo m_DustpanLaunch {0};
 
@@ -56,7 +56,10 @@ class Arm : public frc2::SubsystemBase {
 	//inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
 	//inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
 	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
+
 	//Need to get the ratio of units to length ASAP
+	inline int DistanceToStringPotUnits(double distance) {return (18.401653 * pow(distance, 4) - 159.464456 * pow(distance, 3) + 523.435012 * pow(distance, 2) - 836.451891 * distance + 964.332081);}
+	inline double StringPotUnitsToPower(double units) {return (0.000012 * pow(units, 3) - 0.007719 * pow(units, 2) + 2.280973 * units - 249.831869);}
 	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
 	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((val - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
 	

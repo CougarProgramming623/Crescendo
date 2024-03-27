@@ -91,6 +91,8 @@ class DriveTrain : public frc2::SubsystemBase {
   inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return & m_Odometry; }
   inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
   inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
+  inline frc2::Trigger& GetStrafeLeft() {return m_StrafeLeft; }
+  inline frc2::Trigger& GetStrafeRight() {return m_StrafeRight; }
 
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
@@ -133,6 +135,8 @@ class DriveTrain : public frc2::SubsystemBase {
 
   int m_SelectedGrid;
 
+  int driveState;
+
   // frc::Pose2d m_PoseMatrix[3][3] = {
   //   {TLPOSE, TCPOSE, TRPOSE},
   //   {MLPOSE, MCPOSE, MRPOSE},
@@ -156,12 +160,12 @@ class DriveTrain : public frc2::SubsystemBase {
   frc2::Trigger m_ClimbUp;
 	frc2::Trigger m_ClimbDown;
   frc2::Trigger m_VisionAim;
-  frc2::Trigger m_JoystickOuttake;
+  frc2::Trigger m_StrafeLeft;
+  frc2::Trigger m_StrafeRight;
   frc2::Trigger m_TestJoystickButton;
   frc2::Trigger m_JoystickButtonTwo;
   frc2::Trigger m_DuaLMotorControlButton;
   frc2::Trigger m_NavXResetButton;
-  frc2::Trigger m_ExtraJoystickButton;
 
   bool m_IsBalancing;
 
