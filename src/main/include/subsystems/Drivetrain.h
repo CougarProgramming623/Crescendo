@@ -94,17 +94,20 @@ class DriveTrain : public frc2::SubsystemBase {
 
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
+  wpi::array<frc::SwerveModuleState, 4> getStates();
   Pose2d getPose();
   void resetPose(Pose2d pose);
   ChassisSpeeds getRobotRelativeSpeeds();
   void DriveRobotRelative(ChassisSpeeds robotRelativeSpeeds);
   void SetStates(wpi::array<frc::SwerveModuleState, 4> states);
 
+  // wpi::array<frc::SwerveModuleState, 4> getStates();
+
   inline bool GetIsBalancing() { return m_IsBalancing; }
   inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
 
   frc2::FunctionalCommand AutoBalanceCommand();
-  void AutoBalanceFunction(); 
+  void AutoBalanceFunction();
 
 
   //how fast the robot should be able to drive
@@ -121,10 +124,10 @@ class DriveTrain : public frc2::SubsystemBase {
   //hardware::TalonFX m_ShooterMotor1;
   //hardware::TalonFX m_ShooterMotor2;
 
-  SwerveModulePosition m_FrontLeftOriginalPosition;
-  SwerveModulePosition m_FrontRightOriginalPosition;
-  SwerveModulePosition m_BackLeftOriginalPosition;
-  SwerveModulePosition m_BackRightOriginalPosition;
+  SwerveModuleState m_FrontLeftState;
+  SwerveModuleState m_FrontRightState;
+  SwerveModuleState m_BackLeftState;
+  SwerveModuleState m_BackRightState;
 
   //theoretical maximum angular velocity - can be replaced with measure amount
   const units::radians_per_second_t kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = units::radians_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI / std::sqrt(Pow((DRIVETRAIN_TRACKWIDTH_METERS / 2), 2) + Pow((DRIVETRAIN_WHEELBASE_METERS / 2), 2)));

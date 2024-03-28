@@ -57,10 +57,10 @@ DriveTrain::DriveTrain()
         [this]() { return this->getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](frc::ChassisSpeeds robotRelativeSpeeds){ this->DriveRobotRelative(robotRelativeSpeeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            PIDConstants(0.5, 0.0, 0.0), // Translation PID constants
+            PIDConstants(1.5, 0.0, 0.0), // Translation PID constants
             PIDConstants(0.0, 0.0, 0.0), // Rotation PID constants
             // kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
-            units::meters_per_second_t(0.3),
+            units::meters_per_second_t(4.0),
             0.5298_m, // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
@@ -196,13 +196,18 @@ void DriveTrain::resetPose(Pose2d pose) {
   m_Odometry.ResetPosition(Rotation2d(units::degree_t(Robot::GetRobot()->GetNavX().GetYaw())), m_ModulePositions, pose);
 }
 
+// wpi::array<frc::SwerveModuleState, 4> DriveTrain::getStates() {
+//   return ;
+// }
+
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
   Robot* r = Robot::GetRobot();
-  return ChassisSpeeds::FromRobotRelativeSpeeds(
-      units::meters_per_second_t(r->GetNavX().GetVelocityY()), //x
-      units::meters_per_second_t(r->GetNavX().GetVelocityX()), //y
-      units::radians_per_second_t(r->GetNavX().GetVelocityZ()), //rotation
-      frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)))));
+  // return ChassisSpeeds::FromRobotRelativeSpeeds(
+  //     units::meters_per_second_t(r->GetNavX().GetVelocityY()), //x
+  //     units::meters_per_second_t(r->GetNavX().GetVelocityX()), //y
+  //     units::radians_per_second_t(r->GetNavX().GetVelocityZ()), //rotation
+  //     frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360)))));
+  return m_Kinematics.ToChassisSpeeds(m_ModuleStates);
 }
 
 void DriveTrain::DriveRobotRelative(frc::ChassisSpeeds robotRelativeSpeeds) {
