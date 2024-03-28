@@ -8,7 +8,10 @@
 SwerveModule::SwerveModule(int driveID, int steerID, int encoderPort, double angleOffset):
     m_DriveController(driveID), 
     m_SteerController(steerID, encoderPort, angleOffset)
-{}
+{
+    dID = driveID;
+    sID = steerID;
+}
 
 //Get the velocity of the module in meters per second
 double SwerveModule::GetDriveVelocity(){
@@ -30,8 +33,17 @@ void SwerveModule::BrakeMode(bool on){
 }
 
 //Get the pose of the module
-frc::SwerveModulePosition SwerveModule::GetPosition(){
+frc::SwerveModulePosition SwerveModule::GetPosition() {
     return {units::meter_t(m_DriveController.motor.GetPosition().GetValueAsDouble() * DRIVE_ENCODER_POSITION_CONSTANT), frc::Rotation2d(units::radian_t(-GetSteerAngle()))};
+    // units::meter_t distance = units::meter_t(m_DriveController.motor.GetPosition().GetValueAsDouble() * DRIVE_ENCODER_POSITION_CONSTANT);
+    // units::radian_t rot = units::radian_t(-GetSteerAngle());
+    // if(dID == FRONT_LEFT_MODULE_DRIVE_MOTOR || dID == BACK_RIGHT_MODULE_DRIVE_MOTOR) {
+    //     distance *= -1;
+    // }
+    // else if(sID == FRONT_RIGHT_MODULE_DRIVE_MOTOR || sID == BACK_LEFT_MODULE_DRIVE_MOTOR) {
+    //     rot *= -1;
+    // }
+    // return {distance, frc::Rotation2d(rot)};
 }
 
 //Set the module to drive at a voltage at an angle in radians

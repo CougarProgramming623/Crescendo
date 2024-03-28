@@ -68,7 +68,6 @@ DriveTrain::DriveTrain()
             // Boolean supplier that controls when the path will be mirrored for the red alliance
             // This will flip the path being followed to the red side of the field.
             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
             auto alliance = DriverStation::GetAlliance();
             if (alliance) {
                 return alliance.value() == DriverStation::Alliance::kBlue;
@@ -154,8 +153,9 @@ void DriveTrain::Periodic(){
 
   m_ModulePositions = wpi::array<frc::SwerveModulePosition, 4>(m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition());
 
-  m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetEstimatedPosition());
+  // m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetEstimatedPosition());
 
+  // m_Odometry.Update(m_Rotation, m_ModulePositions);
   m_Odometry.Update(m_Rotation, m_ModulePositions);
 
   // DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));

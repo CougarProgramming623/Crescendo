@@ -20,6 +20,9 @@ class SwerveModule {
 
         void Set(double driveVoltage, double steerAngle);
         void BrakeMode(bool on);
+
+        int dID;
+        int sID;
     
         DriveController m_DriveController;
         SteerController m_SteerController;

@@ -110,7 +110,7 @@
      * Should be measured from center to center.
      */
     #define DRIVETRAIN_WHEELBASE_METERS 0.61595
-    #define DRIVETRAIN_TRACKWIDTH_METERS 0.61595
+    #define DRIVETRAIN_TRACKWIDTH_METERS 0.61806
 
     #define FRONT_LEFT_MODULE_DRIVE_MOTOR 41
     #define FRONT_LEFT_MODULE_STEER_MOTOR 36

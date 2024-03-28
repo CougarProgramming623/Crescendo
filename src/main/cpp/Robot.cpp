@@ -84,8 +84,6 @@ void Robot::AutoButtons() {
 
   m_Print.WhileTrue(new frc2::InstantCommand([&] {
     DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
-
-    
     Vision vision = Robot::GetRobot()->GetVision();
     if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
@@ -165,7 +163,7 @@ frc2::CommandPtr Robot::getAutonomousCommand() {
   // DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   // return PathPlannerAuto("StraightX Auto 2").ToPtr();
   // return AutoBuilder::followPathWithEvents(path);
-  startingPose = path.get()->getStartingDifferentialPose();
+  startingPose = path.get()->getPreviewStartingHolonomicPose();
   return AutoBuilder::followPath(path);
 }
 
@@ -182,9 +180,9 @@ void Robot::RobotPeriodic() {
   Robot::GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());
   Robot::GetCOB().GetTable().GetEntry("/COB/matchTime").SetDouble(frc::DriverStation::GetMatchTime().value());
   Robot::GetCOB().GetTable().GetEntry("/COB/ticks").SetDouble(m_COBTicks);
-  Robot::GetCOB().GetTable().GetEntry("/COB/deltaX").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.X().value()));
-  Robot::GetCOB().GetTable().GetEntry("/COB/deltaY").SetDouble(std::abs(GetDriveTrain().m_VisionRelative.Y().value()));
-  Robot::GetCOB().GetTable().GetEntry("/COB/deltaT").SetDouble(std::abs(-fmod(360 - GetDriveTrain().m_VisionRelative.Rotation().Degrees().value(), 360)));
+  Robot::GetCOB().GetTable().GetEntry("/COB/odoX").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value());
+  Robot::GetCOB().GetTable().GetEntry("/COB/odoY").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value());
+  Robot::GetCOB().GetTable().GetEntry("/COB/odoZ").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value(), 360);
 
   Robot::GetCOB().GetTable().GetEntry("/COB/BackLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/BackRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
