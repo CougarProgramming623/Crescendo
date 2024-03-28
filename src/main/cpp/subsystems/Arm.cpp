@@ -43,6 +43,7 @@ Arm::Arm():
 	// m_Pivot.SetPosition(units::angle::turn_t(0));
 }
 
+
 void Arm::ArmInit() {
 	DebugOutF("inside arm init");
 	m_StringPot.SetAverageBits(3);
@@ -50,7 +51,7 @@ void Arm::ArmInit() {
 	m_Pivot.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-	m_Aim.ToggleOnTrue(ConstantPivot().ToPtr());
+	m_Aim.ToggleOnTrue(PivotToPos(m_StringPotValue).ToPtr());
 
 	m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
 		m_FlywheelPower = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(0) + 1)/2;
@@ -146,6 +147,19 @@ void Arm::ArmInit() {
 	m_ProtectedBlockPivot.OnTrue(PivotToPos(PROTECTEDBLOCKSHOOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
 		m_Pivot.Set(0);
 	}));
+}
+
+void Arm::Periodic() {
+	m_Aim.ToggleOnTrue(new frc2::InstantCommand([&] {
+		Vision Flyvision = Robot::GetRobot()->GetVision();
+		if(Flyvision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+			int id = Flyvision.GetLimeLight()->GetNumber("tid", 0.0);
+			double dis = Flyvision.DistanceFromAprilTag(id);
+			int val = (Robot::GetRobot()->GetArm().DistanceToStringPotUnits(dis));
+			m_StringPotValue = val;
+		}
+	}));
+
 }
 
 // while override is active, gives manual joysticks control over the two arm motors

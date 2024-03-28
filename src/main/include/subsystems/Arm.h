@@ -42,6 +42,7 @@ class Arm : public frc2::SubsystemBase {
 
 	Arm();
 	void ArmInit();
+	void Periodic() override;
 	void SetButtons();
 	// void MoveToStringPotValue(int target);
 	//int ConvertDistanceToValue();
@@ -82,6 +83,7 @@ class Arm : public frc2::SubsystemBase {
 
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
+	double m_StringPotValue;
 
 	private:
 

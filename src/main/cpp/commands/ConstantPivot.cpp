@@ -35,7 +35,7 @@ void ConstantPivot::Execute() {
         id = Flyvision.GetLimeLight()->GetNumber("tid", 0.0);
         dis = Flyvision.DistanceFromAprilTag(id);
         int val = (r->GetArm().DistanceToStringPotUnits(dis));
-        frc2::CommandScheduler::GetInstance().Schedule(PivotToPos(val).ToPtr());
+        r->GetArm().m_StringPotValue = val;
     }
 }
 
