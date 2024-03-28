@@ -15,7 +15,7 @@ void Flywheel::Execute() {
         if(Flyvision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
             id = Flyvision.GetLimeLight()->GetNumber("tid", 0.0);
             dis = Flyvision.DistanceFromAprilTag(id);
-            r->GetArm().m_FlywheelPower = r->GetArm().StringPotUnitsToPower(dis);
+            // r->GetArm().m_FlywheelPower = r->GetArm().StringPotUnitsToPower(dis);
         }
         else{
             r->GetArm().GetShooterMotor1().SetControl(r->m_DutyCycleOutRequest.WithOutput(Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_LOCK_POWER)));

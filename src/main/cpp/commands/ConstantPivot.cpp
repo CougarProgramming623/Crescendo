@@ -20,8 +20,6 @@
 
 using namespace ctre::phoenix6;
 using namespace ctre::phoenix;
-using ctre::phoenix::motorcontrol::NeutralMode;
-using ctre::phoenix::motorcontrol::ControlMode;
 
 # define r Robot::GetRobot()
 
@@ -30,17 +28,25 @@ ConstantPivot::ConstantPivot() {}
 void ConstantPivot::Initialize() {}
 
 void ConstantPivot::Execute() {
-    Vision Flyvision = r->GetVision();
-    if(Flyvision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
-        id = Flyvision.GetLimeLight()->GetNumber("tid", 0.0);
-        dis = Flyvision.DistanceFromAprilTag(id);
-        int val = (r->GetArm().DistanceToStringPotUnits(dis));
-        r->GetArm().m_StringPotValue = val;
+    Vision vision = r->GetVision();
+    if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+        int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
+        double distance = vision.DistanceFromAprilTag(id);
+        if(distance <= 3.13) {
+            int val = (r->GetArm().DistanceToStringPotUnits(distance));
+            stringpot = r->GetArm().GetStringPot().GetAverageValue();
+            int difference = stringpot - val;
+            double kp = 0.1;
+            double targetSpeed = kp * difference;
+            r->GetArm().GetPivotMotor().Set(targetSpeed);
+        }
     }
 }
 
-void ConstantPivot::End(bool interrupted) {}
+void ConstantPivot::End(bool interrupted) {
+    r->GetArm().GetPivotMotor().Set(0);
+}
 
 bool ConstantPivot::IsFinished() {
-    return false;
+    return !r->GetArm().GetAimButton().Get();
 }

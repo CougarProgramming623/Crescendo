@@ -95,9 +95,9 @@ double Vision::DistanceFromAprilTag(double ID) {
     double theta = m_LimelightTable->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
     double height = GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
     distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
-    DebugOutF("ty: " + std::to_string(m_LimelightTable->GetNumber("ty", 0.0)));
-    DebugOutF("theta: " + std::to_string(theta));
-    DebugOutF("height: " + std::to_string(height));
+    // DebugOutF("ty: " + std::to_string(m_LimelightTable->GetNumber("ty", 0.0)));
+    // DebugOutF("theta: " + std::to_string(theta));
+    // DebugOutF("height: " + std::to_string(height));
     DebugOutF("distance: " + std::to_string(distance));
   }
   return distance;

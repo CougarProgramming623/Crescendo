@@ -27,8 +27,7 @@ public:
   void Execute() override;
   void End(bool interrupted) override;
   bool IsFinished() override;
-  int id;
-  double dis;
+  int stringpot;
 
 private:
 

@@ -23,8 +23,6 @@ Arm::Arm():
 	m_Feeder(FEEDER_MOTOR),
 
 	//BUTTONBOARD
-	// m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
-	m_ArmOverride([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(ARM_OVERRIDE);}),
 	m_ShooterUp([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_UP);}),
     m_ShooterDown([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SHOOTER_DOWN);}),
 	m_RunFlywheel([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(FLYWHEEL_SWITCH);}),
@@ -33,7 +31,7 @@ Arm::Arm():
 	m_DustpanDown([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(DUSTPAN_DOWN);}),
 	m_IntakeSwitch([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(INTAKE_SWITCH);}),
 	m_ServoShoot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(SERVO_SHOOT);}),
-	m_Aim([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(AIM_BUTTON);}),
+	m_Aim([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(NUKE_SWITCH_4);}),
 	m_CloseShootPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLOSE_SHOOT_BUTTON);}),
 	m_PickupPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PICKUP_BUTTON);}),
 	m_ProtectedBlockPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PROTECTED_BLOCK_SHOOT);}),
@@ -51,7 +49,7 @@ void Arm::ArmInit() {
 	m_Pivot.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 	m_Feeder.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-	m_Aim.ToggleOnTrue(PivotToPos(m_StringPotValue).ToPtr());
+	m_Aim.ToggleOnTrue(ConstantPivot().ToPtr());
 
 	m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
 		m_FlywheelPower = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(0) + 1)/2;
@@ -150,16 +148,13 @@ void Arm::ArmInit() {
 }
 
 void Arm::Periodic() {
-	m_Aim.ToggleOnTrue(new frc2::InstantCommand([&] {
-		Vision Flyvision = Robot::GetRobot()->GetVision();
-		if(Flyvision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
-			int id = Flyvision.GetLimeLight()->GetNumber("tid", 0.0);
-			double dis = Flyvision.DistanceFromAprilTag(id);
-			int val = (Robot::GetRobot()->GetArm().DistanceToStringPotUnits(dis));
-			m_StringPotValue = val;
-		}
-	}));
-
+	Vision vision = Robot::GetRobot()->GetVision();
+	if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+		int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
+		double dis = vision.DistanceFromAprilTag(id);
+		m_StringPotValue = (Robot::GetRobot()->GetArm().DistanceToStringPotUnits(dis));
+		DebugOutF("target stringpot value: " + std::to_string(m_StringPotValue));
+	}
 }
 
 // while override is active, gives manual joysticks control over the two arm motors

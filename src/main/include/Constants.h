@@ -258,7 +258,10 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define CLOSE_SHOOT_BUTTON 7
 #define PICKUP_BUTTON 8
 #define PROTECTED_BLOCK_SHOOT 12
-#define ARM_OVERRIDE 16
+#define NUKE_SWITCH_4 13
+#define NUKE_SWITCH_3 14
+#define NUKE_SWITCH_2 15
+#define NUKE_SWITCH_1 16
 #define SHOOTER_DOWN 17
 #define SHOOTER_UP 18
 #define CLIMB_UP 19
