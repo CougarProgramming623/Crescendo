@@ -150,7 +150,7 @@ void Robot::AutoButtons() {
 
 frc2::CommandPtr Robot::getAutonomousCommand() {
   // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("New Path");
+  auto path = PathPlannerPath::fromPathFile("testingXhaha");
   // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
