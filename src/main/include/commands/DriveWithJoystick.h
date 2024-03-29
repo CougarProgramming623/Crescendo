@@ -12,4 +12,8 @@ class DriveWithJoystick : public frc2::CommandHelper<frc2::Command, DriveWithJoy
   void Initialize() override;
   void Execute() override;
   double Deadfix(double in, double deadband);
+  double cubicMod(double in, double cm);
+  double rotateMod;
+  double translationMod;
+
 };

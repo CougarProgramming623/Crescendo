@@ -139,6 +139,8 @@ class DriveTrain : public frc2::SubsystemBase {
 
   int m_SelectedGrid;
 
+  int driveState;
+
   // frc::Pose2d m_PoseMatrix[3][3] = {
   //   {TLPOSE, TCPOSE, TRPOSE},
   //   {MLPOSE, MCPOSE, MRPOSE},
@@ -162,12 +164,12 @@ class DriveTrain : public frc2::SubsystemBase {
   frc2::Trigger m_ClimbUp;
 	frc2::Trigger m_ClimbDown;
   frc2::Trigger m_VisionAim;
-  frc2::Trigger m_JoystickOuttake;
+  frc2::Trigger m_StrafeLeft;
+  frc2::Trigger m_StrafeRight;
   frc2::Trigger m_TestJoystickButton;
   frc2::Trigger m_JoystickButtonTwo;
   frc2::Trigger m_DuaLMotorControlButton;
   frc2::Trigger m_NavXResetButton;
-  frc2::Trigger m_ExtraJoystickButton;
 
   bool m_IsBalancing;
 

@@ -276,7 +276,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
   // m_autonomousCommand.value().HasRequirement(&Robot::GetRobot()->GetDriveTrain());
-  m_autonomousCommand = TrajectoryCommand(getTrajectory("testingRot")).ToPtr();
+  m_autonomousCommand = TrajectoryCommand(getTrajectory("real auto pt. 1 (leave)")).ToPtr();
 
   startingPose.RotateBy(frc::Rotation2d(units::degree_t(GetAngle())));
 
