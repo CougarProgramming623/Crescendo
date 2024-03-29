@@ -89,14 +89,18 @@ Pose2d Vision::GetFieldPose(){
 // std::string Vision::FrontBack(std::string key) {}
 
 double Vision::DistanceFromAprilTag(double ID) {
-  double x = IDMap[0][(int)ID - 1] - m_AbsolutePose.X().value();
-  double y = IDMap[1][(int)ID - 1] - m_AbsolutePose.Y().value();
-  DebugOutF("(x, y): (" + std::to_string(m_AbsolutePose.X().value()) + ", " + std::to_string(m_AbsolutePose.Y().value()) + ")");
-  DebugOutF("id map x: " + std::to_string(IDMap[0][(int)ID - 1]));
-  DebugOutF("id map y: " + std::to_string(IDMap[1][(int)ID - 1]));
-  DebugOutF("deltax: " + std::to_string(x));
-  DebugOutF("deltay: " + std::to_string(y));
-  return sqrt(pow(x, 2) + pow(y, 2));
+  double distance;
+  if(m_LimelightTable->GetNumber("tv", 0.0) == 1) {
+    int id = m_LimelightTable->GetNumber("tid", 0.0);
+    double theta = m_LimelightTable->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
+    double height = GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
+    distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
+    // DebugOutF("ty: " + std::to_string(m_LimelightTable->GetNumber("ty", 0.0)));
+    // DebugOutF("theta: " + std::to_string(theta));
+    // DebugOutF("height: " + std::to_string(height));
+    DebugOutF("distance: " + std::to_string(distance));
+  }
+  return distance;
 }
 
 units::angle::radian_t Vision::VisionRobotYaw(double ID) {
