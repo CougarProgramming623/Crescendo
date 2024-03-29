@@ -45,7 +45,7 @@ m_PivotToPos(420)
 
 void Robot::RobotInit() {
   GetNavX().ZeroYaw();
-  GetNavX().SetAngleAdjustment(0);
+  // GetNavX().SetAngleAdjustment(0);
   s_Instance = this;
   // DebugOutF("initalizing drivetrain w/ motors");
   m_DriveTrain.DriveInit();
@@ -260,7 +260,7 @@ void Robot::DisabledInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Cancel();
   }
-
+  GetDriveTrain().GetModuleStates() = std::array<frc::SwerveModuleState, 4>();
   GetDriveTrain().BrakeMode(true);
   // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   // GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
@@ -289,7 +289,13 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
   // m_autonomousCommand.value().HasRequirement(&Robot::GetRobot()->GetDriveTrain());
+<<<<<<< Updated upstream
   m_autonomousCommand = getAutonomousCommand();
+=======
+  m_autonomousCommand = TrajectoryCommand(getTrajectory("testingX")).ToPtr();
+
+  startingPose.RotateBy(frc::Rotation2d(units::degree_t(GetAngle())));
+>>>>>>> Stashed changes
 
   GetDriveTrain().GetOdometry()->ResetPosition(
     units::radian_t(Deg2Rad(GetAngle())), 
@@ -347,6 +353,8 @@ void Robot::TeleopInit() {
     m_autonomousCommand->Cancel();
   }
 
+  GetDriveTrain().GetModuleStates() = std::array<frc::SwerveModuleState, 4>();
+
   DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
@@ -373,7 +381,6 @@ void Robot::TeleopInit() {
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-  GetNavX().SetAngleAdjustment(0);
 }
 
 /**

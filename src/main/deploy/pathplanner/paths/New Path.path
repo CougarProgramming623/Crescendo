@@ -8,20 +8,34 @@
       },
       "prevControl": null,
       "nextControl": {
+<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/New Path.path
         "x": 3.118033988749895,
         "y": 7.0
+=======
+        "x": 2.0,
+        "y": 6.433645220844751
+>>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/testingY.path
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
+<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/New Path.path
         "x": 5.0,
         "y": 7.0
       },
       "prevControl": {
         "x": 3.4793093674254436,
         "y": 7.0
+=======
+        "x": 2.0,
+        "y": 4.728951098085812
+      },
+      "prevControl": {
+        "x": 2.0,
+        "y": 6.249641730660366
+>>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/testingY.path
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,12 +48,16 @@
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 90.0
   },
   "goalEndState": {
     "velocity": 0,
+<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/New Path.path
     "rotation": 0,
+=======
+    "rotation": 0.0,
+>>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/testingY.path
     "rotateFast": false
   },
   "reversed": false,

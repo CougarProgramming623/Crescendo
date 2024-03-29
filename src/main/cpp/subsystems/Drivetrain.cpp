@@ -34,9 +34,15 @@ DriveTrain::DriveTrain()
       m_BackLeftModule(BACK_LEFT_MODULE_DRIVE_MOTOR, BACK_LEFT_MODULE_STEER_MOTOR, BACK_LEFT_MODULE_ENCODER_PORT, BACK_LEFT_MODULE_STEER_OFFSET),
       m_BackRightModule(BACK_RIGHT_MODULE_DRIVE_MOTOR, BACK_RIGHT_MODULE_STEER_MOTOR, BACK_RIGHT_MODULE_ENCODER_PORT, BACK_RIGHT_MODULE_STEER_OFFSET),
       m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s}, 
+<<<<<<< Updated upstream
       m_xController(0.7, 0.4, 0.3),
       m_yController(0.7, 0.4, 0.3),
       m_ThetaController(3.5, 0, 0, frc::TrapezoidProfile<units::radian>::Constraints{5_rad_per_s, (1/2) * 5_rad_per_s / 1_s}),
+=======
+      m_xController(0.6, 0.5, 0.15),
+      m_yController(0.6, 0.5, 0.15),
+      m_ThetaController(10.0, 25.0, 100.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
+>>>>>>> Stashed changes
       m_HolonomicController(m_xController, m_yController, m_ThetaController),
       m_Climb(CLIMB_MOTOR),
       m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),

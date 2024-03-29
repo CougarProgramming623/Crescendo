@@ -91,8 +91,15 @@ class DriveTrain : public frc2::SubsystemBase {
   inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return & m_Odometry; }
   inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
   inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
+<<<<<<< Updated upstream
 
+=======
+  inline frc::Timer& GetTimer() {return m_Timer;}
+>>>>>>> Stashed changes
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
+  inline wpi::array<frc::SwerveModuleState, 4> GetModuleStates() { return m_ModuleStates; }
+  inline void SetChassisSpeeds(frc::ChassisSpeeds speeds) { m_ChassisSpeeds = speeds; }
+  
 
   wpi::array<frc::SwerveModuleState, 4> getStates();
   Pose2d getPose();
