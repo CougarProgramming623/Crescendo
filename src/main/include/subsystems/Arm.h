@@ -70,7 +70,6 @@ class Arm : public frc2::SubsystemBase {
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
 	inline frc2::Trigger& GetShooterUpButton() {return m_ShooterUp;}
 	inline frc2::Trigger& GetShooterDownButton() {return m_ShooterDown;}
-	
 
 	frc2::Trigger m_PlacingMode;
 

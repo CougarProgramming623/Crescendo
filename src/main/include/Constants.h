@@ -18,7 +18,7 @@
 #define ENCODER_RESET_MAX_ANGULAR_VELOCITY (Deg2Rad(0.5))
 #define ENCODER_RESET_ITERATIONS 500
 
-#define WHEEL_DIAMETER 0.10033
+#define WHEEL_DIAMETER 0.10001
 
 #ifdef ROBOT_WHEELBASE
 
@@ -94,6 +94,8 @@
     #define MAX_VOLTAGE_WHEN_OFFSET 4.76
 
     #define CLIMB_MOTOR 31
+
+    #define LIMELIGHT_YTHETA 62.7
 
 
     // #define LIMELIGHT_HEIGHT    -1   //cm

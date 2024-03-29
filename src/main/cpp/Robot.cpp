@@ -23,6 +23,7 @@
 #include <commands/AutoTest.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc2/command/PrintCommand.h>
+#include "commands/TrajectoryCommand.h"
 
 #include <chrono>
 
@@ -147,24 +148,10 @@ void Robot::AutoButtons() {
 // 	return SelectedPose;
 // }
 
-frc2::CommandPtr Robot::getAutonomousCommand() {
+pathplanner::PathPlannerTrajectory Robot::getTrajectory() {
   // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("Comp2Path");
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  // DebugOutF(std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-  // // Create a path following command using AutoBuilder. This will also trigger event markers.
-  // // startingPose = Pose2d(path.get()->getAllPathPoints().at(0).position, path.get()->getAllPathPoints().at(0).rotationTarget.value().getTarget());
-  // // DebugOutF(std::to_string(startingPose.X().value()));
-  // // DebugOutF(std::to_string(startingPose.Y().value()));
-  // startingPose = path.get()->getStartingDifferentialPose();
-  // DebugOutF("starting pose: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  // DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  // DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-  // return PathPlannerAuto("StraightX Auto 2").ToPtr();
-  // return AutoBuilder::followPathWithEvents(path);
-  startingPose = path.get()->getPreviewStartingHolonomicPose();
-  return AutoBuilder::followPath(path);
+  auto path = PathPlannerPath::fromPathFile("real auto pt. 1 (leave)");
+  return path.get()->getTrajectory(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s), path.get()->getPreviewStartingHolonomicPose().Rotation());
 }
 
 // /**
@@ -188,6 +175,10 @@ void Robot::RobotPeriodic() {
   Robot::GetCOB().GetTable().GetEntry("/COB/BackRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/FrontLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/FrontRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+
+  // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  // DebugOutF("Y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  // DebugOutF("Deg: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
   
   
   // m_Vision.PushID();
@@ -284,7 +275,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
   // m_autonomousCommand.value().HasRequirement(&Robot::GetRobot()->GetDriveTrain());
-  m_autonomousCommand = getAutonomousCommand();
+  m_autonomousCommand = TrajectoryCommand(getTrajectory()).ToPtr();
 
   GetDriveTrain().GetOdometry()->ResetPosition(
     units::radian_t(Deg2Rad(GetAngle())), 
@@ -296,9 +287,9 @@ void Robot::AutonomousInit() {
     startingPose
   );
 
-  DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+  // DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  // DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  // DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
   // if (m_autonomousCommand) {
   //   m_autonomousCommand->Schedule();
@@ -322,24 +313,30 @@ void Robot::AutonomousInit() {
         )
       ),
       frc2::InstantCommand([&] {
-      Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0);
-      Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0);
-      Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1);
-      })
+        Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0);
+        Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0);
+        Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1);
+      }),
+      TrajectoryCommand(getTrajectory())
     )
   );
   
 }
+
 void Robot::AutonomousPeriodic() {
-    // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-    // DebugOutF("Y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-    // DebugOutF("Deg: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+    // DebugOutF("x: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+    // DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+    // DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 }
 
 void Robot::TeleopInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Cancel();
   }
+
+  DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
   // m_AutoFlag = false;
   // frc2::CommandScheduler::GetInstance().Schedule(new frc2::InstantCommand([&] {
