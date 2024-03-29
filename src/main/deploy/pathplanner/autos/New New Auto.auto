@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4043185378037422,
+      "y": 5.57476103667485
+    },
+    "rotation": 179.8866553812616
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "two note leave"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "three note leave"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
