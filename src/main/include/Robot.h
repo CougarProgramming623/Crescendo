@@ -71,7 +71,7 @@ class Robot : public frc::TimedRobot {
   inline COB& GetCOB() { return m_COB; }
   inline Vision& GetVision() { return m_Vision; }
 
-  pathplanner::PathPlannerTrajectory getTrajectory();
+  pathplanner::PathPlannerTrajectory getTrajectory(std::string traj);
   frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
   void MotorInversionCheck();
   // void MotorInversionCorrection(ctre::phoenix6::hardware::TalonFX motor, int ID, bool invert);

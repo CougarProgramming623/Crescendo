@@ -268,28 +268,6 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define DUSTPAN_UP 21
 #define DUSTPAN_DOWN 22
 
-//BUTTONBOARD 2
-// #define GRID_TL 2
-// #define GRID_TC 7 
-// #define GRID_TR 12
-// #define GRID_ML 3 
-// #define GRID_MC 8 
-// #define GRID_MR 10
-// #define GRID_BL 4
-// #define GRID_BC 9
-// #define GRID_BR 14
-
-// #define GROUND_PICKUP_MODE 5 //red
-// #define TRANSIT_MODE 13 //green
-// #define PLACING_MODE 15 //yellow
-
-// #define LEFT_GRID 1 
-// #define CENTER_GRID 6 
-// #define RIGHT_GRID 11
-
-// #define LED_YELLOW 19
-// #define LED_PURPLE 18
-
 #define LIMELIGHT_HEIGHT 0.238125  //m from the bottom
 #define LIMELIGHT_YTHETA 60 //off the horizontal
 #define LIMELIGHT_DISPLACEMENT 0.1524 // m from the front

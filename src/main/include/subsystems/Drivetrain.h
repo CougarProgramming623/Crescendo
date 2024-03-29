@@ -93,6 +93,8 @@ class DriveTrain : public frc2::SubsystemBase {
   inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
   inline frc::Timer& GetTimer() {return m_Timer;}
 
+  inline void SetChassisSpeeds(frc::ChassisSpeeds speeds) {m_ChassisSpeeds = speeds;}
+
   inline std::array<frc::SwerveModulePosition, 4> GetModulePositions(){ return m_ModulePositions; }
 
   wpi::array<frc::SwerveModuleState, 4> getStates();

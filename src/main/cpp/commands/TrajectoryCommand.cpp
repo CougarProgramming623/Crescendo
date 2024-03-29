@@ -28,8 +28,8 @@ void TrajectoryCommand::Execute() {
     frc::Timer timer = r->GetDriveTrain().GetTimer();
     frc::ChassisSpeeds speeds = r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), m_Trajectory.sample(timer.Get()).getTargetHolonomicPose(), m_Trajectory.sample(timer.Get()).velocity, m_Trajectory.getEndState().heading);
 
-    speeds.vy = -speeds.vy;
-    speeds.omega = -speeds.omega;
+    // speeds.vy = -speeds.vy;
+    // speeds.omega = -speeds.omega;
 
     r->GetDriveTrain().BaseDrive(speeds);
 }
@@ -37,6 +37,7 @@ void TrajectoryCommand::Execute() {
 void TrajectoryCommand::End(bool interrupted){
     //DebugOutF("Ending follow");
     Robot::GetRobot()->GetDriveTrain().GetTimer().Stop();
+    Robot::GetRobot()->GetDriveTrain().SetChassisSpeeds(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s));
 }
 
 //End command when close to intended pose

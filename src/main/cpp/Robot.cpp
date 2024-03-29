@@ -39,7 +39,7 @@ m_NavX(frc::SerialPort::Port(2), AHRS::SerialDataType(0), uint8_t(66)),
 m_LED(),
 m_PivotToPos(420)
 {
-  DebugOutF("inside robot constructor");
+  // DebugOutF("inside robot constructor");
   s_Instance = this;
 }
 
@@ -52,10 +52,10 @@ void Robot::RobotInit() {
   m_DriveTrain.DriveInit();
   m_Arm.ArmInit();
   
-  DebugOutF("initalizing motors finished");
-  DebugOutF("x: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  DebugOutF("y: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  DebugOutF("theta: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+  // DebugOutF("initalizing motors finished");
+  // DebugOutF("x: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
+  // DebugOutF("y: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
+  // DebugOutF("theta: " + std::to_string(Robot::GetRobot()->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
   DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
   DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
@@ -148,9 +148,10 @@ void Robot::AutoButtons() {
 // 	return SelectedPose;
 // }
 
-pathplanner::PathPlannerTrajectory Robot::getTrajectory() {
+pathplanner::PathPlannerTrajectory Robot::getTrajectory(std::string traj) {
   // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile("real auto pt. 1 (leave)");
+  auto path = PathPlannerPath::fromPathFile(traj);
+  startingPose = path.get()->getPreviewStartingHolonomicPose();
   return path.get()->getTrajectory(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s), path.get()->getPreviewStartingHolonomicPose().Rotation());
 }
 
@@ -206,7 +207,7 @@ void Robot::RobotPeriodic() {
 
 
 
-  // if(Robot::GetButtonBoard().GetRawButton(15)){
+  // if(Robot::GetButtonBoard().GetRawButton(15)) {
   //   DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
   //   DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
   //   DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
@@ -275,15 +276,13 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
   // m_autonomousCommand.value().HasRequirement(&Robot::GetRobot()->GetDriveTrain());
-  m_autonomousCommand = TrajectoryCommand(getTrajectory()).ToPtr();
+  m_autonomousCommand = TrajectoryCommand(getTrajectory("testingRot")).ToPtr();
+
+  startingPose.RotateBy(frc::Rotation2d(units::degree_t(GetAngle())));
 
   GetDriveTrain().GetOdometry()->ResetPosition(
     units::radian_t(Deg2Rad(GetAngle())), 
-    wpi::array<frc::SwerveModulePosition, 4>(
-      GetDriveTrain().m_FrontLeftModule.GetPosition(), 
-      GetDriveTrain().m_FrontRightModule.GetPosition(), 
-      GetDriveTrain().m_BackLeftModule.GetPosition(), 
-      GetDriveTrain().m_BackRightModule.GetPosition()),
+    GetDriveTrain().GetModulePositions(),
     startingPose
   );
 
@@ -291,35 +290,30 @@ void Robot::AutonomousInit() {
   // DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
   // DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
 
-  // if (m_autonomousCommand) {
-  //   m_autonomousCommand->Schedule();
-  // }
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Schedule();
+  }
 
   // Only shoot and don't move:
   
-  frc2::CommandScheduler::GetInstance().Schedule(
-    new frc2::SequentialCommandGroup(
-      frc2::ParallelDeadlineGroup(
-        frc2::WaitCommand(7.0_s),
-        frc2::InstantCommand([&] {
-          // Robot::GetRobot()->GetArm().GetShooterMotor1().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3 + 0.05));
-          // Robot::GetRobot()->GetArm().GetShooterMotor2().SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.3));
-          Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0.7 - 0.05);
-          Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0.7);
-        }),
-        frc2::SequentialCommandGroup(
-          frc2::WaitCommand(2.0_s),
-          Shoot()
-        )
-      ),
-      frc2::InstantCommand([&] {
-        Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0);
-        Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0);
-        Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1);
-      }),
-      TrajectoryCommand(getTrajectory())
-    )
-  );
+  // frc2::CommandScheduler::GetInstance().Schedule(
+  //   new frc2::SequentialCommandGroup(
+  //     frc2::ParallelDeadlineGroup(
+  //       frc2::WaitCommand(2.0_s),
+  //       Flywheel(),
+  //       frc2::SequentialCommandGroup(
+  //         frc2::WaitCommand(1.0_s),
+  //         Shoot()
+  //       )
+  //     ),
+  //     frc2::InstantCommand([&] {
+  //       Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0);
+  //       Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0);
+  //       Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1);
+  //     }),
+  //     TrajectoryCommand(getTrajectory())
+  //   )
+  // );
   
 }
 
