@@ -115,11 +115,13 @@ void Robot::AutoButtons() {
   }));
 
   m_Print3.WhileTrue(new frc2::InstantCommand([&] {
-    DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
-    DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
-    DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
-    DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
-    DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
+    // DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
+    // DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
+    // DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
+    // DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
+    // DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
+    DebugOutF("digital input 1: " + std::to_string(m_Laser1.Get()));
+    DebugOutF("digital input 2: " + std::to_string(m_Laser2.Get()));
   }));
 }
 
@@ -181,51 +183,12 @@ void Robot::RobotPeriodic() {
   Robot::GetCOB().GetTable().GetEntry("/COB/flywheel%").SetDouble(GetArm().m_FlywheelPower);
   Robot::GetCOB().GetTable().GetEntry("/COB/stringpot").SetDouble(GetArm().GetStringPot().GetAverageValue());
 
-
-  // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  // DebugOutF("Y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  // DebugOutF("Deg: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-  
-  
-  // m_Vision.PushID();
-
   m_COBTicks++;
   Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(Robot::GetRobot()->GetNavX().GetPitch() + 0.05);
   // m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
   m_AutoPath = "New New Path";
 
   Robot::GetRobot()->GetButtonBoard().SetOutputs(0);
-  // if(GetVision().GetLimeLight()->GetNumber("tv", 0.0) == 1 && flash) {
-  //   Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0xFFFFFFFF); 
-  //   flash = false;
-  // } else {
-  //   frc2::CommandScheduler::GetInstance().Schedule(
-  //     frc2::ParallelCommandGroup(
-  //       frc2::InstantCommand([&] {
-  //         Robot::GetRobot()->GetButtonBoard().SetOutput(3, 0);
-  //         flash = true;
-  //       }),
-  //       frc2::WaitCommand(0.5_s)
-  //     ).ToPtr()
-  //   );
-  // }
-
-
-
-  // if(Robot::GetButtonBoard().GetRawButton(15)) {
-  //   DebugOutF("FL: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontLeftModule.GetSteerAngle())));
-  //   DebugOutF("FR: " + std::to_string(Rad2Deg(GetDriveTrain().m_FrontRightModule.GetSteerAngle())));
-  //   DebugOutF("BL: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackLeftModule.GetSteerAngle())));
-  //   DebugOutF("BR: " + std::to_string(Rad2Deg(GetDriveTrain().m_BackRightModule.GetSteerAngle())));
-  // }
-
-  // if(GetButtonBoard().GetRawButton(16)) {
-  //   // DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
-  //   // DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
-  //   // DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
-  //   // DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
-  //   // DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
-  // }
 
   bool preset = false;
   double difference = 0;

@@ -80,8 +80,7 @@ class Arm : public frc2::SubsystemBase {
 	frc2::Trigger m_PlacingMode;
 
 	double m_FlywheelPower = 0.88;
-	double m_Differential = 0.20;
-	units::turns_per_second_t m_DifferentialVelocity = units::turns_per_second_t(0.2 * 75);
+	double m_Differential = 0.8;
 	units::turns_per_second_t m_FlywheelVelocity;
 
 	controls::VelocityDutyCycle m_VelocityDutyCycle{units::turns_per_second_t(0)};

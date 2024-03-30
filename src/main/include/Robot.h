@@ -10,10 +10,8 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc/SerialPort.h>
 #include <frc2/command/button/Trigger.h>
-
-
 #include <frc2/command/Command.h>
-
+#include <frc/DigitalInput.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include "LED.h"
 #include "subsystems/DriveTrain.h"
@@ -101,6 +99,9 @@ class Robot : public frc::TimedRobot {
   frc2::Trigger m_Print2;
   frc2::Trigger m_Print3;
   frc2::Trigger m_Print4;
+
+  frc::DigitalInput m_Laser1{0};
+  frc::DigitalInput m_Laser2{1};
 
   int m_COBTicks;
   //double m_Set;
