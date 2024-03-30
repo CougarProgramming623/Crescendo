@@ -184,11 +184,11 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define SHOOTER2_MOTOR 33
 #define FEEDER_MOTOR 22
 
-//#define TOP_INTAKE_MOTOR -1 //check
-//#define BOTTOM_INTAKE_MOTOR 15
+// #define TOP_INTAKE_MOTOR -1 //check
+// #define BOTTOM_INTAKE_MOTOR 15
 // #define STRINGPOT_ANALOG_INPUT_ID 4
 #define STRINGPOT_ANALOG_INPUT_ID 0
-//#define PIVOT_CAN_ID 0
+// #define PIVOT_CAN_ID 0
 
 //setpoints
 #define PIVOT_CAN_DIFFERENCE_BETWEEN_STARTING_AND_LEVEL -1 //check
@@ -276,15 +276,3 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define LIMELIGHT_DISPLACEMENT 0.1524 // m from the front
 
 #endif
-
-// #define TLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(0)))
-// #define TCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(0)))
-// #define TRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(0)))
-
-// #define MLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
-// #define MCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.072), frc::Rotation2d(units::degree_t(180)))
-// #define MRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))
-
-// #define BLPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.61), frc::Rotation2d(units::degree_t(180)))
-// #define BCPOSE frc::Pose2d(units::meter_t(2), units::meter_t(1.05), frc::Rotation2d(units::degree_t(180)))
-// #define BRPOSE frc::Pose2d(units::meter_t(2), units::meter_t(.49), frc::Rotation2d(units::degree_t(180)))

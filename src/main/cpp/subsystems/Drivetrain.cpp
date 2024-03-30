@@ -10,7 +10,8 @@
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include "./commands/LockOn.h"
-//#include "./commands/BotStrafe.h"
+#include "./commands/Lock180.h"
+#include "./commands/Strafe.h"
 #include <frc/DriverStation.h>
 #include <frc/geometry/Pose2d.h>
 
@@ -38,17 +39,17 @@ DriveTrain::DriveTrain()
       m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s}, 
       m_xController(0.6, 0.5, 0.15),
       m_yController(0.6, 0.5, 0.15),
-      m_ThetaController(10.0, 0.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{6.28_rad_per_s, 3.14_rad_per_s / 1_s}),
+      m_ThetaController(0.1, 0.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
       m_HolonomicController(m_xController, m_yController, m_ThetaController),
       m_Climb(CLIMB_MOTOR),
-      m_TestJoystickButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
-      m_JoystickButtonTwo([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
+      m_Lock180Button([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
+      m_LockOnButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
       m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
       m_DuaLMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
       m_StrafeLeft([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
       m_StrafeRight([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
-      m_ClimbUp([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLIMB_UP);}),
-	    m_ClimbDown([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLIMB_DOWN);}),
+      m_ClimbRobotUp([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLIMB_UP);}),
+	    m_ClimbRobotDown([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLIMB_DOWN);}),
       m_VisionAim([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(AIM_BUTTON);}),
       m_Timer(),
       m_EventMap()
@@ -86,7 +87,13 @@ void DriveTrain::DriveInit() {
 
   SetDefaultCommand(DriveWithJoystick());
 
-  m_JoystickButtonTwo.ToggleOnTrue(new LockOn());
+  m_LockOnButton.OnTrue(new LockOn());
+
+  m_Lock180Button.ToggleOnTrue(new Lock180());
+
+  m_StrafeLeft.OnTrue(new Strafe(1));
+  
+  m_StrafeRight.OnTrue(new Strafe(0));
 
   m_NavXResetButton.OnTrue(
     new frc2::InstantCommand([&]{
@@ -96,7 +103,7 @@ void DriveTrain::DriveInit() {
 
   // m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
 
-  m_ClimbUp.OnTrue(new frc2::InstantCommand([&] {
+  m_ClimbRobotUp.OnTrue(new frc2::InstantCommand([&] {
     DebugOutF("climbing up on");
     m_Climb.Set(1);
     // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.5));
@@ -106,7 +113,7 @@ void DriveTrain::DriveInit() {
     // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
   }));
 
-  m_ClimbDown.OnTrue(new frc2::InstantCommand([&] {
+  m_ClimbRobotDown.OnTrue(new frc2::InstantCommand([&] {
     DebugOutF("climbing down on");
     m_Climb.Set(-1);
     // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.5));

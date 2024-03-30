@@ -34,9 +34,6 @@
 #include "SwerveModule.h"
 #include <frc2/command/SubsystemBase.h>
 #include "commands/DriveWithJoystick.h"
-//#include "commands/Shooter.h"
-//#include <./commands/TrajectoryCommand.h>
-//#include <./commands/DriveToPosCommand.h>
 #include <frc/Timer.h>
 
 #include <frc/controller/PIDController.h>
@@ -55,26 +52,12 @@
 
 #include <frc/drive/DifferentialDrive.h>
 
-// #include "COB.h"
-// #include "Vision.h"
-// #include "subsystems/Arm.h"
-// #include "LED.h"
-
-// #include <Robot.h>
-//#include <memory>
-
 using namespace frc;
-
-//using ctre::phoenix::motorcontrol::can::TalonFX;
 
 class DriveTrain : public frc2::SubsystemBase {
  public:
   DriveTrain();
-  //hardware::TalonFX m_ShooterMotor1;
-	//hardware::TalonFX m_ShooterMotor2;
-  //hardware::TalonFX m_PivotShooter;
-  //hardware::TalonFX m_DustpanAngle;
-  //frc2::Trigger m_BigRed;
+
   void BaseDrive(frc::ChassisSpeeds chassisSpeeds);
   void DriveInit();
   void BrakeMode(bool on);
@@ -161,13 +144,13 @@ class DriveTrain : public frc2::SubsystemBase {
   frc::Timer m_Timer;
 
   //triggers
-  frc2::Trigger m_ClimbUp;
-	frc2::Trigger m_ClimbDown;
+  frc2::Trigger m_ClimbRobotUp;
+	frc2::Trigger m_ClimbRobotDown;
   frc2::Trigger m_VisionAim;
   frc2::Trigger m_StrafeLeft;
   frc2::Trigger m_StrafeRight;
-  frc2::Trigger m_TestJoystickButton;
-  frc2::Trigger m_JoystickButtonTwo;
+  frc2::Trigger m_Lock180Button;
+  frc2::Trigger m_LockOnButton;
   frc2::Trigger m_DuaLMotorControlButton;
   frc2::Trigger m_NavXResetButton;
 
@@ -185,6 +168,4 @@ class DriveTrain : public frc2::SubsystemBase {
   frc::PIDController m_yController;
   frc::ProfiledPIDController <units::radians> m_ThetaController;
   frc::HolonomicDriveController m_HolonomicController;
-
-  
 };
