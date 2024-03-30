@@ -194,6 +194,8 @@ void Robot::RobotPeriodic() {
   double difference = 0;
 
   //LED functionality
+  m_LED.SetData();
+  m_LED.SensorTriggered();
   // m_LED.SponsorBoardAllianceColor();
   // m_LED.LowBattery();
   // m_LED.EyesAllianceColor();
