@@ -42,9 +42,10 @@ class Arm : public frc2::SubsystemBase {
 
 	Arm();
 	void ArmInit();
+	void Periodic() override;
 	void SetButtons();
-	void MoveToStringPotValue(int target);
-	int ConvertDistanceToValue();
+	// void MoveToStringPotValue(int target);
+	//int ConvertDistanceToValue();
 
 	frc::Servo m_DustpanLaunch {0};
 
@@ -56,7 +57,10 @@ class Arm : public frc2::SubsystemBase {
 	//inline double PivotDegreesToRotations(double degrees) {return degrees/PIVOT_TOTAL_DEGREES / 360;}
 	//inline double PivotRotationsToDegrees(double rotations) {return rotations/PIVOT_TOTAL_ROTATIONS * 360 + STRINGPOT_ZERO_DEGREES;}
 	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
+
 	//Need to get the ratio of units to length ASAP
+	inline int DistanceToStringPotUnits(double distance) {return (a * pow(distance, 6) + b * pow(distance, 5) + c * pow(distance, 4) + d * pow(distance, 3) + e * pow(distance, 2) + f * distance + g);}
+	inline double StringPotUnitsToPower(double units) {return (0.000012 * pow(units, 3) - 0.007719 * pow(units, 2) + 2.280973 * units - 249.831869);}
 	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
 	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((val - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
 	
@@ -70,19 +74,34 @@ class Arm : public frc2::SubsystemBase {
 	inline frc::AnalogInput& GetStringPot() {return m_StringPot;}
 	inline frc2::Trigger& GetShooterUpButton() {return m_ShooterUp;}
 	inline frc2::Trigger& GetShooterDownButton() {return m_ShooterDown;}
+	inline frc2::Trigger& GetAimButton() {return m_Aim;}
+	
 
 	frc2::Trigger m_PlacingMode;
 
-	double m_FlywheelPower = 1;
-	double m_Differential = 0.05;
+	double m_FlywheelPower = 0.88;
+	double m_Differential = 0.20;
+	units::turns_per_second_t m_DifferentialVelocity = units::turns_per_second_t(0.2 * 75);
+	units::turns_per_second_t m_FlywheelVelocity;
+
+	controls::VelocityDutyCycle m_VelocityDutyCycle{units::turns_per_second_t(0)};
 
 	double m_OriginalPivotRotations;
 	double m_StringPotOffset;
+	int m_StringPotValue;
 
 	private:
 
+	double a = 2.79297;
+	double b = -28.4665;
+	double c = 99.0376;
+	double d = -118.764;
+	double e = 0;
+	double f = -87.1045;
+	double g = 664.418;
+
+
 	//triggers
-	frc2::Trigger m_ArmOverride;
 	frc2::Trigger m_ShooterUp;
 	frc2::Trigger m_ShooterDown;
 	frc2::Trigger m_FlywheelPowerLock;

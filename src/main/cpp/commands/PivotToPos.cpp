@@ -23,7 +23,7 @@ void PivotToPos::Execute() {
 	DebugOutF("Going into execute");
 	stringpot = ARM.GetStringPot().GetAverageValue();
 	int difference = stringpot - targetValue;
-	double kp = 0.02;
+	double kp = 0.15;
 	double targetSpeed = kp * difference;
 	ARM.GetPivotMotor().Set(targetSpeed);
 	// if(targetValue != stringpot) {
@@ -63,11 +63,8 @@ void PivotToPos::Execute() {
 void PivotToPos::End(bool interrupted){
 	DebugOutF("Pivot finished");
 	ARM.GetPivotMotor().Set(0);
-	// ARM.GetPivotMotor().SetControl(Robot::GetRobot()->m_DutyCycleRequest.WithOutput(0));
-	//ARM.GetPivotMotor().Set(ControlMode::PercentOutput, 0);
 }
 
 bool PivotToPos::IsFinished() {
-	return targetValue == ARM.GetStringPot().GetValue() || ARM.GetShooterUpButton().Get() || ARM.GetShooterDownButton().Get();
-	//return abs(ARM.PivotDegreesToTicks(targetDegrees) - ARM.GetPivotMotor().GetSelectedSensorPosition()) < 4000;
+	return targetValue == ARM.GetStringPot().GetAverageValue() || ARM.GetShooterUpButton().Get() || ARM.GetShooterDownButton().Get();
 }

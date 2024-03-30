@@ -84,7 +84,7 @@ void Robot::AutoButtons() {
   m_Print4 = frc2::Trigger(BUTTON_L(13));
 
   m_Print.WhileTrue(new frc2::InstantCommand([&] {
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetValue()));
+    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetAverageValue()));
     Vision vision = Robot::GetRobot()->GetVision();
     if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
@@ -176,6 +176,11 @@ void Robot::RobotPeriodic() {
   Robot::GetCOB().GetTable().GetEntry("/COB/BackRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/FrontLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
   Robot::GetCOB().GetTable().GetEntry("/COB/FrontRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+
+  Robot::GetCOB().GetTable().GetEntry("/COB/distanceToApr").SetDouble(GetVision().DistanceFromAprilTag(GetVision().GetLimeLight()->GetEntry("tid").GetInteger(0.0)));
+  Robot::GetCOB().GetTable().GetEntry("/COB/flywheel%").SetDouble(GetArm().m_FlywheelPower);
+  Robot::GetCOB().GetTable().GetEntry("/COB/stringpot").SetDouble(GetArm().GetStringPot().GetAverageValue());
+
 
   // DebugOutF("X: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   // DebugOutF("Y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));

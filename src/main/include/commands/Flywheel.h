@@ -11,4 +11,6 @@ class Flywheel : public frc2::CommandHelper<frc2::Command, Flywheel> {
   void Initialize() override;
   void Execute() override;
   void End(bool interrupted) override;
+  int id;
+  double dis;
 };
