@@ -36,10 +36,10 @@ class LED {
 
         bool m_IsTele;
         int numLEDs = 67;
+        std::array <frc::AddressableLED::LEDData, 67> m_LEDBuffer;
     private:
 
         frc::AddressableLED m_AddressableLED{2};
-        std::array <frc::AddressableLED::LEDData, 12> m_LEDBuffer;
         int m_IterationTracker;
 
         frc::Color m_AllianceColor;

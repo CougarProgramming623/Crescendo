@@ -12,9 +12,10 @@ void LED::Init(){
     DebugOutF("LED Init");
     m_AddressableLED.SetLength(numLEDs);
     m_AddressableLED.Start();
+    m_AddressableLED.SetData(m_LEDBuffer);
     m_IterationTracker = 0;
     m_IsTele = false;
-    SponsorBoardAllianceColor();
+    // SponsorBoardAllianceColor();
 }
 
 void LED::SetData() { m_AddressableLED.SetData(m_LEDBuffer); }
@@ -44,14 +45,6 @@ void LED::SponsorBoardSolid(frc::Color color){
             m_LEDBuffer[i].SetLED(color);
     }
 }
-
-// void LED::UnderBotSensor() {
-//     if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
-//         for(int i = 0; i < numLEDs; i++) {
-//             m_LEDBuffer[i].SetLED(frc::Color::kPurple);
-//         }
-//     } else {SponsorBoardAllianceColor();}
-// }
 
 void LED::LaserSensors() {
     if(Robot::GetRobot()->m_DustpanLaser.Get() == 0) {

@@ -81,7 +81,7 @@ class Arm : public frc2::SubsystemBase {
 
 	double m_FlywheelPower = 0.88;
 	double m_Differential = 0.8;
-	units::turns_per_second_t m_FlywheelVelocity;
+	units::turns_per_second_t m_FlywheelVelocity = units::turns_per_second_t(72);
 
 	controls::VelocityDutyCycle m_VelocityDutyCycle{units::turns_per_second_t(0)};
 

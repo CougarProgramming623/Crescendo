@@ -99,7 +99,7 @@ void Arm::ArmInit() {
 	m_RunFlywheel.OnTrue(new frc2::InstantCommand([&] {
 		// m_ShooterMotor1.Set(m_FlywheelPower);
 		// m_ShooterMotor2.Set(m_FlywheelPower * m_Differential);
-		m_ShooterMotor1.SetControl(m_VelocityDutyCycle.WithVelocity(m_FlywheelVelocity));
+		m_ShooterMotor1.SetControl(m_VelocityDutyCycle.WithVelocity(-1 * m_FlywheelVelocity));
 		m_ShooterMotor2.SetControl(m_VelocityDutyCycle.WithVelocity(m_FlywheelVelocity * m_Differential));
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_ShooterMotor1.Set(0);
