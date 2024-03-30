@@ -89,11 +89,11 @@ void DriveTrain::DriveInit() {
 
   m_LockOnButton.OnTrue(new LockOn());
 
-  m_Lock180Button.ToggleOnTrue(new Lock180());
+  // m_Lock180Button.ToggleOnTrue(new Lock180());
 
-  m_StrafeLeft.OnTrue(new Strafe(1));
+  // m_StrafeLeft.OnTrue(new Strafe(1));
   
-  m_StrafeRight.OnTrue(new Strafe(0));
+  // m_StrafeRight.OnTrue(new Strafe(0));
 
   m_NavXResetButton.OnTrue(
     new frc2::InstantCommand([&]{

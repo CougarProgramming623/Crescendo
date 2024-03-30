@@ -85,7 +85,7 @@ void Robot::AutoButtons() {
 
   m_Print.WhileTrue(new frc2::InstantCommand([&] {
     DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetAverageValue()));
-    Vision vision = Robot::GetRobot()->GetVision();
+    Vision vision = GetVision();
     if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
       double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
@@ -101,7 +101,7 @@ void Robot::AutoButtons() {
 
   m_Print2.OnTrue(new frc2::InstantCommand([&] {
     DebugOutF("button clicked");
-    Vision vision = Robot::GetRobot()->GetVision();
+    Vision vision = GetVision();
     if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
       int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
       double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
@@ -167,28 +167,28 @@ pathplanner::PathPlannerTrajectory Robot::getTrajectory(std::string traj) {
 //  */
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
-  Robot::GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());
-  Robot::GetCOB().GetTable().GetEntry("/COB/matchTime").SetDouble(frc::DriverStation::GetMatchTime().value());
-  Robot::GetCOB().GetTable().GetEntry("/COB/ticks").SetDouble(m_COBTicks);
-  Robot::GetCOB().GetTable().GetEntry("/COB/odoX").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value());
-  Robot::GetCOB().GetTable().GetEntry("/COB/odoY").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value());
-  Robot::GetCOB().GetTable().GetEntry("/COB/odoZ").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value(), 360);
+  GetCOB().GetTable().GetEntry("/COB/robotAngle").SetDouble(Robot::GetAngle());
+  GetCOB().GetTable().GetEntry("/COB/matchTime").SetDouble(frc::DriverStation::GetMatchTime().value());
+  GetCOB().GetTable().GetEntry("/COB/ticks").SetDouble(m_COBTicks);
+  GetCOB().GetTable().GetEntry("/COB/odoX").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value());
+  GetCOB().GetTable().GetEntry("/COB/odoY").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value());
+  GetCOB().GetTable().GetEntry("/COB/odoZ").SetDouble(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value(), 360);
 
-  Robot::GetCOB().GetTable().GetEntry("/COB/BackLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
-  Robot::GetCOB().GetTable().GetEntry("/COB/BackRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
-  Robot::GetCOB().GetTable().GetEntry("/COB/FrontLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
-  Robot::GetCOB().GetTable().GetEntry("/COB/FrontRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+  GetCOB().GetTable().GetEntry("/COB/BackLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+  GetCOB().GetTable().GetEntry("/COB/BackRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_BackRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+  GetCOB().GetTable().GetEntry("/COB/FrontLeftDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontLeftModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
+  GetCOB().GetTable().GetEntry("/COB/FrontRightDeviceTemp").SetString(std::to_string(GetDriveTrain().m_FrontRightModule.m_DriveController.motor.GetDeviceTemp().GetValue().value()));
 
-  Robot::GetCOB().GetTable().GetEntry("/COB/distanceToApr").SetDouble(GetVision().DistanceFromAprilTag(GetVision().GetLimeLight()->GetEntry("tid").GetInteger(0.0)));
-  Robot::GetCOB().GetTable().GetEntry("/COB/flywheel%").SetDouble(GetArm().m_FlywheelPower);
-  Robot::GetCOB().GetTable().GetEntry("/COB/stringpot").SetDouble(GetArm().GetStringPot().GetAverageValue());
+  GetCOB().GetTable().GetEntry("/COB/distanceToApr").SetDouble(GetVision().DistanceFromAprilTag(GetVision().GetLimeLight()->GetEntry("tid").GetInteger(0.0)));
+  GetCOB().GetTable().GetEntry("/COB/flywheel%").SetDouble(GetArm().m_FlywheelPower);
+  GetCOB().GetTable().GetEntry("/COB/stringpot").SetDouble(GetArm().GetStringPot().GetAverageValue());
 
   m_COBTicks++;
-  Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(Robot::GetRobot()->GetNavX().GetPitch() + 0.05);
+  GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(GetNavX().GetPitch() + 0.05);
   // m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
   m_AutoPath = "New New Path";
 
-  Robot::GetRobot()->GetButtonBoard().SetOutputs(0);
+  GetButtonBoard().SetOutputs(0);
 
   bool preset = false;
   double difference = 0;
@@ -214,6 +214,8 @@ void Robot::DisabledInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Cancel();
   }
+
+  GetDriveTrain().BaseDrive(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s));
 
   GetDriveTrain().BrakeMode(true);
   // GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
@@ -242,10 +244,12 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-  // m_autonomousCommand.value().HasRequirement(&Robot::GetRobot()->GetDriveTrain());
   m_autonomousCommand = TrajectoryCommand(getTrajectory("real auto pt. 1 (leave)")).ToPtr();
 
+  //does this whole thing make any difference??
+  DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
   startingPose.RotateBy(frc::Rotation2d(units::degree_t(GetAngle())));
+  DebugOutF("after rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
 
   GetDriveTrain().GetOdometry()->ResetPosition(
     units::radian_t(Deg2Rad(GetAngle())), 
@@ -253,47 +257,41 @@ void Robot::AutonomousInit() {
     startingPose
   );
 
-  // DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-  // DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-  // DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }
 
   // Only shoot and don't move:
   
-  // frc2::CommandScheduler::GetInstance().Schedule(
-  //   new frc2::SequentialCommandGroup(
-  //     frc2::ParallelDeadlineGroup(
-  //       frc2::WaitCommand(2.0_s),
-  //       Flywheel(),
-  //       frc2::SequentialCommandGroup(
-  //         frc2::WaitCommand(1.0_s),
-  //         Shoot()
-  //       )
-  //     ),
-  //     frc2::InstantCommand([&] {
-  //       Robot::GetRobot()->GetArm().GetShooterMotor1().Set(0);
-  //       Robot::GetRobot()->GetArm().GetShooterMotor2().Set(0);
-  //       Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1);
-  //     }),
-  //     TrajectoryCommand(getTrajectory())
-  //   )
-  // );
+  frc2::CommandScheduler::GetInstance().Schedule(
+    new frc2::SequentialCommandGroup(
+      frc2::ParallelDeadlineGroup(
+        frc2::WaitCommand(2.0_s),
+        Flywheel(),
+        frc2::SequentialCommandGroup(
+          frc2::WaitCommand(1.0_s),
+          Shoot()
+        )
+      ),
+      frc2::InstantCommand([&] {
+        GetArm().GetShooterMotor1().Set(0);
+        GetArm().GetShooterMotor2().Set(0);
+        GetArm().GetDustpanLaunchServo().Set(1);
+      }),
+      TrajectoryCommand(getTrajectory("real auto pt. 1 (leave)"))
+    )
+  );
   
 }
 
-void Robot::AutonomousPeriodic() {
-    // DebugOutF("x: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
-    // DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));
-    // DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
-}
+void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Cancel();
   }
+
+  GetDriveTrain().BaseDrive(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s));
 
   DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().X().value()));
   DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetEstimatedPosition().Y().value()));

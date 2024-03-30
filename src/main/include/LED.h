@@ -35,7 +35,7 @@ class LED {
         // void EyeRoll();
 
         bool m_IsTele;
-        int numLEDs = 12;
+        int numLEDs = 67;
     private:
 
         frc::AddressableLED m_AddressableLED{2};
