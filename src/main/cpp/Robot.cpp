@@ -120,8 +120,8 @@ void Robot::AutoButtons() {
     // DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
     // DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
     // DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
-    DebugOutF("digital input 1: " + std::to_string(m_Laser1.Get()));
-    DebugOutF("digital input 2: " + std::to_string(m_Laser2.Get()));
+    DebugOutF("digital input 1: " + std::to_string(m_DustpanLaser.Get()));
+    DebugOutF("digital input 2: " + std::to_string(m_UnderBotLaser.Get()));
   }));
 }
 
@@ -193,19 +193,16 @@ void Robot::RobotPeriodic() {
   bool preset = false;
   double difference = 0;
 
-  //LED functionality
-  m_LED.SetData();
-  m_LED.SensorTriggered();
+  // LEDs!!!
   // m_LED.SponsorBoardAllianceColor();
+  m_LED.SetData();
+  m_LED.LaserSensors();
   // m_LED.LowBattery();
   // m_LED.EyesAllianceColor();
   // m_LED.EndGame();
   // m_LED.SetData();
   // m_LED.SponsorBoardRainbow();
-  // m_LED.LowBattery();
-
-  // Robot::GetCOB().GetTable().GetEntry("/COB/armValue").SetDouble(Robot::GetArm().GetPot());   
-  // Robot::GetCOB().GetTable().GetEntry("/COB/armAngle").SetDouble(Robot::GetArm().PivotTicksToDeg(Robot::GetArm().GetPivot().GetSelectedSensorPosition()));                                                                                                                                   
+  // m_LED.LowBattery();                                                                                                                   
 }
 
 /**

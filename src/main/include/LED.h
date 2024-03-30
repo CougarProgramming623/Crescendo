@@ -14,35 +14,28 @@ class LED {
         LED();
         void Init();
         void SetData();
-        void SensorTriggered();
+        void SponsorBoardAllianceColor();
+        void SponsorBoardSolid(frc::Color allianceColor);
+        void LaserSensors();
+        void VisionCanSee();
 
         // void LowBattery();
-
         // void EndGame();
-
-        // void SponsorBoardAllianceColor();
-        // void SponsorBoardSolid(frc::Color allianceColor);
         // void SponsorBoardSolid(int R, int G, int B);
-
         // void SponsorBoardRainbow();
-
         // void SponsorBoardFlash(frc::Color allianceColor);     
         // void SponsorBoardFlash(int R, int G, int B);     
-
         // void EyesAllianceColor();
         // void EyesSolidYellow(frc::Color);
         // void EyesSolidPurple(frc::Color);
         // void EyesSolid(frc::Color allianceColor);
         // void EyesSolid(int R, int G, int B);
-
         // void EyesAngry();
         // void EyesSleepy();
         // void EyeRoll();
 
         bool m_IsTele;
         int numLEDs = 12;
-
-
     private:
 
         frc::AddressableLED m_AddressableLED{2};
