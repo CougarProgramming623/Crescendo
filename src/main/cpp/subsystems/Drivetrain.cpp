@@ -89,7 +89,7 @@ void DriveTrain::DriveInit() {
 
   m_LockOnButton.OnTrue(new LockOn());
 
-  // m_Lock180Button.ToggleOnTrue(new Lock180());
+  m_Lock180Button.ToggleOnTrue(new Lock180());
 
   // m_StrafeLeft.OnTrue(new Strafe(1));
   
