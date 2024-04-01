@@ -195,7 +195,7 @@ void Robot::RobotPeriodic() {
 
   // LEDs!!!
   m_LED.SponsorBoardAllianceColor();
-  // m_LED.LaserSensors();
+  m_LED.LaserSensors();
   m_LED.SetData();
   // m_LED.LowBattery();
   // m_LED.EyesAllianceColor();
@@ -231,13 +231,13 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
-  m_AutoFlag = true;
+  // m_AutoFlag = true;
   DebugOutF("Auto init");
 
   frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
   GetNavX().Reset();
-  GetNavX().SetAngleAdjustment(0);
+  // GetNavX().
   GetDriveTrain().BrakeMode(true);
   GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
@@ -246,10 +246,8 @@ void Robot::AutonomousInit() {
 
   m_autonomousCommand = TrajectoryCommand(getTrajectory("real auto pt. 1 (leave)")).ToPtr();
 
-  //does this whole thing make any difference??
+  // does this whole thing make any difference??
   DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
-  startingPose.RotateBy(frc::Rotation2d(units::degree_t(GetAngle())));
-  DebugOutF("after rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
 
   GetDriveTrain().GetOdometry()->ResetPosition(
     units::radian_t(Deg2Rad(GetAngle())), 

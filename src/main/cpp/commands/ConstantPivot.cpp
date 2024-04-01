@@ -23,7 +23,9 @@ using namespace ctre::phoenix;
 
 # define r Robot::GetRobot()
 
-ConstantPivot::ConstantPivot() {}
+ConstantPivot::ConstantPivot() {
+    AddRequirements(&Robot::GetRobot()->GetArm());
+}
 
 void ConstantPivot::Initialize() {}
 
@@ -34,21 +36,22 @@ void ConstantPivot::Execute() {
         double distance = vision.DistanceFromAprilTag(id);
         int val = (r->GetArm().DistanceToStringPotUnits(distance));
         stringpot = r->GetArm().GetStringPot().GetAverageValue();
+        int difference = stringpot - val;
         DebugOutF("target: " + val);
-        if(distance <= 3.13 && r->GetArm().GetStringPot().GetAverageValue() > STRINGPOT_LOW && abs(stringpot - val) > 3) {
-            int difference = stringpot - val;
-            double kp = 0.15;
+        if(distance <= 3.13 && r->GetArm().GetStringPot().GetAverageValue() > STRINGPOT_LOW && abs(difference) > 3) {
+            double kp = 0.125;
             double targetSpeed = kp * difference;
             r->GetArm().GetPivotMotor().Set(targetSpeed);
         }
-    } else if(r->GetArm().GetStringPot().GetAverageValue() > STRINGPOT_LOW) {
-        stringpot = r->GetArm().GetStringPot().GetAverageValue();
-        int difference = stringpot - 420;
-        double kp = 0.15;
-        double targetSpeed = kp * difference;
-        r->GetArm().GetPivotMotor().Set(targetSpeed);
-        r->GetArm().GetDustpanPivotServo().Set(1);
     }
+    // else if(r->GetArm().GetStringPot().GetAverageValue() > STRINGPOT_LOW) {
+    //     stringpot = r->GetArm().GetStringPot().GetAverageValue();
+    //     int difference = stringpot - 420;
+    //     double kp = 0.125;
+    //     double targetSpeed = kp * difference;
+    //     r->GetArm().GetPivotMotor().Set(targetSpeed);
+    //     r->GetArm().GetDustpanPivotServo().Set(1);
+    // }
 }
 
 void ConstantPivot::End(bool interrupted) {
