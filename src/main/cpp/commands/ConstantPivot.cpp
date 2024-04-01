@@ -31,17 +31,19 @@ void ConstantPivot::Initialize() {}
 
 void ConstantPivot::Execute() {
     Vision vision = r->GetVision();
-    if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+    if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1 && r->GetArm().GetStringPot().GetAverageValue() > STRINGPOT_LOW) {
         int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
         double distance = vision.DistanceFromAprilTag(id);
         int val = (r->GetArm().DistanceToStringPotUnits(distance));
         stringpot = r->GetArm().GetStringPot().GetAverageValue();
         int difference = stringpot - val;
         DebugOutF("target: " + val);
-        if(distance <= 3.13 && r->GetArm().GetStringPot().GetAverageValue() > STRINGPOT_LOW && abs(difference) > 3) {
+        if(distance <= 3.13 && r->GetArm().GetStringPot().GetAverageValue() > STRINGPOT_LOW) {
             double kp = 0.125;
             double targetSpeed = kp * difference;
             r->GetArm().GetPivotMotor().Set(targetSpeed);
+        } else {
+            r->GetArm().GetPivotMotor().Set(0);
         }
     }
     // else if(r->GetArm().GetStringPot().GetAverageValue() > STRINGPOT_LOW) {

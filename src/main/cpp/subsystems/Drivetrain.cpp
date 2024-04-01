@@ -11,7 +11,7 @@
 #include <frc2/command/ParallelCommandGroup.h>
 #include "./commands/LockOn.h"
 #include "./commands/Lock180.h"
-// #include "./commands/Strafe.h"
+#include "./commands/Strafe.h"
 #include <frc/DriverStation.h>
 #include <frc/geometry/Pose2d.h>
 
@@ -28,8 +28,6 @@ DriveTrain::DriveTrain()
       m_Kinematics(m_FrontLeftLocation, m_FrontRightLocation, m_BackLeftLocation, m_BackRightLocation),
       m_Rotation(0_rad),
       driveState(0),
-      // m_ModulePositions( wpi::array<frc::SwerveModulePosition, 4>
-      //    (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())),
       m_Odometry(m_Kinematics, m_Rotation, ( wpi::array<frc::SwerveModulePosition, 4>
          (m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition())), frc::Pose2d(0_m, 0_m, 0_rad)),
       m_FrontLeftModule(FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_ENCODER_PORT, FRONT_LEFT_MODULE_STEER_OFFSET),
@@ -39,7 +37,7 @@ DriveTrain::DriveTrain()
       m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s}, 
       m_xController(0.6, 0.5, 0.15),
       m_yController(0.6, 0.5, 0.15),
-      m_ThetaController(3.0, 0.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
+      m_ThetaController(5.0, 4.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
       m_HolonomicController(m_xController, m_yController, m_ThetaController),
       m_Climb(CLIMB_MOTOR),
       m_Lock180Button([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
@@ -91,9 +89,9 @@ void DriveTrain::DriveInit() {
 
   m_Lock180Button.ToggleOnTrue(new Lock180());
 
-  // m_StrafeLeft.OnTrue(new Strafe(1));
+  m_StrafeLeft.WhileTrue(new Strafe(1));
   
-  // m_StrafeRight.OnTrue(new Strafe(0));
+  m_StrafeRight.WhileTrue(new Strafe(0));
 
   m_NavXResetButton.OnTrue(
     new frc2::InstantCommand([&]{
