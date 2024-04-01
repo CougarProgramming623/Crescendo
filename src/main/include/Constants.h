@@ -274,5 +274,6 @@ constexpr int kDriverControllerPort = 0; //uhhhh idk it just wont build without 
 #define LIMELIGHT_HEIGHT 0.238125  //m from the bottom
 #define LIMELIGHT_YTHETA 60 //off the horizontal
 #define LIMELIGHT_DISPLACEMENT 0.1524 // m from the front
+#define LIMELIGHT_CENTER_DISPLACEMENT 0.1397 //
 
 #endif

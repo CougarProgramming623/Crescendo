@@ -94,7 +94,7 @@ void Robot::AutoButtons() {
       // DebugOutF("ty: " + std::to_string(vision.GetLimeLight()->GetNumber("ty", 0.0)));
       // DebugOutF("theta: " + std::to_string(theta));
       // DebugOutF("height: " + std::to_string(height));
-      DebugOutF("distance: " + std::to_string(distance));
+      //DebugOutF("distance: " + std::to_string(distance));
     }
     DebugOutF("shooter speed: " + std::to_string(GetArm().m_FlywheelPower));
   }));

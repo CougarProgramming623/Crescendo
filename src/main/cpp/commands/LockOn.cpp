@@ -22,13 +22,14 @@ double LockOn::cubicMod(double in, double cm) {
 }
 
 //if the limelight detects a target, robot theta and (LATER) shooter locks onto april tag
-void LockOn::Execute() {    
+void LockOn::Execute() {
     Robot* r = Robot::GetRobot();
     std::shared_ptr<nt::NetworkTable> limelight = r->GetVision().GetLimeLight();
     if(limelight->GetNumber("tv", 0.0) == 1) {
         m_AprilTagID = limelight->GetNumber("tid", 0.0);
         // r->GetVision().CalcPose();
-        m_GoalTheta = Rotation2d(units::angle::degree_t(r->GetAngle() + limelight->GetNumber("tx", 0.0)));
+        double LLCenterOffset = Rad2Deg(asin(LIMELIGHT_CENTER_DISPLACEMENT/r->GetVision().DistanceFromAprilTag(m_AprilTagID)));
+        m_GoalTheta = Rotation2d(units::angle::degree_t(r->GetAngle() + limelight->GetNumber("tx", 0.0) + LLCenterOffset));
 
         //print statements
         // DebugOutF("April Tag ID: " + std::to_string(m_AprilTagID));
