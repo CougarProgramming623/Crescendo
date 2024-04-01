@@ -39,7 +39,7 @@ DriveTrain::DriveTrain()
       m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s}, 
       m_xController(0.6, 0.5, 0.15),
       m_yController(0.6, 0.5, 0.15),
-      m_ThetaController(1.0, 0.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
+      m_ThetaController(3.0, 0.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
       m_HolonomicController(m_xController, m_yController, m_ThetaController),
       m_Climb(CLIMB_MOTOR),
       m_Lock180Button([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),

@@ -28,12 +28,12 @@ void LockOn::Execute() {
     if(limelight->GetNumber("tv", 0.0) == 1) {
         m_AprilTagID = limelight->GetNumber("tid", 0.0);
         // r->GetVision().CalcPose();
-        m_GoalTheta = Rotation2d(units::angle::degree_t(-r->GetAngle() + limelight->GetNumber("tx", 0.0)));
+        m_GoalTheta = Rotation2d(units::angle::degree_t(r->GetAngle() + limelight->GetNumber("tx", 0.0)));
 
         //print statements
         // DebugOutF("April Tag ID: " + std::to_string(m_AprilTagID));
         DebugOutF("Target Robot Angle: " + std::to_string(m_GoalTheta.Degrees().value()));
-        DebugOutF("Robot Angle: " + std::to_string(-r->GetAngle()));
+        DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
 
         frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                 units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
@@ -42,12 +42,12 @@ void LockOn::Execute() {
                 frc::Rotation2d(units::radian_t(Deg2Rad(-r->GetAngle())))
         );
 
-        m_AngleError = -r->GetAngle() - m_GoalTheta.Degrees().value();
+        m_AngleError = r->GetAngle() - m_GoalTheta.Degrees().value();
         DebugOutF("Angle Error: " + std::to_string(m_AngleError));
 
         // speeds.omega = -speeds.omega;
         DebugOutF("omega: " + std::to_string(speeds.omega()));
-        // r->GetDriveTrain().BaseDrive(speeds);
+        r->GetDriveTrain().BaseDrive(speeds);
 
     } else {
         Robot* r = Robot::GetRobot();

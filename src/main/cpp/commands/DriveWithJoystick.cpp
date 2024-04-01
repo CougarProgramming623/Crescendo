@@ -33,6 +33,8 @@ void DriveWithJoystick::Execute() {
             units::radians_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(2), 0.05), rotateMod) * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND),
             frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360))))
     );
+
+    DebugOutF("omega: " + std::to_string(speeds.omega()));
     
     r->GetDriveTrain().BaseDrive(speeds);
 }
