@@ -34,10 +34,11 @@ DriveTrain::DriveTrain()
       m_FrontRightModule(FRONT_RIGHT_MODULE_DRIVE_MOTOR, FRONT_RIGHT_MODULE_STEER_MOTOR, FRONT_RIGHT_MODULE_ENCODER_PORT, FRONT_RIGHT_MODULE_STEER_OFFSET),
       m_BackLeftModule(BACK_LEFT_MODULE_DRIVE_MOTOR, BACK_LEFT_MODULE_STEER_MOTOR, BACK_LEFT_MODULE_ENCODER_PORT, BACK_LEFT_MODULE_STEER_OFFSET),
       m_BackRightModule(BACK_RIGHT_MODULE_DRIVE_MOTOR, BACK_RIGHT_MODULE_STEER_MOTOR, BACK_RIGHT_MODULE_ENCODER_PORT, BACK_RIGHT_MODULE_STEER_OFFSET),
-      m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s}, 
-      m_xController(0.6, 0.5, 0.15),
-      m_yController(0.6, 0.5, 0.15),
+      m_ChassisSpeeds{0_mps, 0_mps, 0_rad_per_s},
+      m_xController(0.75, 0.5, 0.15),
+      m_yController(0.75, 0.5, 0.15),
       m_ThetaController(5.0, 4.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
+      // m_ThetaController(20.0, 0.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
       m_HolonomicController(m_xController, m_yController, m_ThetaController),
       m_Climb(CLIMB_MOTOR),
       m_Lock180Button([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
@@ -99,7 +100,7 @@ void DriveTrain::DriveInit() {
       Robot::GetRobot()->zeroGyroscope();
   }));
 
-  // m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
+  m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
 
   m_ClimbRobotUp.OnTrue(new frc2::InstantCommand([&] {
     DebugOutF("climbing up on");
@@ -193,20 +194,18 @@ void DriveTrain::Periodic(){
   // DebugOutF("visionY: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Y().value()));
   // DebugOutF("visionTheta: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Rotation().Degrees().value()));
 
-
-  // if(COB_GET_ENTRY(GET_VISION.FrontBack("botpose")).GetDoubleArray(std::span<double>()).size() != 0) { // FIX uncomment when we have both limelights back
-  // // if(COB_GET_ENTRY("/limelight/botpose").GetDoubleArray(std::span<double>()).size() != 0){ //Works with one limelight
-  //   if((m_DriveToPoseFlag != true || m_VisionCounter == 25) && !Robot::GetRobot()->m_AutoFlag) {
+  // m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetEstimatedPosition());
+  // if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumberArray("botpose_wpiblue", std::span<double>()).size() != 0) {
+  //   if(m_VisionCounter == 25) {
   //     if(std::abs(m_VisionRelative.X().value()) < 1 && std::abs(m_VisionRelative.Y().value()) < 1 && std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) {
   //       m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetFieldPose().Translation(), m_Rotation), m_Timer.GetFPGATimestamp() - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
   //       DebugOutF("Vision Update");
   //       m_VisionCounter = 0;
+  //     } else {
+  //       m_VisionCounter++;
   //     }
-  //   } else {
-  //     m_VisionCounter++;
   //   }
   // }
-
 }
 //Converts chassis speed object and updates module states
 void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds) {

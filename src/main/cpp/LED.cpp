@@ -22,7 +22,7 @@ void LED::Init(){
 void LED::SetData() { m_AddressableLED.SetData(m_LEDBuffer); }
 
 void LED::SponsorBoardAllianceColor() {
-    DebugOutF("first:" + std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
+    // DebugOutF("first:" + std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
     //DebugOutF("second" + std::to_string(LockOnStatus));
     // if(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/FMSInfo/IsRedAlliance").GetBoolean(false)) {
     //     m_AllianceColor = frc::Color::kRed;

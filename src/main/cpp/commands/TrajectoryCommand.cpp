@@ -26,10 +26,15 @@ void TrajectoryCommand::Execute() {
     DebugOutF("Execute");
     Robot* r = Robot::GetRobot();
     frc::Timer timer = r->GetDriveTrain().GetTimer();
-    frc::ChassisSpeeds speeds = r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), m_Trajectory.sample(timer.Get()).getTargetHolonomicPose(), m_Trajectory.sample(timer.Get()).velocity, m_Trajectory.getEndState().heading);
+    frc::ChassisSpeeds speeds = r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), m_Trajectory.sample(timer.Get()).getTargetHolonomicPose(), m_Trajectory.sample(timer.Get()).velocity, m_Trajectory.sample(timer.Get()).getTargetHolonomicPose().Rotation().Degrees());
+    DebugOutF("end heading: " + std::to_string(m_Trajectory.getStates().at(m_Trajectory.getStates().size() - 1).heading.Degrees().value()));
+    DebugOutF("current angle: " + std::to_string(r->GetAngle()));
+    DebugOutF("target heading: " + std::to_string(m_Trajectory.sample(timer.Get()).getTargetHolonomicPose().Rotation().Degrees().value()));
+    DebugOutF("timer: " + std::to_string(timer.Get().value()));
 
     // speeds.vy = -speeds.vy;
-    // speeds.omega = -speeds.omega;
+    speeds.omega = -speeds.omega;
+    DebugOutF("current omega: " + std::to_string(speeds.omega.value()));
 
     r->GetDriveTrain().BaseDrive(speeds);
 }
@@ -42,5 +47,5 @@ void TrajectoryCommand::End(bool interrupted){
 
 //End command when close to intended pose
 bool TrajectoryCommand::IsFinished(){
-    return m_Trajectory.getTotalTime() + 0.25_s < Robot::GetRobot()->GetDriveTrain().GetTimer().Get();
+    return m_Trajectory.getTotalTime() + 0.5_s < Robot::GetRobot()->GetDriveTrain().GetTimer().Get();
 }

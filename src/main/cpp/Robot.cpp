@@ -255,9 +255,9 @@ void Robot::AutonomousInit() {
     startingPose
   );
 
-  // if (m_autonomousCommand) {
-  //   m_autonomousCommand->Schedule();
-  // }
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Schedule();
+  }
 
   // Only shoot and don't move:
   
