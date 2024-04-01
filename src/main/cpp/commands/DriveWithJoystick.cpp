@@ -34,7 +34,7 @@ void DriveWithJoystick::Execute() {
             frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360))))
     );
 
-    DebugOutF("omega: " + std::to_string(speeds.omega()));
+    //DebugOutF("omega: " + std::to_string(speeds.omega()));
     
     r->GetDriveTrain().BaseDrive(speeds);
 }

@@ -7,7 +7,10 @@ LockOn::LockOn() {
     AddRequirements(&Robot::GetRobot()->GetDriveTrain());
 }
 
-void LockOn::Initialize(){}
+void LockOn::Initialize(){
+    Robot::GetRobot()->GetDriveTrain().LockOnStatus = true;
+    DebugOutF(std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
+}
 
 //joystick deadzone -> if input is below deadband, set input to zero
 double LockOn::Deadfix(double in, double deadband) {
@@ -23,18 +26,19 @@ double LockOn::cubicMod(double in, double cm) {
 
 //if the limelight detects a target, robot theta and (LATER) shooter locks onto april tag
 void LockOn::Execute() {
+    //DebugOutF(std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
     Robot* r = Robot::GetRobot();
     std::shared_ptr<nt::NetworkTable> limelight = r->GetVision().GetLimeLight();
     if(limelight->GetNumber("tv", 0.0) == 1) {
         m_AprilTagID = limelight->GetNumber("tid", 0.0);
         // r->GetVision().CalcPose();
         double LLCenterOffset = Rad2Deg(asin(LIMELIGHT_CENTER_DISPLACEMENT/r->GetVision().DistanceFromAprilTag(m_AprilTagID)));
-        m_GoalTheta = Rotation2d(units::angle::degree_t(r->GetAngle() + limelight->GetNumber("tx", 0.0) + LLCenterOffset));
+        m_GoalTheta = Rotation2d(units::degree_t(r->GetAngle() + limelight->GetNumber("tx", 0.0) + LLCenterOffset));
 
         //print statements
         // DebugOutF("April Tag ID: " + std::to_string(m_AprilTagID));
-        DebugOutF("Target Robot Angle: " + std::to_string(m_GoalTheta.Degrees().value()));
-        DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
+        //DebugOutF("Target Robot Angle: " + std::to_string(m_GoalTheta.Degrees().value()));
+        //DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
 
         frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                 units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
@@ -44,10 +48,10 @@ void LockOn::Execute() {
         );
 
         m_AngleError = r->GetAngle() - m_GoalTheta.Degrees().value();
-        DebugOutF("Angle Error: " + std::to_string(m_AngleError));
+        //DebugOutF("Angle Error: " + std::to_string(m_AngleError));
 
         // speeds.omega = -speeds.omega;
-        DebugOutF("omega: " + std::to_string(speeds.omega()));
+        //DebugOutF("omega: " + std::to_string(speeds.omega()));
         r->GetDriveTrain().BaseDrive(speeds);
 
     } else {
@@ -64,4 +68,9 @@ void LockOn::Execute() {
 
 bool LockOn::IsFinished() {
     return Robot::GetRobot()->m_AutoFlag && abs(m_AngleError) < 0.5;
+}
+
+void LockOn::End(bool interrupted) {
+    Robot::GetRobot()->GetDriveTrain().LockOnStatus = false;
+    //DebugOutF(std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
 }

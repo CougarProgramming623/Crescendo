@@ -135,6 +135,7 @@ class DriveTrain : public frc2::SubsystemBase {
   int m_VisionCounter;
   frc::Pose2d m_VisionRelative;
 
+  bool LockOnStatus;
   
   private:
 
