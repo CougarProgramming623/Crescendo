@@ -15,12 +15,15 @@ void LED::Init(){
     m_AddressableLED.SetData(m_LEDBuffer);
     m_IterationTracker = 0;
     m_IsTele = false;
+    //LockOnStatus = Robot::GetRobot()->GetDriveTrain().LockOnStatus;
     // SponsorBoardAllianceColor();
 }
 
 void LED::SetData() { m_AddressableLED.SetData(m_LEDBuffer); }
 
 void LED::SponsorBoardAllianceColor() {
+    DebugOutF("first:" + std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
+    //DebugOutF("second" + std::to_string(LockOnStatus));
     // if(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/FMSInfo/IsRedAlliance").GetBoolean(false)) {
     //     m_AllianceColor = frc::Color::kRed;
     // } else {
@@ -47,19 +50,40 @@ void LED::SponsorBoardSolid(frc::Color color){
 }
 
 void LED::LaserSensors() {
-    if(Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
+    //DebugOutF(std::to_string(LockOnStatus));
+    if(Robot::GetRobot()->m_DustpanLaser.Get() == 0 && !Robot::GetRobot()->GetDriveTrain().LockOnStatus) {
         for(int i = 0; i < numLEDs; i++) {
             m_LEDBuffer[i].SetLED(frc::Color::kGreen);
         }
-    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
+    } else if(Robot::GetRobot()->m_DustpanLaser.Get() == 0 && Robot::GetRobot()->GetDriveTrain().LockOnStatus){
+        for(int i = 0; i < numLEDs; i+=2) {
+            m_LEDBuffer[i].SetLED(frc::Color::kGreen);
+        }
+        for(int i = 1; i < numLEDs; i+=2) {
+            m_LEDBuffer[i].SetLED(frc::Color::kOrange);
+        }
+    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0 && !Robot::GetRobot()->GetDriveTrain().LockOnStatus) {
         for(int i = 0; i < numLEDs; i++) {
             m_LEDBuffer[i].SetLED(frc::Color::kPurple);
+        }
+    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0 && Robot::GetRobot()->GetDriveTrain().LockOnStatus){
+        for(int i = 0; i < numLEDs; i+=2) {
+            m_LEDBuffer[i].SetLED(frc::Color::kPurple);
+        }
+        for(int i = 1; i < numLEDs; i+=2) {
+            m_LEDBuffer[i].SetLED(frc::Color::kOrange);
         }
     } else {SponsorBoardAllianceColor();}
 }
 
 // void LED::VisionCanSee() {
 //     if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0.0) == 1) {
-//         if()
-//     }
-// }
+//         if(Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
+//         for(int i = 0; i < numLEDs; i += 2)
+//             m_LEDBuffer[i].SetLED(frc::Color::kGreen);
+//         for(int i = 1; i < numLEDs; i += 2)
+//             m_LEDBuffer[i].SetLED(frc::Color::kGreen);
+//     } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
+//         for(int i = 0; i < numLEDs; i++) {
+//             m_LEDBuffer[i].SetLED(frc::Color::kPurple);
+//         }

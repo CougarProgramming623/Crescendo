@@ -12,6 +12,7 @@ class LockOn : public frc2::CommandHelper<frc2::Command, LockOn> {
   void Initialize() override;
   void Execute() override;
   bool IsFinished() override;
+  void End(bool interrupted) override;
   double Deadfix(double in, double deadband);
   double cubicMod(double in, double cm);
 
@@ -19,4 +20,5 @@ class LockOn : public frc2::CommandHelper<frc2::Command, LockOn> {
   double m_AprilTagID;
   double m_PriorityId;
   double m_AngleError;
+  bool LockOnStatus;
 };
