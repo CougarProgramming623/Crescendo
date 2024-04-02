@@ -48,37 +48,27 @@ void LED::SponsorBoardSolid(frc::Color color){
     for(int i = 0; i < numLEDs; i++) {
         m_LEDBuffer[i].SetLED(color);
     }
+    if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
+        for(int i = numLEDs/2; i < numLEDs; i++) {
+            m_LEDBuffer[i].SetLED(frc::Color::kDarkGreen);
+        }
+    }
 }
 
 void LED::LaserSensors() {
     //DebugOutF(std::to_string(LockOnStatus));
-    if(Robot::GetRobot()->m_DustpanLaser.Get() == 0 /*&& !Robot::GetRobot()->GetDriveTrain().LockOnStatus*/) {
-        for(int i = 0; i < numLEDs; i+=2) {
-            m_LEDBuffer[i].SetLED(frc::Color::kGreen);
+    if(Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
+        for(int i = 0; i < numLEDs; i++) {
+           m_LEDBuffer[i].SetLED(frc::Color::kOrangeRed);
         }
-    } else if(Robot::GetRobot()->m_DustpanLaser.Get() == 0 /*&& Robot::GetRobot()->GetDriveTrain().LockOnStatus*/){
-        for(int i = 0; i < numLEDs; i+=2) {
-            m_LEDBuffer[i].SetLED(frc::Color::kGreen);
+    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
+        for(int i = 0; i < m_LEDBuffer.size(); i++) {
+            m_LEDBuffer[i].SetLED(frc::Color::kHotPink);
         }
-        for(int i = 1; i < numLEDs; i+=2) {
-            m_LEDBuffer[i].SetLED(frc::Color::kOrange);
-        }
-    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0 /*&& !Robot::GetRobot()->GetDriveTrain().LockOnStatus*/) {
-        DebugOutF(std::to_string(Robot::GetRobot()->m_UnderBotLaser.Get()));
-        for(int i = 0; i < m_LEDBuffer.size(); i+=2) {
-            m_LEDBuffer[i].SetLED(frc::Color::kPurple);
-        }
-    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0 /*&& Robot::GetRobot()->GetDriveTrain().LockOnStatus*/){
-        for(int i = 0; i < numLEDs; i+=2) {
-            m_LEDBuffer[i].SetLED(frc::Color::kPurple);
-        }
-        // for(int i = 1; i < numLEDs; i++) {
-        //     m_LEDBuffer[i].SetLED(frc::Color::kOrange);
-        // }
-    }
-    else {
+    } else {
         SponsorBoardAllianceColor();
     }
+
 }
 
 // void LED::VisionCanSee() {
