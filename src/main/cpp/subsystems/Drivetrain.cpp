@@ -14,6 +14,8 @@
 #include "./commands/Strafe.h"
 #include <frc/DriverStation.h>
 #include <frc/geometry/Pose2d.h>
+#include "./commands/Flywheel.h"
+#include "./commands/ConstantPivot.h"
 
 using namespace pathplanner;
 
@@ -44,7 +46,7 @@ DriveTrain::DriveTrain()
       m_Lock180Button([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(1);}),
       m_LockOnButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(2);}),
       m_NavXResetButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(3);}),
-      m_DuaLMotorControlButton([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
+      m_JoystickFlywheel([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(5);}),
       m_StrafeLeft([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(6);}),
       m_StrafeRight([&] {return Robot::GetRobot()->GetJoyStick().GetRawButton(4);}),
       m_ClimbRobotUp([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLIMB_UP);}),
@@ -86,7 +88,12 @@ void DriveTrain::DriveInit() {
 
   SetDefaultCommand(DriveWithJoystick());
 
-  m_LockOnButton.ToggleOnTrue(new LockOn());
+
+  m_LockOnButton.ToggleOnTrue(new frc2::ParallelCommandGroup(
+    LockOn(),
+    ConstantPivot(),
+    Flywheel()
+  ));
 
   m_Lock180Button.ToggleOnTrue(new Lock180());
 
@@ -94,13 +101,15 @@ void DriveTrain::DriveInit() {
   
   m_StrafeRight.WhileTrue(new Strafe(0));
 
+  m_JoystickFlywheel.ToggleOnTrue(new Flywheel());
+
   m_NavXResetButton.OnTrue(
     new frc2::InstantCommand([&]{
       DebugOutF("NavX Zero");
       Robot::GetRobot()->zeroGyroscope();
   }));
 
-  m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
+  // m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
 
   m_ClimbRobotUp.OnTrue(new frc2::InstantCommand([&] {
     DebugOutF("climbing up on");
@@ -183,8 +192,16 @@ void DriveTrain::Periodic(){
 
   m_ModulePositions = wpi::array<frc::SwerveModulePosition, 4>(m_FrontLeftModule.GetPosition(), m_FrontRightModule.GetPosition(), m_BackLeftModule.GetPosition(), m_BackRightModule.GetPosition());
 
-  // m_Odometry.Update(m_Rotation, m_ModulePositions);
   m_Odometry.Update(m_Rotation, m_ModulePositions);
+
+  // m_VisionPos = Robot::GetRobot()->GetVision().GetFieldPose();
+  // m_VisionPosXArray.push_back(m_VisionPos.X().value());
+  // m_VisionPosYArray.push_back(m_VisionPos.Y().value());
+  // m_VisionPosTArray.push_back(m_VisionPos.Rotation().Degrees().value());
+
+  // DebugOutF("xSD " + std::to_string(getStandardDeviation(m_VisionPosXArray)));
+  // DebugOutF("ySD " + std::to_string(getStandardDeviation(m_VisionPosYArray)));
+  // DebugOutF("tSD " + std::to_string(getStandardDeviation(m_VisionPosTArray)));
 
   // DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));
   // DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetEstimatedPosition().Y().value()));
@@ -244,9 +261,25 @@ void DriveTrain::SetStates(wpi::array<frc::SwerveModuleState, 4> states) {
 }
 
 //Sets the drive motors to brake mode
-void DriveTrain::BrakeMode(bool on){
+void DriveTrain::BrakeMode(bool on) {
   m_FrontLeftModule.BrakeMode(on);
   m_FrontRightModule.BrakeMode(on);
   m_BackLeftModule.BrakeMode(on);
   m_BackRightModule.BrakeMode(on);
- }
+}
+
+double DriveTrain::getStandardDeviation(std::vector<double> arr) {
+  double sum;
+  double mean;
+  double sd;
+
+  for(int i = 0; i < arr.size(); i++) {
+    sum += arr.at(i);
+  }
+  mean = sum/arr.size();
+  for(int i = 0; i < arr.size(); i++) {
+    sd += pow(arr.at(i) - mean, 2);
+  }
+  sd = sqrt(sd / arr.size());
+  return sd;
+}

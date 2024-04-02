@@ -93,6 +93,7 @@ class DriveTrain : public frc2::SubsystemBase {
   inline void SetIsBalancing(bool b) { m_IsBalancing = b; }
 
   frc2::FunctionalCommand AutoBalanceCommand();
+  double getStandardDeviation(std::vector<double> arr);
   void AutoBalanceFunction();
 
 
@@ -119,6 +120,22 @@ class DriveTrain : public frc2::SubsystemBase {
   const units::radians_per_second_t kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = units::radians_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI / std::sqrt(Pow((DRIVETRAIN_TRACKWIDTH_METERS / 2), 2) + Pow((DRIVETRAIN_WHEELBASE_METERS / 2), 2)));
 
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> m_EventMap;
+
+  frc::Pose2d m_VisionPos;
+
+  std::vector<double> m_VisionPosXArray;
+  std::vector<double> m_VisionPosYArray;
+  std::vector<double> m_VisionPosTArray;
+
+  double xSum;
+  double xMean;
+  double xSD;
+  double ySum;
+  double yMean;
+  double ySD;
+  double tSum;
+  double tMean;
+  double tSD;
 
   int m_SelectedGrid;
 
@@ -152,7 +169,7 @@ class DriveTrain : public frc2::SubsystemBase {
   frc2::Trigger m_StrafeRight;
   frc2::Trigger m_Lock180Button;
   frc2::Trigger m_LockOnButton;
-  frc2::Trigger m_DuaLMotorControlButton;
+  frc2::Trigger m_JoystickFlywheel;
   frc2::Trigger m_NavXResetButton;
 
   bool m_IsBalancing;

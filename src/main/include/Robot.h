@@ -117,6 +117,8 @@ class Robot : public frc::TimedRobot {
  private:
   
   bool flash;
+
+  double m_AngleOffset;
   
   frc::Pose2d startingPose;
 

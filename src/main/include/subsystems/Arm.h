@@ -91,14 +91,14 @@ class Arm : public frc2::SubsystemBase {
 
 	private:
 
-	double a=98.7315;
-	double b=-1789.18;
-	double c=13816.4;
-	double d=-59215.1;
-	double f=153564;
-	double g=-245904;
-	double h=236676;
-	double i=-125018;
+	double a = 98.7315;
+	double b = -1789.18;
+	double c = 13816.4;
+	double d = -59215.1;
+	double f = 153564;
+	double g = -245904;
+	double h = 236676;
+	double i = -125018;
 	double j = 28301.5;
 
 

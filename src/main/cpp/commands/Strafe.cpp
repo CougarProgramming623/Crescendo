@@ -35,11 +35,11 @@ void Strafe::Execute() {
     // if(frc::DriverStation::GetMatchTime().value() > ) {
         Robot* r = Robot::GetRobot();
     
-        frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+        frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(
             units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.05), 0.8) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
-            units::meters_per_second_t(r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.3 * m_Direction),
+            units::meters_per_second_t(r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.15 * m_Direction),
             units::radians_per_second_t(0),
-            frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360))))
+            frc::Rotation2d(units::radian_t(Deg2Rad(fmod(360 - r->GetNavX().GetAngle(), 360))))
         );
 
         r->GetDriveTrain().BaseDrive(speeds);

@@ -69,6 +69,13 @@ void Robot::RobotInit() {
   AutoButtons();
   m_LED.Init();
   
+  if(m_Print3.Get()) {
+    m_AngleOffset = 120;
+  } else if(m_Print4.Get()) {
+    m_AngleOffset = 180;
+  } else {
+    m_AngleOffset = 240;
+  }
   
   m_COBTicks = 0;
   m_AutoPath = "";
@@ -237,7 +244,7 @@ void Robot::AutonomousInit() {
   frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
   GetNavX().Reset();
-  // GetNavX().
+  GetNavX().SetAngleAdjustment(m_AngleOffset);
   GetDriveTrain().BrakeMode(true);
   GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
@@ -261,24 +268,24 @@ void Robot::AutonomousInit() {
 
   // Only shoot and don't move:
   
-  // frc2::CommandScheduler::GetInstance().Schedule(
-  //   new frc2::SequentialCommandGroup(
-  //     frc2::ParallelDeadlineGroup(
-  //       frc2::WaitCommand(2.0_s),
-  //       Flywheel(),
-  //       frc2::SequentialCommandGroup(
-  //         frc2::WaitCommand(1.0_s),
-  //         Shoot()
-  //       )
-  //     ),
-  //     frc2::InstantCommand([&] {
-  //       GetArm().GetShooterMotor1().Set(0);
-  //       GetArm().GetShooterMotor2().Set(0);
-  //       GetArm().GetDustpanLaunchServo().Set(1);
-  //     }),
-  //     TrajectoryCommand(getTrajectory("real auto pt. 1 (leave)"))
-  //   )
-  // );
+  frc2::CommandScheduler::GetInstance().Schedule(
+    new frc2::SequentialCommandGroup(
+      frc2::ParallelDeadlineGroup(
+        frc2::WaitCommand(2.0_s),
+        Flywheel(),
+        frc2::SequentialCommandGroup(
+          frc2::WaitCommand(1.0_s),
+          Shoot()
+        )
+      ),
+      frc2::InstantCommand([&] {
+        GetArm().GetShooterMotor1().Set(0);
+        GetArm().GetShooterMotor2().Set(0);
+        GetArm().GetDustpanLaunchServo().Set(1);
+      }),
+      TrajectoryCommand(getTrajectory("real auto pt. 1 (leave)"))
+    )
+  );
   
 }
 
