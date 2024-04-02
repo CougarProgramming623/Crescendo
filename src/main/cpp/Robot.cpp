@@ -255,7 +255,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-  m_autonomousCommand = TrajectoryCommand(getTrajectory("middleRed")).ToPtr();
+  m_autonomousCommand = TrajectoryCommand(getTrajectory("rightRed")).ToPtr();
 
   // does this whole thing make any difference??
   DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
@@ -288,7 +288,7 @@ void Robot::AutonomousInit() {
         GetArm().GetShooterMotor2().Set(0);
         GetArm().GetDustpanLaunchServo().Set(1);
       }),
-      TrajectoryCommand(getTrajectory("middleRed"))
+      TrajectoryCommand(getTrajectory("rightRed"))
     )
   );
 }
