@@ -88,12 +88,7 @@ void DriveTrain::DriveInit() {
 
   SetDefaultCommand(DriveWithJoystick());
 
-
-  m_LockOnButton.ToggleOnTrue(new frc2::ParallelCommandGroup(
-    LockOn(),
-    ConstantPivot(),
-    Flywheel()
-  ));
+  m_LockOnButton.ToggleOnTrue(new LockOn());
 
   m_Lock180Button.ToggleOnTrue(new Lock180());
 

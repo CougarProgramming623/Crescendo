@@ -59,7 +59,8 @@ class Arm : public frc2::SubsystemBase {
 	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
 
 	//Need to get the ratio of units to length ASAP
-	inline int DistanceToStringPotUnits(double distance) {return (a * pow(distance, 8) + b * pow(distance, 7) + c * pow(distance, 6) + d * pow(distance, 5) + f * pow(distance, 4) +  g * pow(distance, 3) +  h * pow(distance, 2) +  i * pow(distance, 1) + j);}
+	// inline int DistanceToStringPotUnits(double distance) {return (a * pow(distance, 8) + b * pow(distance, 7) + c * pow(distance, 6) + d * pow(distance, 5) + f * pow(distance, 4) +  g * pow(distance, 3) +  h * pow(distance, 2) +  i * pow(distance, 1) + j);}
+	inline int DistanceToStringPotUnits(double distance) {return round(a * pow(distance, 6) + b * pow(distance, 5) + c * pow(distance, 4) + d * pow(distance, 3) + k * pow(distance, 2) +  f * pow(distance, 1) + g);}
 	inline double StringPotUnitsToVelocity(double units) {return (-1);}
 	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
 	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((val - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
@@ -91,15 +92,23 @@ class Arm : public frc2::SubsystemBase {
 
 	private:
 
-	double a = 98.7315;
-	double b = -1789.18;
-	double c = 13816.4;
-	double d = -59215.1;
-	double f = 153564;
-	double g = -245904;
-	double h = 236676;
-	double i = -125018;
-	double j = 28301.5;
+	// double a = 98.7315;
+	// double b = -1789.18;
+	// double c = 13816.4;
+	// double d = -59215.1;
+	// double f = 153564;
+	// double g = -245904;
+	// double h = 236676;
+	// double i = -125018;
+	// double j = 28301.5;
+
+	double a = -10.7953;
+	double b = 154.526;
+	double c = -887.825;
+	double d = 2598.06;
+	double k = -4008.18;
+	double f = 2911.9;
+	double g = -219.44;
 
 
 	//triggers

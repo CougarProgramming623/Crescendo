@@ -57,7 +57,7 @@ void Arm::ArmInit() {
 	}));
 
 	m_ChangeDifferential.OnTrue(new frc2::InstantCommand([&] {
-		m_Differential = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(1) + 1)/4;
+		// m_Differential = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(1) + 1)/4;
 		DebugOutF("getting the dial value, differential: " + std::to_string(m_Differential));
 	}));
 
