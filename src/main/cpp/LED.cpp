@@ -11,6 +11,8 @@ LED::LED() {}
 void LED::Init(){
     DebugOutF("LED Init");
     m_AddressableLED.SetLength(numLEDs);
+    //m_AddressableLED.SetSyncTime(500);
+    //m_AddressableLED.SetBitTiming(260, 960, 760, 260);
     m_AddressableLED.Start();
     m_AddressableLED.SetData(m_LEDBuffer);
     m_IterationTracker = 0;

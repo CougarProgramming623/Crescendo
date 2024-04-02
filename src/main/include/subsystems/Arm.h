@@ -59,8 +59,8 @@ class Arm : public frc2::SubsystemBase {
 	inline double PivotDegreesToStringPotLength(double degrees) {return sqrt((ARM_LENGTH * ARM_LENGTH) + (DIFF_BASE_PIVOT_STRINGPOT * DIFF_BASE_PIVOT_STRINGPOT) - (2 * DIFF_BASE_PIVOT_STRINGPOT * ARM_LENGTH * cos(degrees)));}
 
 	//Need to get the ratio of units to length ASAP
-	inline int DistanceToStringPotUnits(double distance) {return (a * pow(distance, 6) + b * pow(distance, 5) + c * pow(distance, 4) + d * pow(distance, 3) + e * pow(distance, 2) + f * distance + g);}
-	inline double StringPotUnitsToPower(double units) {return (0.000012 * pow(units, 3) - 0.007719 * pow(units, 2) + 2.280973 * units - 249.831869);}
+	inline int DistanceToStringPotUnits(double distance) {return (a * pow(distance, 8) + b * pow(distance, 7) + c * pow(distance, 6) + d * pow(distance, 5) + f * pow(distance, 4) +  g * pow(distance, 3) +  h * pow(distance, 2) +  i * pow(distance, 1) + j);}
+	inline double StringPotUnitsToVelocity(double units) {return (-1);}
 	inline int StringPotLengthToStringPotUnits(double len) {return -1;}
 	inline double StringPotUnitsToRotations(int val) {return PIVOT_LOW  - (((val - STRINGPOT_LOW)/STRINGPOT_TOTAL_RANGE) * PIVOT_TOTAL_ROTATIONS);}
 	
@@ -91,13 +91,15 @@ class Arm : public frc2::SubsystemBase {
 
 	private:
 
-	double a = 2.79297;
-	double b = -28.4665;
-	double c = 99.0376;
-	double d = -118.764;
-	double e = 0;
-	double f = -87.1045;
-	double g = 664.418;
+	double a=98.7315;
+	double b=-1789.18;
+	double c=13816.4;
+	double d=-59215.1;
+	double f=153564;
+	double g=-245904;
+	double h=236676;
+	double i=-125018;
+	double j = 28301.5;
 
 
 	//triggers
@@ -116,10 +118,10 @@ class Arm : public frc2::SubsystemBase {
 	frc2::Trigger m_ChangeDifferential;
 	
 	//motors
-	hardware::TalonFX m_Pivot;
 	
 	hardware::TalonFX m_ShooterMotor1;
 	hardware::TalonFX m_ShooterMotor2;
+	hardware::TalonFX m_Pivot;
 	motorcontrol::can::TalonSRX m_Feeder;
 	//servos
   	frc::Servo m_DustpanPivot {1};
