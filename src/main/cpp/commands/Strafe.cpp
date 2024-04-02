@@ -33,7 +33,7 @@ void Strafe::Initialize() {
 
 void Strafe::Execute() {
     // if(frc::DriverStation::GetMatchTime().value() > ) {
-        // Robot::GetRobot()->GetNavX().Reset();
+        Robot::GetRobot()->GetNavX().Reset();
         Robot* r = Robot::GetRobot();
     
         frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(

@@ -88,7 +88,11 @@ void DriveTrain::DriveInit() {
 
   SetDefaultCommand(DriveWithJoystick());
 
-  m_LockOnButton.ToggleOnTrue(new LockOn());
+  m_LockOnButton.ToggleOnTrue(new frc2::ParallelCommandGroup(
+    LockOn(),
+    ConstantPivot(),
+    Flywheel()
+  ));
 
   m_Lock180Button.ToggleOnTrue(new Lock180());
 
@@ -96,11 +100,16 @@ void DriveTrain::DriveInit() {
   
   m_StrafeRight.WhileTrue(new Strafe(0));
 
-  m_JoystickFlywheel.ToggleOnTrue(new Flywheel());
+  m_JoystickFlywheel.OnTrue(new frc2::InstantCommand([&] {
+    Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(0.75);
+	})).OnFalse(new frc2::InstantCommand([&] {
+		Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1);
+	}));
 
   m_NavXResetButton.OnTrue(
     new frc2::InstantCommand([&]{
       DebugOutF("NavX Zero");
+      Robot::GetRobot()->m_AngleOffset = 0;
       Robot::GetRobot()->zeroGyroscope();
   }));
 

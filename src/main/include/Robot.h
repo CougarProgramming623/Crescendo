@@ -64,7 +64,7 @@ class Robot : public frc::TimedRobot {
   inline DriveTrain& GetDriveTrain() { return m_DriveTrain; }
   inline frc::Joystick& GetJoyStick() { return m_Joystick; }
 
-  double GetAngle() {return fmod(360 - GetNavX().GetAngle(), 360); }
+  double GetAngle() {return fmod(360 - GetNavX().GetAngle() + m_AngleOffset, 360); }
   
   inline COB& GetCOB() { return m_COB; }
   inline Vision& GetVision() { return m_Vision; }
@@ -113,13 +113,12 @@ class Robot : public frc::TimedRobot {
 
   bool m_AutoFlag;
   int m_ColOffset;
+  double m_AngleOffset;
 
  private:
   
   bool flash;
 
-  double m_AngleOffset;
-  
   frc::Pose2d startingPose;
 
   frc2::ParallelCommandGroup* m_ArmCommand;

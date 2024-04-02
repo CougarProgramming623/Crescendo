@@ -70,6 +70,6 @@ void ConstantPivot::End(bool interrupted) {
     r->GetArm().GetPivotMotor().Set(0);
 }
 
-bool ConstantPivot::IsFinished() {
-    return !r->GetArm().GetAimButton().Get();
-}
+// bool ConstantPivot::IsFinished() {
+//     return !r->GetArm().GetAimButton().Get();
+// }

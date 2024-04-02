@@ -69,13 +69,13 @@ void Robot::RobotInit() {
   AutoButtons();
   m_LED.Init();
   
-  if(m_Print3.Get()) {
-    m_AngleOffset = 120;
-  } else if(m_Print4.Get()) {
-    m_AngleOffset = 240;
-  } else {
-    m_AngleOffset = 180;
-  }
+  // if(m_Print.Get()) {
+  //   m_AngleOffset = 120;
+  // } else if(m_Print2.Get()) {
+  //   m_AngleOffset = 240;
+  // } else {
+  //   m_AngleOffset = 180;
+  // }
   
   m_COBTicks = 0;
   m_AutoPath = "";
@@ -255,7 +255,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-  m_autonomousCommand = TrajectoryCommand(getTrajectory("middleBlue")).ToPtr();
+  m_autonomousCommand = TrajectoryCommand(getTrajectory("middleRed")).ToPtr();
 
   // does this whole thing make any difference??
   DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
@@ -270,14 +270,13 @@ void Robot::AutonomousInit() {
   //   m_autonomousCommand->Schedule();
   // }
 
-  // Only shoot and don't move:
   
   frc2::CommandScheduler::GetInstance().Schedule(
     new frc2::SequentialCommandGroup(
       frc2::ParallelDeadlineGroup(
         frc2::WaitCommand(2.0_s),
         ConstantPivot(),
-
+        //LockOn(),
         Flywheel(),
         frc2::SequentialCommandGroup(
           frc2::WaitCommand(1.0_s),
@@ -289,10 +288,9 @@ void Robot::AutonomousInit() {
         GetArm().GetShooterMotor2().Set(0);
         GetArm().GetDustpanLaunchServo().Set(1);
       }),
-      TrajectoryCommand(getTrajectory("middleBlue"))
+      TrajectoryCommand(getTrajectory("middleRed"))
     )
   );
-  
 }
 
 void Robot::AutonomousPeriodic() {}
@@ -330,7 +328,6 @@ void Robot::TeleopInit() {
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-  GetNavX().SetAngleAdjustment(0);
 }
 
 /**

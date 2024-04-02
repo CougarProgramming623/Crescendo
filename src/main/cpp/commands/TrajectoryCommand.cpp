@@ -32,7 +32,7 @@ void TrajectoryCommand::Execute() {
     DebugOutF("target heading: " + std::to_string(m_Trajectory.sample(timer.Get()).getTargetHolonomicPose().Rotation().Degrees().value()));
     DebugOutF("timer: " + std::to_string(timer.Get().value()));
 
-    speeds.vy = -speeds.vy;
+    // speeds.vy = -speeds.vy;
     speeds.omega = -speeds.omega;
     DebugOutF("current omega: " + std::to_string(speeds.omega.value()));
 
