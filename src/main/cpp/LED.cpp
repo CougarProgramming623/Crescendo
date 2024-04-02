@@ -11,10 +11,9 @@ LED::LED() {}
 void LED::Init(){
     DebugOutF("LED Init");
     m_AddressableLED.SetLength(numLEDs);
-    //m_AddressableLED.SetSyncTime(500);
-    //m_AddressableLED.SetBitTiming(260, 960, 760, 260);
     m_AddressableLED.Start();
     m_AddressableLED.SetData(m_LEDBuffer);
+    // m_AddressableLED.SetSyncTime(500_us);
     m_IterationTracker = 0;
     m_IsTele = false;
     //LockOnStatus = Robot::GetRobot()->GetDriveTrain().LockOnStatus;
@@ -47,35 +46,39 @@ void LED::SponsorBoardAllianceColor() {
 
 void LED::SponsorBoardSolid(frc::Color color){
     for(int i = 0; i < numLEDs; i++) {
-            m_LEDBuffer[i].SetLED(color);
+        m_LEDBuffer[i].SetLED(color);
     }
 }
 
 void LED::LaserSensors() {
     //DebugOutF(std::to_string(LockOnStatus));
-    if(Robot::GetRobot()->m_DustpanLaser.Get() == 0 && !Robot::GetRobot()->GetDriveTrain().LockOnStatus) {
-        for(int i = 0; i < numLEDs; i++) {
+    if(Robot::GetRobot()->m_DustpanLaser.Get() == 0 /*&& !Robot::GetRobot()->GetDriveTrain().LockOnStatus*/) {
+        for(int i = 0; i < numLEDs; i+=2) {
             m_LEDBuffer[i].SetLED(frc::Color::kGreen);
         }
-    } else if(Robot::GetRobot()->m_DustpanLaser.Get() == 0 && Robot::GetRobot()->GetDriveTrain().LockOnStatus){
+    } else if(Robot::GetRobot()->m_DustpanLaser.Get() == 0 /*&& Robot::GetRobot()->GetDriveTrain().LockOnStatus*/){
         for(int i = 0; i < numLEDs; i+=2) {
             m_LEDBuffer[i].SetLED(frc::Color::kGreen);
         }
         for(int i = 1; i < numLEDs; i+=2) {
             m_LEDBuffer[i].SetLED(frc::Color::kOrange);
         }
-    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0 && !Robot::GetRobot()->GetDriveTrain().LockOnStatus) {
-        for(int i = 0; i < numLEDs; i++) {
+    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0 /*&& !Robot::GetRobot()->GetDriveTrain().LockOnStatus*/) {
+        DebugOutF(std::to_string(Robot::GetRobot()->m_UnderBotLaser.Get()));
+        for(int i = 0; i < m_LEDBuffer.size(); i+=2) {
             m_LEDBuffer[i].SetLED(frc::Color::kPurple);
         }
-    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0 && Robot::GetRobot()->GetDriveTrain().LockOnStatus){
+    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0 /*&& Robot::GetRobot()->GetDriveTrain().LockOnStatus*/){
         for(int i = 0; i < numLEDs; i+=2) {
             m_LEDBuffer[i].SetLED(frc::Color::kPurple);
         }
-        for(int i = 1; i < numLEDs; i+=2) {
-            m_LEDBuffer[i].SetLED(frc::Color::kOrange);
-        }
-    } else {SponsorBoardAllianceColor();}
+        // for(int i = 1; i < numLEDs; i++) {
+        //     m_LEDBuffer[i].SetLED(frc::Color::kOrange);
+        // }
+    }
+    else {
+        SponsorBoardAllianceColor();
+    }
 }
 
 // void LED::VisionCanSee() {

@@ -19,7 +19,7 @@
 #include "commands/LockOn.h"
 #include <frc/DriverStation.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
-#include <commands/LockOn.h>
+#include "commands/ConstantPivot.h"
 #include <commands/AutoTest.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc2/command/PrintCommand.h>
@@ -72,9 +72,9 @@ void Robot::RobotInit() {
   if(m_Print3.Get()) {
     m_AngleOffset = 120;
   } else if(m_Print4.Get()) {
-    m_AngleOffset = 180;
-  } else {
     m_AngleOffset = 240;
+  } else {
+    m_AngleOffset = 180;
   }
   
   m_COBTicks = 0;
@@ -160,6 +160,9 @@ void Robot::AutoButtons() {
 pathplanner::PathPlannerTrajectory Robot::getTrajectory(std::string traj) {
   // Load the path you want to follow using its name in the GUI
   auto path = PathPlannerPath::fromPathFile(traj);
+  // if(frc::DriverStation::GetAlliance() == DriverStation::Alliance::kRed) {
+    // path = path->flipPath();
+  // }
   startingPose = path.get()->getPreviewStartingHolonomicPose();
   return path.get()->getTrajectory(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s), path.get()->getPreviewStartingHolonomicPose().Rotation());
 }
@@ -189,6 +192,7 @@ void Robot::RobotPeriodic() {
   GetCOB().GetTable().GetEntry("/COB/distanceToApr").SetDouble(GetVision().DistanceFromAprilTag(GetVision().GetLimeLight()->GetEntry("tid").GetInteger(0.0)));
   GetCOB().GetTable().GetEntry("/COB/flywheel%").SetDouble(GetArm().m_FlywheelPower);
   GetCOB().GetTable().GetEntry("/COB/stringpot").SetDouble(GetArm().GetStringPot().GetAverageValue());
+  GetCOB().GetTable().GetEntry("/COB/angleAdjustment").SetDouble(m_AngleOffset);
 
   m_COBTicks++;
   GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(GetNavX().GetPitch() + 0.05);
@@ -251,7 +255,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-  m_autonomousCommand = TrajectoryCommand(getTrajectory("real auto pt. 1 (leave)")).ToPtr();
+  m_autonomousCommand = TrajectoryCommand(getTrajectory("middleBlue")).ToPtr();
 
   // does this whole thing make any difference??
   DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
@@ -262,9 +266,9 @@ void Robot::AutonomousInit() {
     startingPose
   );
 
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
-  }
+  // if (m_autonomousCommand) {
+  //   m_autonomousCommand->Schedule();
+  // }
 
   // Only shoot and don't move:
   
@@ -272,6 +276,8 @@ void Robot::AutonomousInit() {
     new frc2::SequentialCommandGroup(
       frc2::ParallelDeadlineGroup(
         frc2::WaitCommand(2.0_s),
+        ConstantPivot(),
+
         Flywheel(),
         frc2::SequentialCommandGroup(
           frc2::WaitCommand(1.0_s),
@@ -283,7 +289,7 @@ void Robot::AutonomousInit() {
         GetArm().GetShooterMotor2().Set(0);
         GetArm().GetDustpanLaunchServo().Set(1);
       }),
-      TrajectoryCommand(getTrajectory("real auto pt. 1 (leave)"))
+      TrajectoryCommand(getTrajectory("middleBlue"))
     )
   );
   
