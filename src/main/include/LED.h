@@ -18,21 +18,7 @@ class LED {
         void SponsorBoardSolid(frc::Color allianceColor);
         void LaserSensors();
         void VisionCanSee();
-
-        // void LowBattery();
-        // void EndGame();
-        // void SponsorBoardSolid(int R, int G, int B);
-        // void SponsorBoardRainbow();
-        // void SponsorBoardFlash(frc::Color allianceColor);     
-        // void SponsorBoardFlash(int R, int G, int B);     
-        // void EyesAllianceColor();
-        // void EyesSolidYellow(frc::Color);
-        // void EyesSolidPurple(frc::Color);
-        // void EyesSolid(frc::Color allianceColor);
-        // void EyesSolid(int R, int G, int B);
-        // void EyesAngry();
-        // void EyesSleepy();
-        // void EyeRoll();
+        void PickupFlashing();
 
         bool m_IsTele;
         int numLEDs = 67;
@@ -40,7 +26,7 @@ class LED {
     private:
 
         frc::AddressableLED m_AddressableLED{2};
-        int m_IterationTracker;
+        int m_FlashCounter;
 
         frc::Color m_AllianceColor;
 

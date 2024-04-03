@@ -69,16 +69,24 @@ void Robot::RobotInit() {
   AutoButtons();
   m_LED.Init();
   
-  // if(m_Print.Get()) {
-  //   m_AngleOffset = 120;
-  // } else if(m_Print2.Get()) {
-  //   m_AngleOffset = 240;
-  // } else {
-  //   m_AngleOffset = 180;
-  // }
+  if(m_Print.Get()) {
+    m_AutoPath += "left";
+    m_AngleOffset = 120;
+  } else if(m_Print2.Get()) {
+    m_AutoPath += "right";
+    m_AngleOffset = 240;
+  } else {
+    m_AutoPath += "middle";
+    m_AngleOffset = 180;
+  }
+
+  if(DriverStation::GetAlliance() == DriverStation::Alliance::kBlue) {
+    m_AutoPath += "Blue";
+  } else {
+    m_AutoPath += "Red";
+  }
   
   m_COBTicks = 0;
-  m_AutoPath = "";
   m_ArmCommand = nullptr;
 }
 
@@ -89,36 +97,37 @@ void Robot::AutoButtons() {
   m_Print2 = frc2::Trigger(BUTTON_L(15));
   m_Print3 = frc2::Trigger(BUTTON_L(14));
   m_Print4 = frc2::Trigger(BUTTON_L(13));
+  m_FlashLEDs  = frc2::Trigger(BUTTON_L(AIM_BUTTON));
 
   m_Print.WhileTrue(new frc2::InstantCommand([&] {
-    DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetAverageValue()));
-    Vision vision = GetVision();
-    if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
-      int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
-      double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
-      double height = vision.GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
-      double distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
-      // DebugOutF("ty: " + std::to_string(vision.GetLimeLight()->GetNumber("ty", 0.0)));
-      // DebugOutF("theta: " + std::to_string(theta));
-      // DebugOutF("height: " + std::to_string(height));
-      //DebugOutF("distance: " + std::to_string(distance));
-    }
-    DebugOutF("shooter speed: " + std::to_string(GetArm().m_FlywheelPower));
+    // DebugOutF("Stringpot Value: " + std::to_string(GetArm().GetStringPot().GetAverageValue()));
+    // Vision vision = GetVision();
+    // if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+    //   int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
+    //   double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
+    //   double height = vision.GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
+    //   double distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
+    //   DebugOutF("ty: " + std::to_string(vision.GetLimeLight()->GetNumber("ty", 0.0)));
+    //   DebugOutF("theta: " + std::to_string(theta));
+    //   DebugOutF("height: " + std::to_string(height));
+    //   DebugOutF("distance: " + std::to_string(distance));
+    // }
+    // DebugOutF("shooter speed: " + std::to_string(GetArm().m_FlywheelPower));
   }));
 
   m_Print2.OnTrue(new frc2::InstantCommand([&] {
-    DebugOutF("button clicked");
-    Vision vision = GetVision();
-    if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
-      int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
-      double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
-      double height = vision.GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
-      double distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
-      DebugOutF("ty: " + std::to_string(vision.GetLimeLight()->GetNumber("ty", 0.0)));
-      DebugOutF("theta: " + std::to_string(theta));
-      DebugOutF("height: " + std::to_string(height));
-      DebugOutF("distance: " + std::to_string(distance));
-    }
+    // DebugOutF("button clicked");
+    // Vision vision = GetVision();
+    // if(vision.GetLimeLight()->GetNumber("tv", 0.0) == 1) {
+    //   int id = vision.GetLimeLight()->GetNumber("tid", 0.0);
+    //   double theta = vision.GetLimeLight()->GetNumber("ty", 0.0) + 90 - LIMELIGHT_YTHETA;
+    //   double height = vision.GetIDMapValue(2, id) - LIMELIGHT_HEIGHT;
+    //   double distance = height/tan(Deg2Rad(theta)) - LIMELIGHT_DISPLACEMENT;
+    //   DebugOutF("ty: " + std::to_string(vision.GetLimeLight()->GetNumber("ty", 0.0)));
+    //   DebugOutF("theta: " + std::to_string(theta));
+    //   DebugOutF("height: " + std::to_string(height));
+    //   DebugOutF("distance: " + std::to_string(distance));
+    // }
   }));
 
   m_Print3.WhileTrue(new frc2::InstantCommand([&] {
@@ -129,6 +138,10 @@ void Robot::AutoButtons() {
     // DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
     DebugOutF("digital input 1: " + std::to_string(m_DustpanLaser.Get()));
     DebugOutF("digital input 2: " + std::to_string(m_UnderBotLaser.Get()));
+  }));
+
+  m_FlashLEDs.ToggleOnTrue(new frc2::InstantCommand([&] {
+    m_LED.PickupFlashing();
   }));
 }
 
@@ -196,8 +209,9 @@ void Robot::RobotPeriodic() {
 
   m_COBTicks++;
   GetRobot()->GetCOB().GetTable().GetEntry("/COB/pitchAngle").SetDouble(GetNavX().GetPitch() + 0.05);
+  GetRobot()->GetCOB().GetTable().GetEntry("/COB/autoPath").SetString(m_AutoPath);
+  
   // m_AutoPath = std::string(Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/auto").GetString(""));
-  m_AutoPath = "New New Path";
 
   GetButtonBoard().SetOutputs(0);
 
@@ -248,14 +262,14 @@ void Robot::AutonomousInit() {
   frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
   GetNavX().Reset();
-  GetNavX().SetAngleAdjustment(m_AngleOffset);
+  // GetNavX().SetAngleAdjustment(m_AngleOffset);
   GetDriveTrain().BrakeMode(true);
   GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-  m_autonomousCommand = TrajectoryCommand(getTrajectory("rightRed")).ToPtr();
+  m_autonomousCommand = TrajectoryCommand(getTrajectory("testRot")).ToPtr();
 
   // does this whole thing make any difference??
   DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
@@ -288,7 +302,7 @@ void Robot::AutonomousInit() {
         GetArm().GetShooterMotor2().Set(0);
         GetArm().GetDustpanLaunchServo().Set(1);
       }),
-      TrajectoryCommand(getTrajectory("rightRed"))
+      TrajectoryCommand(getTrajectory("testRot"))
     )
   );
 }

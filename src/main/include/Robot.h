@@ -99,15 +99,12 @@ class Robot : public frc::TimedRobot {
   frc2::Trigger m_Print2;
   frc2::Trigger m_Print3;
   frc2::Trigger m_Print4;
+  frc2::Trigger m_FlashLEDs;
 
   frc::DigitalInput m_DustpanLaser{0};
   frc::DigitalInput m_UnderBotLaser{1};
 
   int m_COBTicks;
-  //double m_Set;
-
-  int SelectedRow;
-	int SelectedColumn;
 
   //Intake m_Intake;
 

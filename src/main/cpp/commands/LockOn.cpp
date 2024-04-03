@@ -43,7 +43,7 @@ void LockOn::Execute() {
             units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
             units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.02), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
             units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega()),
-            frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360))))
+            frc::Rotation2d(units::radian_t(Deg2Rad(-r->GetAngle())))
         );
 
         m_AngleError = r->GetAngle() - m_GoalTheta.Degrees().value();
@@ -52,6 +52,10 @@ void LockOn::Execute() {
         // speeds.omega = -speeds.omega;
         //DebugOutF("omega: " + std::to_string(speeds.omega()));
         r->GetDriveTrain().BaseDrive(speeds);
+
+        if(abs(m_AngleError) < 1) {
+            Robot::GetRobot()->GetDriveTrain().LockOnStatus = true;
+        }
 
     } else {
         Robot* r = Robot::GetRobot();
@@ -65,11 +69,11 @@ void LockOn::Execute() {
     }
 }
 
-bool LockOn::IsFinished() {
-    return Robot::GetRobot()->m_AutoFlag && abs(m_AngleError) < 0.5;
-}
-
 void LockOn::End(bool interrupted) {
     Robot::GetRobot()->GetDriveTrain().LockOnStatus = false;
     //DebugOutF(std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
+}
+
+bool LockOn::IsFinished() {
+    return Robot::GetRobot()->m_AutoFlag && abs(m_AngleError) < 0.5;
 }
