@@ -71,19 +71,23 @@ void Robot::RobotInit() {
   
   if(m_Print.Get()) {
     m_AutoPath += "left";
-    m_AngleOffset = 120;
+    m_AngleOffset = 240;
+    if(DriverStation::GetAlliance() == DriverStation::Alliance::kBlue) {
+      m_AutoPath += "Blue";
+    } else {
+      m_AutoPath += "Red";
+    }
   } else if(m_Print2.Get()) {
     m_AutoPath += "right";
-    m_AngleOffset = 240;
+    m_AngleOffset = 120;
+    if(DriverStation::GetAlliance() == DriverStation::Alliance::kBlue) {
+      m_AutoPath += "Blue";
+    } else {
+      m_AutoPath += "Red";
+    }
   } else {
-    m_AutoPath += "middle";
+    m_AutoPath += "middleBlue";
     m_AngleOffset = 180;
-  }
-
-  if(DriverStation::GetAlliance() == DriverStation::Alliance::kBlue) {
-    m_AutoPath += "Blue";
-  } else {
-    m_AutoPath += "Red";
   }
   
   m_COBTicks = 0;
@@ -269,7 +273,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-  m_autonomousCommand = TrajectoryCommand(getTrajectory("testRot")).ToPtr();
+  m_autonomousCommand = TrajectoryCommand(getTrajectory(m_AutoPath)).ToPtr();
 
   // does this whole thing make any difference??
   DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
@@ -302,7 +306,7 @@ void Robot::AutonomousInit() {
         GetArm().GetShooterMotor2().Set(0);
         GetArm().GetDustpanLaunchServo().Set(1);
       }),
-      TrajectoryCommand(getTrajectory("testRot"))
+      TrajectoryCommand(getTrajectory(m_AutoPath))
     )
   );
 }
