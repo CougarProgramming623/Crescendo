@@ -36,13 +36,14 @@ void LockOn::Execute() {
 
         //print statements
         // DebugOutF("April Tag ID: " + std::to_string(m_AprilTagID));
-        //DebugOutF("Target Robot Angle: " + std::to_string(m_GoalTheta.Degrees().value()));
-        //DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
+        DebugOutF("Target Robot Angle: " + std::to_string(m_GoalTheta.Degrees().value()));
+        DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
 
         frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
             units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
             units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.02), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
-            units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega()),
+            // units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega()),
+            units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), Rotation2d(units::degree_t(r->GetAngle()))), frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega()),
             frc::Rotation2d(units::radian_t(Deg2Rad(-r->GetAngle())))
         );
 
@@ -50,7 +51,7 @@ void LockOn::Execute() {
         //DebugOutF("Angle Error: " + std::to_string(m_AngleError));
 
         // speeds.omega = -speeds.omega;
-        //DebugOutF("omega: " + std::to_string(speeds.omega()));
+        DebugOutF("omega: " + std::to_string(speeds.omega()));
         r->GetDriveTrain().BaseDrive(speeds);
 
         if(abs(m_AngleError) < 1) {

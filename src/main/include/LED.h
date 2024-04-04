@@ -23,8 +23,8 @@ class LED {
         bool m_IsTele;
         int numLEDs = 67;
         std::array <frc::AddressableLED::LEDData, 67> m_LEDMiddle;
-        std::array <frc::AddressableLED::LEDData, 57> m_LEDLeft;
-        std::array <frc::AddressableLED::LEDData, 57> m_LEDRight;
+        std::array <frc::AddressableLED::LEDData, 55> m_LEDLeft;
+        // std::array <frc::AddressableLED::LEDData, 57> m_LEDRight;
     private:
 
         frc::AddressableLED m_AddressableLED{2};

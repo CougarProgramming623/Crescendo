@@ -5,17 +5,17 @@
 #define ARM Robot::GetRobot()->GetArm()
 
 PivotToPos::PivotToPos(int target) {
-	DebugOutF("Going into constructor");
+	// DebugOutF("Going into constructor");
 	targetValue = target;
 	AddRequirements(&Robot::GetRobot()->GetArm());
 }
 
 void PivotToPos::Initialize() {
-	DebugOutF("Going into init");
+	// DebugOutF("Going into init");
 }
 
 void PivotToPos::Execute() {
-	DebugOutF("Going into execute");
+	// DebugOutF("Going into execute");
 	stringpot = ARM.GetStringPot().GetAverageValue();
 	int difference = stringpot - targetValue;
 	double kp = 0.15;

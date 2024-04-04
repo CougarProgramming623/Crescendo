@@ -273,6 +273,10 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
+  if(m_AutoPath == "rightRed" || m_AutoPath == "leftBlue") {
+    m_AutoPath = "na";
+  }
+
   m_autonomousCommand = TrajectoryCommand(getTrajectory(m_AutoPath)).ToPtr();
 
   // does this whole thing make any difference??

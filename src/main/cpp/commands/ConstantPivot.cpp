@@ -44,9 +44,9 @@ void ConstantPivot::Execute() {
         //DebugOutF("stringpot average value" + std::to_string(stringpot));
         int difference = stringpot - val;
         //DebugOutF("difference value : " + std::to_string(difference));
-            DebugOutF("target: " + std::to_string(val));
+            // DebugOutF("target: " + std::to_string(val));
         if(abs(difference) < 2) {
-            DebugOutF("Setting motor to 0");
+            // DebugOutF("Setting motor to 0");
             r->GetArm().GetPivotMotor().Set(0);
         }
         if(distance <= 3.26 && val > STRINGPOT_LOW && val < 555) {

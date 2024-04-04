@@ -83,7 +83,7 @@ DriveTrain::DriveTrain()
 }
 
 void DriveTrain::DriveInit() {
-  m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetNavX().GetAngle()));
+  m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetAngle()));
   m_Climb.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
   SetDefaultCommand(DriveWithJoystick());
@@ -111,6 +111,7 @@ void DriveTrain::DriveInit() {
       DebugOutF("NavX Zero");
       Robot::GetRobot()->m_AngleOffset = 0;
       Robot::GetRobot()->zeroGyroscope();
+      // Robot::GetRobot()->GetDriveTrain().GetOdometry()->ResetPosition()
   }));
 
   // m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
