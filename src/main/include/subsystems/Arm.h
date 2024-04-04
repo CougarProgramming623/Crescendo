@@ -124,7 +124,7 @@ class Arm : public frc2::SubsystemBase {
 	frc2::Trigger m_PickupPivot;
 	frc2::Trigger m_ProtectedBlockPivot;
 	frc2::Trigger m_CloseShootPivot;
-	frc2::Trigger m_ChangeDifferential;
+	frc2::Trigger m_PivotMax;
 	
 	//motors
 	

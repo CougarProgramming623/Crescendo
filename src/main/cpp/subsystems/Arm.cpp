@@ -35,7 +35,7 @@ Arm::Arm():
 	m_CloseShootPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(CLOSE_SHOOT_BUTTON);}),
 	m_PickupPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PICKUP_BUTTON);}),
 	m_ProtectedBlockPivot([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(PROTECTED_BLOCK_SHOOT);}),
-	m_ChangeDifferential([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(TEST_BIG_YELLOW_BUTTON);}),
+	m_PivotMax([&] {return Robot::GetRobot()->GetButtonBoard().GetRawButton(TEST_BIG_YELLOW_BUTTON);}),
 	m_Timer()
 {
 	// m_Pivot.SetPosition(units::angle::turn_t(0));
@@ -56,10 +56,12 @@ void Arm::ArmInit() {
 		DebugOutF("getting the dial value, power: " + std::to_string(m_FlywheelVelocity.value()));
 	}));
 
-	m_ChangeDifferential.OnTrue(new frc2::InstantCommand([&] {
-		// m_Differential = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(1) + 1)/4;
-		DebugOutF("getting the dial value, differential: " + std::to_string(m_Differential));
-	}));
+	
+
+	// m_ChangeDifferential.OnTrue(new frc2::InstantCommand([&] {
+	// 	// m_Differential = (Robot::GetRobot()->GetButtonBoard().GetRawAxis(1) + 1)/4;
+	// 	DebugOutF("getting the dial value, differential: " + std::to_string(m_Differential));
+	// }));
 
 	m_ShooterUp.WhileTrue(std::move(frc2::InstantCommand([&] {
 		if(m_StringPot.GetAverageValue() < STRINGPOT_TOP) {
@@ -110,6 +112,10 @@ void Arm::ArmInit() {
 		m_Feeder.Set(motorcontrol::ControlMode::PercentOutput, 0.35);
 	})).OnFalse(new frc2::InstantCommand([&] {
 		m_Feeder.Set(motorcontrol::ControlMode::PercentOutput, 0);
+	}));
+
+	m_PivotMax.OnTrue(PivotToPos(STRINGPOT_TOP).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
+		m_Pivot.Set(0);
 	}));
 
 	m_CloseShootPivot.OnTrue(PivotToPos(CLOSEUPSHOOTSTRINGPOT).ToPtr()).OnFalse(new frc2::InstantCommand([&] {
