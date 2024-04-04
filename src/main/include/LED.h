@@ -21,10 +21,17 @@ class LED {
         void PickupFlashing();
 
         bool m_IsTele;
-        int numLEDs = 67;
-        std::array <frc::AddressableLED::LEDData, 67> m_LEDMiddle;
-        std::array <frc::AddressableLED::LEDData, 55> m_LEDLeft;
-        // std::array <frc::AddressableLED::LEDData, 57> m_LEDRight;
+        int numLEDsTotal = 181;
+        int numLEDsLeftR1 = 19;
+        int numLEDsLeftR2 = 38;
+        int numLEDsLeftEnd = 57;
+        int numLEDsFrontR1 = 79;
+        int numLEDsFrontR2 = 102;
+        int numLEDsFrontEnd = 124;
+        int numLEDsRightR1 = 143;
+        int numLEDsRightR2 = 162;
+        int numLEDsRightEnd = numLEDsTotal; //181
+        std::array <frc::AddressableLED::LEDData, 181> m_LEDBuffer;
     private:
 
         frc::AddressableLED m_AddressableLED{2};
@@ -36,18 +43,13 @@ class LED {
         frc2::Trigger m_EyesPurple;
         frc2::Trigger m_ButtonLeds;
 
+        frc::Color red = frc::Color(127, 0, 0);
+        frc::Color blue = frc::Color(0, 0, 127);
+        frc::Color white = frc::Color(127, 127, 127);
+        frc::Color darkGreen = frc::Color(0, 50, 0);
+        frc::Color yellow = frc::Color(127, 127, 0);
+        frc::Color orangeRed = frc::Color(127, 34, 0);
+        frc::Color darkViolet = frc::Color(74, 0, 105);
+
         bool LockOnStatus;
-
-        int sect1left = 17;
-        int sect2left = 35;
-        int sect3left = 54;
-
-        int sect1right = 17;
-        int sect2right = 35;
-        int sect3right = 54;
-
-        int sect1middle = 21;
-        int sect2middle = 42;
-        int sect3middle = 66;
-
 };
