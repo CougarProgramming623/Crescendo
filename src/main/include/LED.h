@@ -22,7 +22,9 @@ class LED {
 
         bool m_IsTele;
         int numLEDs = 67;
-        std::array <frc::AddressableLED::LEDData, 67> m_LEDBuffer;
+        std::array <frc::AddressableLED::LEDData, 67> m_LEDMiddle;
+        std::array <frc::AddressableLED::LEDData, 57> m_LEDLeft;
+        std::array <frc::AddressableLED::LEDData, 57> m_LEDRight;
     private:
 
         frc::AddressableLED m_AddressableLED{2};
@@ -35,4 +37,17 @@ class LED {
         frc2::Trigger m_ButtonLeds;
 
         bool LockOnStatus;
+
+        int sect1left = 17;
+        int sect2left = 35;
+        int sect3left = 54;
+
+        int sect1right = 17;
+        int sect2right = 35;
+        int sect3right = 54;
+
+        int sect1middle = 21;
+        int sect2middle = 42;
+        int sect3middle = 66;
+
 };

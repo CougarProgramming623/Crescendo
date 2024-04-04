@@ -12,14 +12,14 @@ void LED::Init(){
     DebugOutF("LED Init");
     m_AddressableLED.SetLength(numLEDs);
     m_AddressableLED.Start();
-    m_AddressableLED.SetData(m_LEDBuffer);
+    m_AddressableLED.SetData(m_LEDMiddle);
     // m_AddressableLED.SetBitTiming(1500_us);
     m_IsTele = false;
     //LockOnStatus = Robot::GetRobot()->GetDriveTrain().LockOnStatus;
     // SponsorBoardAllianceColor();
 }
 
-void LED::SetData() { m_AddressableLED.SetData(m_LEDBuffer); }
+void LED::SetData() { m_AddressableLED.SetData(m_LEDMiddle); }
 
 void LED::SponsorBoardAllianceColor() {
     // DebugOutF("first:" + std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
@@ -45,44 +45,85 @@ void LED::SponsorBoardAllianceColor() {
 
 void LED::SponsorBoardSolid(frc::Color color){
     for(int i = 0; i < numLEDs; i++) {
-        m_LEDBuffer[i].SetLED(color);
+        m_LEDMiddle[i].SetLED(color);
     }
     if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
         for(int i = numLEDs/2; i < numLEDs; i++) {
-            m_LEDBuffer[i].SetLED(frc::Color::kDarkGreen);
+            m_LEDMiddle[i].SetLED(frc::Color::kDarkGreen);
         }
     }
 }
 
 void LED::LaserSensors() {
     //DebugOutF(std::to_string(LockOnStatus));
-    if(Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
-        for(int i = 0; i < numLEDs; i++) {
-           m_LEDBuffer[i].SetLED(frc::Color::kOrangeRed);
+    // if(Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
+    //     for(int i = 0; i < numLEDs; i++) {
+    //        m_LEDBuffer[i].SetLED(frc::Color::kOrangeRed);
+    //     }
+    // } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
+    //     for(int i = 0; i < m_LEDBuffer.size(); i++) {
+    //         m_LEDBuffer[i].SetLED(frc::Color::kHotPink);
+    //     }
+    // } else {
+    //     SponsorBoardAllianceColor();
+    // }
+    // if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
+    //     for(int i = numLEDs/2; i < numLEDs; i++) {
+    //         m_LEDBuffer[i].SetLED(frc::Color::kDarkGreen);
+    //     }
+    // }
+
+    if (Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
+        for (int i = sect1left; i <= sect2left; i++) {
+            m_LEDLeft[i].SetLED(frc::Color::kHotPink);
+            m_LEDRight[i].SetLED(frc::Color::kHotPink);
         }
-    } else if(Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
-        for(int i = 0; i < m_LEDBuffer.size(); i++) {
-            m_LEDBuffer[i].SetLED(frc::Color::kHotPink);
+
+        for (int i = sect1middle; i <=sect2middle; i++){
+            m_LEDMiddle[i].SetLED(frc::Color::kHotPink);
         }
-    } else {
-        SponsorBoardAllianceColor();
+    } else if (Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
+        for (int i = sect1left; i <= sect2left; i++) {
+            m_LEDLeft[i].SetLED(frc::Color::kOrangeRed);
+            m_LEDRight[i].SetLED(frc::Color::kOrangeRed);
+        }
+
+        for (int i = sect1middle; i <= sect2middle; i++) {
+            m_LEDMiddle[i].SetLED(frc::Color::kOrangeRed);
+        }
+    } else if (Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
+        for (int i = 0; i <= sect1left; i++) {
+            m_LEDLeft[i].SetLED(frc::Color::kYellow);
+            m_LEDRight[i].SetLED(frc::Color::kYellow);
+        }
+
+        for (int i = 0; i <= sect1left; i++) {
+            m_LEDMiddle[i].SetLED(frc::Color::kYellow);
+        }
+
+    } else if (Robot::GetRobot()->GetDriveTrain().LockOnStatus == true) {
+        for (int i = 0; i <= sect1left; i++) {
+            m_LEDLeft[i].SetLED(frc::Color::kYellow);
+            m_LEDRight[i].SetLED(frc::Color::kYellow);
+        }
+
+        for (int i = 0; i <= sect1left; i++) {
+            m_LEDMiddle[i].SetLED(frc::Color::kYellow);
+        }
     }
-    if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
-        for(int i = numLEDs/2; i < numLEDs; i++) {
-            m_LEDBuffer[i].SetLED(frc::Color::kDarkGreen);
-        }
-    }
+
+
 }
 
 void LED::PickupFlashing() {
     if(m_FlashCounter == 20) {
-        for(int i = 0; i < m_LEDBuffer.size(); i++) {
-            m_LEDBuffer[i].SetLED(frc::Color::kWhite);
+        for(int i = 0; i < m_LEDMiddle.size(); i++) {
+            m_LEDMiddle[i].SetLED(frc::Color::kWhite);
         }
     } else if(m_FlashCounter == 40) {
         m_FlashCounter = 0;
-        for(int i = 0; i < m_LEDBuffer.size(); i++) {
-            m_LEDBuffer[i].SetRGB(0,0,0);
+        for(int i = 0; i < m_LEDMiddle.size(); i++) {
+            m_LEDMiddle[i].SetRGB(0,0,0);
         }
     } else {
         m_FlashCounter++;
