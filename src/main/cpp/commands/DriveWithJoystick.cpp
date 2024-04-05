@@ -5,7 +5,7 @@
 DriveWithJoystick::DriveWithJoystick() {
     AddRequirements(&Robot::GetRobot()->GetDriveTrain());
     rotateMod = 0.75;
-    translationMod = 0.4;
+    translationMod = 0.3;
     Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/rotateMod").SetDouble(0.0);
     Robot::GetRobot()->GetCOB().GetTable().GetEntry("/COB/translationeMod").SetDouble(0.0);
 }

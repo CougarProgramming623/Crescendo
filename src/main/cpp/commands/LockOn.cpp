@@ -40,8 +40,8 @@ void LockOn::Execute() {
         DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
 
         frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-            units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02), 0.4) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
-            units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.02), 0.4) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
+            units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02), 0.3) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
+            units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.02), 0.3) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
             // units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega()),
             units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), Rotation2d(units::degree_t(r->GetAngle()))), frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega()),
             frc::Rotation2d(units::radian_t(Deg2Rad(-r->GetAngle())))
@@ -61,8 +61,8 @@ void LockOn::Execute() {
     } else {
         Robot* r = Robot::GetRobot();
         frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.05), 0.4) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
-                units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.05), 0.4) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
+                units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.05), 0.3) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
+                units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.05), 0.3) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
                 units::radians_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(2), 0.05), 0.75) * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND),
                 frc::Rotation2d(units::radian_t(Deg2Rad(-r->GetAngle())))
         );

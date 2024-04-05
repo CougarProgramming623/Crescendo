@@ -51,14 +51,8 @@ void LED::SponsorBoardSolid(frc::Color color){
         m_LEDBuffer[i].SetLED(color);
     }
     if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
-        for (int i = 0; i < numLEDsLeftR1; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen);
-        }
-        for(int i = numLEDsLeftEnd; i < numLEDsFrontR1; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen);
-        }
-        for(int i = numLEDsFrontEnd; i < numLEDsRightR1; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen);
+        for (int i = numLEDsLeftEnd; i < numLEDsFrontEnd; i++) {
+            m_LEDBuffer[i].SetLED(yellow);
         }
     }
 }
@@ -81,76 +75,105 @@ void LED::LaserSensors() {
     //         m_LEDMiddle[i].SetLED(frc::Color::kDarkGreen);
     //     }
     // }
+    // if (Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
+    //     for (int i = 0; i < numLEDsLeftR1; i++) {
+    //         m_LEDBuffer[i].SetLED(darkGreen);
+    //     }
+    //     for(int i = numLEDsLeftEnd; i < numLEDsFrontR1; i++) {
+    //         m_LEDBuffer[i].SetLED(darkGreen);
+    //     }
+    //     for(int i = numLEDsFrontEnd; i <= numLEDsRightR1; i++) {
+    //         m_LEDBuffer[i].SetLED(darkGreen );
+    //     }
+    // } else if (Robot::GetRobot()->GetDriveTrain().LockOnStatus == true) {
+    //     for (int i = 0; i < numLEDsLeftR1; i++) {
+    //         m_LEDBuffer[i].SetLED(yellow);
+    //     }
+    //     for(int i = numLEDsLeftEnd; i < numLEDsFrontR1; i++) {
+    //         m_LEDBuffer[i].SetLED(yellow);
+    //     }
+    //     for(int i = numLEDsFrontEnd; i <= numLEDsRightR1; i++) {
+    //         m_LEDBuffer[i].SetLED(yellow);
+    //     }
+    // }
+    
+    // if (Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
+    //     for (int i = numLEDsLeftR1; i < numLEDsLeftR2; i++) {
+    //         m_LEDBuffer[i].SetLED(orangeRed);
+    //     }
+    //     for(int i = numLEDsFrontR1; i < numLEDsFrontR2; i++) {
+    //         m_LEDBuffer[i].SetLED(orangeRed);
+    //     }
+    //     for(int i = numLEDsRightR1; i <= numLEDsRightR2; i++) {
+    //         m_LEDBuffer[i].SetLED(orangeRed);
+    //     }
+    // } else if (Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
+    //     for (int i = numLEDsLeftR1; i < numLEDsLeftR2; i++) {
+    //         m_LEDBuffer[i].SetLED(darkViolet);
+    //     }
+    //     for(int i = numLEDsFrontR1; i < numLEDsFrontR2; i++) {
+    //         m_LEDBuffer[i].SetLED(darkViolet);
+    //     }
+    //     for(int i = numLEDsRightR1; i < numLEDsRightR2; i++) {
+    //         m_LEDBuffer[i].SetLED(darkViolet);
+    //     }
+    // }
+
+    // if(abs(Robot::GetRobot()->GetArm().GetShooterMotor1().GetVelocity().GetValueAsDouble()) > 70) {
+    //     for (int i = numLEDsLeftR2; i <= numLEDsLeftEnd; i++) {
+    //         m_LEDBuffer[i].SetLED(darkGreen);
+    //     }
+    //     for(int i = numLEDsFrontR2; i <= numLEDsFrontEnd; i++) {
+    //         m_LEDBuffer[i].SetLED(darkGreen);
+    //     }
+    //     for(int i = numLEDsRightR2; i <= numLEDsRightEnd; i++) {
+    //         m_LEDBuffer[i].SetLED(darkGreen);
+    //     }
+    // }
+
+    if (Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
+        for (int i = 0; i <= numLEDsTotal; i++) {
+            m_LEDBuffer[i].SetLED(orangeRed);
+        }
+    } else if (Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
+        for (int i = 0; i <= numLEDsTotal; i++) {
+            m_LEDBuffer[i].SetLED(darkViolet);
+        }
+    } 
+    
     if (Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
-        for (int i = 0; i < numLEDsLeftR1; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen);
-        }
-        for(int i = numLEDsLeftEnd; i < numLEDsFrontR1; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen);
-        }
-        for(int i = numLEDsFrontEnd; i <= numLEDsRightR1; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen );
-        }
-    } else if (Robot::GetRobot()->GetDriveTrain().LockOnStatus == true) {
-        for (int i = 0; i < numLEDsLeftR1; i++) {
-            m_LEDBuffer[i].SetLED(yellow);
-        }
-        for(int i = numLEDsLeftEnd; i < numLEDsFrontR1; i++) {
-            m_LEDBuffer[i].SetLED(yellow);
-        }
-        for(int i = numLEDsFrontEnd; i <= numLEDsRightR1; i++) {
+        for (int i = numLEDsLeftEnd; i < numLEDsFrontEnd; i++) {
             m_LEDBuffer[i].SetLED(yellow);
         }
     }
     
-    if (Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
-        for (int i = numLEDsLeftR1; i < numLEDsLeftR2; i++) {
-            m_LEDBuffer[i].SetLED(orangeRed);
-        }
-        for(int i = numLEDsFrontR1; i < numLEDsFrontR2; i++) {
-            m_LEDBuffer[i].SetLED(orangeRed);
-        }
-        for(int i = numLEDsRightR1; i <= numLEDsRightR2; i++) {
-            m_LEDBuffer[i].SetLED(orangeRed);
-        }
-    } else if (Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
-        for (int i = numLEDsLeftR1; i < numLEDsLeftR2; i++) {
-            m_LEDBuffer[i].SetLED(darkViolet);
-        }
-        for(int i = numLEDsFrontR1; i < numLEDsFrontR2; i++) {
-            m_LEDBuffer[i].SetLED(darkViolet);
-        }
-        for(int i = numLEDsRightR1; i < numLEDsRightR2; i++) {
-            m_LEDBuffer[i].SetLED(darkViolet);
+    if (abs(Robot::GetRobot()->GetArm().GetShooterMotor1().GetVelocity().GetValueAsDouble()) > 68) {
+        for (int i = 0; i <= numLEDsTotal; i++) {
+             m_LEDBuffer[i].SetLED(darkGreen);
         }
     }
 
-    if(abs(Robot::GetRobot()->GetArm().GetShooterMotor1().GetVelocity().GetValueAsDouble()) > 70) {
-        for (int i = numLEDsLeftR2; i <= numLEDsLeftEnd; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen);
-        }
-        for(int i = numLEDsFrontR2; i <= numLEDsFrontEnd; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen);
-        }
-        for(int i = numLEDsRightR2; i <= numLEDsRightEnd; i++) {
-            m_LEDBuffer[i].SetLED(darkGreen);
-        }
-    }
+// dustpan orange
+// under bot purple
+// vision can see yellow
+// ready to shoot green
+// otherwise alliance color
+
 }
 
 void LED::PickupFlashing() {
-    if(m_FlashCounter == 20) {
-        for(int i = 0; i < m_LEDBuffer.size(); i++) {
+    DebugOutF("flash counter: " + std::to_string(m_FlashCounter));
+    if(m_FlashCounter == 5) {
+        for(int i = 0; i <= numLEDsTotal; i++) {
             m_LEDBuffer[i].SetLED(white);
         }
-    } else if(m_FlashCounter == 40) {
-        m_FlashCounter = 0;
-        for(int i = 0; i < m_LEDBuffer.size(); i++) {
+    } else if(m_FlashCounter == 10) {
+        for(int i = 0; i <= numLEDsTotal; i++) {
             m_LEDBuffer[i].SetRGB(0,0,0);
         }
-    } else {
-        m_FlashCounter++;
+        m_FlashCounter = 0;
     }
+    m_FlashCounter++;
 }
 
 // void LED::VisionCanSee() {

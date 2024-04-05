@@ -223,8 +223,12 @@ void Robot::RobotPeriodic() {
   double difference = 0;
 
   // LEDs!!!
-  m_LED.SponsorBoardAllianceColor();
-  m_LED.LaserSensors();
+  if(m_FlashLEDs.Get()) {
+    m_LED.PickupFlashing();
+  } else {
+    m_LED.SponsorBoardAllianceColor();
+    m_LED.LaserSensors();
+  }
   m_LED.SetData();
   // m_LED.LowBattery();
   // m_LED.EyesAllianceColor();
