@@ -13,7 +13,8 @@ void LED::Init(){
     m_AddressableLED.SetLength(numLEDsTotal);
     m_AddressableLED.Start();
     m_AddressableLED.SetData(m_LEDBuffer);
-    // m_AddressableLED.SetBitTiming(1500_us);
+    m_AddressableLED.SetBitTiming(260_ns, 960_ns, 760_ns, 580_ns);
+    m_AddressableLED.SetSyncTime(17_ms);
     m_IsTele = false;
     //LockOnStatus = Robot::GetRobot()->GetDriveTrain().LockOnStatus;
     // SponsorBoardAllianceColor();
