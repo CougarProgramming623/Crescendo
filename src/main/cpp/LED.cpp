@@ -147,7 +147,7 @@ void LED::LaserSensors() {
         }
     }
     
-    if (abs(Robot::GetRobot()->GetArm().GetShooterMotor1().GetVelocity().GetValueAsDouble()) > 68) {
+    if (abs(Robot::GetRobot()->GetArm().GetShooterMotor1().GetVelocity().GetValueAsDouble()) > (Robot::GetRobot()->GetArm().m_FlywheelPower * 75) && Robot::GetRobot()->GetDriveTrain().LockOnStatus == true) {
         for (int i = 0; i <= numLEDsTotal; i++) {
              m_LEDBuffer[i].SetLED(darkGreen);
         }

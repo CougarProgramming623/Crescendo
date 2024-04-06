@@ -8,8 +8,7 @@ LockOn::LockOn() {
 }
 
 void LockOn::Initialize(){
-    Robot::GetRobot()->GetDriveTrain().LockOnStatus = true;
-    DebugOutF(std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
+    Robot::GetRobot()->GetDriveTrain().LockOnStatus = false;
 }
 
 //joystick deadzone -> if input is below deadband, set input to zero
@@ -56,6 +55,8 @@ void LockOn::Execute() {
 
         if(abs(m_AngleError) < 1) {
             Robot::GetRobot()->GetDriveTrain().LockOnStatus = true;
+        } else {
+            Robot::GetRobot()->GetDriveTrain().LockOnStatus = false;
         }
 
     } else {

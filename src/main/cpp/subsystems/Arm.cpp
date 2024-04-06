@@ -53,7 +53,7 @@ void Arm::ArmInit() {
 
 	m_FlywheelPowerLock.OnTrue(new frc2::InstantCommand([&] {
 		// m_FlywheelVelocity = units::turns_per_second_t((((Robot::GetRobot()->GetButtonBoard().GetRawAxis(0) + 1)/2) * 27) + 45);
-		m_FlywheelVelocity = units::turns_per_second_t(72);
+		m_FlywheelVelocity = units::turns_per_second_t(72 * Robot::GetRobot()->GetButtonBoard().GetRawAxis(0));
 		DebugOutF("getting the dial value, power: " + std::to_string(m_FlywheelVelocity.value()));
 	}));
 
@@ -90,7 +90,7 @@ void Arm::ArmInit() {
 	}));
 
 	m_DustpanDown.OnTrue(new frc2::InstantCommand([&] {
-		m_DustpanPivot.Set(1);
+		m_DustpanPivot.Set(1.0 - (35.0/270.0));
 	}));
 
 	m_ServoShoot.OnTrue(new frc2::InstantCommand([&] {
