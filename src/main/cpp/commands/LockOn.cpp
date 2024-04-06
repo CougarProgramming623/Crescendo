@@ -8,8 +8,7 @@ LockOn::LockOn() {
 }
 
 void LockOn::Initialize(){
-    Robot::GetRobot()->GetDriveTrain().LockOnStatus = true;
-    DebugOutF(std::to_string(Robot::GetRobot()->GetDriveTrain().LockOnStatus));
+    Robot::GetRobot()->GetDriveTrain().LockOnStatus = false;
 }
 
 //joystick deadzone -> if input is below deadband, set input to zero
@@ -40,8 +39,8 @@ void LockOn::Execute() {
         DebugOutF("Robot Angle: " + std::to_string(r->GetAngle()));
 
         frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-            units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
-            units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.02), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
+            units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.02), 0.3) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
+            units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.02), 0.3) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND * 0.7),
             // units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega()),
             units::radians_per_second_t(r->GetDriveTrain().GetHolonomicController().Calculate(frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), Rotation2d(units::degree_t(r->GetAngle()))), frc::Pose2d(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition().Translation(), m_GoalTheta), 0_m / 1_s, m_GoalTheta).omega()),
             frc::Rotation2d(units::radian_t(Deg2Rad(-r->GetAngle())))
@@ -56,15 +55,17 @@ void LockOn::Execute() {
 
         if(abs(m_AngleError) < 1) {
             Robot::GetRobot()->GetDriveTrain().LockOnStatus = true;
+        } else {
+            Robot::GetRobot()->GetDriveTrain().LockOnStatus = false;
         }
 
     } else {
         Robot* r = Robot::GetRobot();
         frc::ChassisSpeeds speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.05), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
-                units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.05), 0.5) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
-                units::radians_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(2), 0.05), 0.8) * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND),
-                frc::Rotation2d(units::radian_t(Deg2Rad(-fmod(360 - r->GetNavX().GetAngle(), 360))))
+                units::meters_per_second_t(-cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(1), 0.05), 0.3) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
+                units::meters_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(0), 0.05), 0.3) * r->GetDriveTrain().kMAX_VELOCITY_METERS_PER_SECOND),
+                units::radians_per_second_t(cubicMod(Deadfix(r->GetJoyStick().GetRawAxis(2), 0.05), 0.75) * r->GetDriveTrain().kMAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND),
+                frc::Rotation2d(units::radian_t(Deg2Rad(-r->GetAngle())))
         );
         r->GetDriveTrain().BaseDrive(speeds);
     }

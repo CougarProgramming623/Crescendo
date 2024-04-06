@@ -49,5 +49,4 @@ class LED {
         int sect1middle = 21;
         int sect2middle = 42;
         int sect3middle = 66;
-
 };
