@@ -24,13 +24,17 @@
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc2/command/PrintCommand.h>
 #include "commands/TrajectoryCommand.h"
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <frc2/command/Command.h>
 
 #include <chrono>
+#include <memory>
 
 
 using ctre::phoenix::motorcontrol::ControlMode;
 using namespace pathplanner;
 using namespace std::chrono;
+using namespace pathplanner;
 
 Robot* Robot::s_Instance = nullptr;
 
@@ -40,7 +44,13 @@ m_LED(),
 m_PivotToPos(420)
 {
   // DebugOutF("inside robot constructor");
-  s_Instance = this;
+  // Build an auto chooser. This will use frc2::cmd::None() as the default option.
+  // autoChooser = AutoBuilder::buildAutoChooser();
+
+  // Another option that allows you to specify the default auto by its name
+  // autoChooser = AutoBuilder::buildAutoChooser("My Default Auto");
+
+  // frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
 }
 
 
@@ -277,54 +287,57 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-  if(m_AutoPath == "rightRed" || m_AutoPath == "leftBlue") {
-    m_AutoPath = "na";
+  m_autonomousCommand = getAutonomousCommand();
+
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Schedule();
   }
 
-  m_autonomousCommand = TrajectoryCommand(getTrajectory(m_AutoPath)).ToPtr();
-
-  // does this whole thing make any difference??
-  DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
-
-  GetDriveTrain().GetOdometry()->ResetPosition(
-    units::radian_t(Deg2Rad(GetAngle())), 
-    GetDriveTrain().GetModulePositions(),
-    startingPose
-  );
-
-  // if (m_autonomousCommand) {
-  //   m_autonomousCommand->Schedule();
+  // if(m_AutoPath == "rightRed" || m_AutoPath == "leftBlue") {
+  //   m_AutoPath = "na";
   // }
 
+  // m_autonomousCommand = TrajectoryCommand(getTrajectory(m_AutoPath)).ToPtr();
+
+  // does this whole thing make any difference??
+  // DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
+
+  // GetDriveTrain().GetOdometry()->ResetPosition(
+  //   units::radian_t(Deg2Rad(GetAngle())), 
+  //   GetDriveTrain().GetModulePositions(),
+  //   startingPose
+  // );
+
+  // // if (m_autonomousCommand) {
+  // //   m_autonomousCommand->Schedule();
+  // // }
+
   
-  frc2::CommandScheduler::GetInstance().Schedule(
-    new frc2::SequentialCommandGroup(
-      frc2::ParallelDeadlineGroup(
-        frc2::WaitCommand(2.0_s),
-        ConstantPivot(),
-        //LockOn(),
-        Flywheel(),
-        frc2::SequentialCommandGroup(
-          frc2::WaitCommand(1.0_s),
-          Shoot()
-        )
-      ),
-      frc2::InstantCommand([&] {
-        GetArm().GetShooterMotor1().Set(0);
-        GetArm().GetShooterMotor2().Set(0);
-        GetArm().GetDustpanLaunchServo().Set(1);
-      }),
-      TrajectoryCommand(getTrajectory(m_AutoPath))
-    )
-  );
+  // frc2::CommandScheduler::GetInstance().Schedule(
+  //   new frc2::SequentialCommandGroup(
+  //     frc2::ParallelDeadlineGroup(
+  //       frc2::WaitCommand(2.0_s),
+  //       ConstantPivot(),
+  //       //LockOn(),
+  //       Flywheel(),
+  //       frc2::SequentialCommandGroup(
+  //         frc2::WaitCommand(1.0_s),
+  //         Shoot()
+  //       )
+  //     ),
+  //     frc2::InstantCommand([&] {
+  //       GetArm().GetShooterMotor1().Set(0);
+  //       GetArm().GetShooterMotor2().Set(0);
+  //       GetArm().GetDustpanLaunchServo().Set(1);
+  //     }),
+  //     TrajectoryCommand(getTrajectory(m_AutoPath))
+  //   )
+  // );
 }
 
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Cancel();
-  }
 
   GetDriveTrain().BaseDrive(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s));
 
@@ -355,6 +368,22 @@ void Robot::TeleopInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 }
+
+frc2::CommandPtr Robot::getAutonomousCommand() {
+  DebugOutF("getting auto command");
+  return PathPlannerAuto("path").ToPtr(); 
+}
+
+// frc2::Command* Robot::getAutonomousCommand() {
+//   // Returns a frc2::Command* that is freed at program termination
+//   return autoChooser.GetSelected();
+// }
+
+// frc2::CommandPtr Robot::getAutonomousCommand() {
+//   // Returns a copy that is freed after reference is lost
+//   return frc2::CommandPtr(std::make_unique<frc2::Command>(*autoChooser.GetSelected()));
+//   s_Instance = this;
+// }
 
 /**
  * This function is called periodically during operator control.  

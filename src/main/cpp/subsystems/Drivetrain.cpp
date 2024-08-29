@@ -55,31 +55,32 @@ DriveTrain::DriveTrain()
       m_Timer(),
       m_EventMap()
 {
-  // AutoBuilder::configureHolonomic(
-  //       [this]() { return this->getPose(); }, // Robot pose supplier
-  //       [this](frc::Pose2d pose){ this->resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
-  //       [this]() { return this->getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-  //       [this](frc::ChassisSpeeds robotRelativeSpeeds){ this->DriveRobotRelative(robotRelativeSpeeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-  //       HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-  //           PIDConstants(10.5, 0.0, 0.0), // Translation PID constants
-  //           PIDConstants(0.5, 0.0, 0.0), // Rotation PID constants
-  //           // kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
-  //           units::meters_per_second_t(2.0),
-  //           0.5298_m, // Drive base radius in meters. Distance from robot center to furthest module.
-  //           ReplanningConfig() // Default path replanning config. See the API for the options here
-  //       ),
-  //       []() {
-  //           // Boolean supplier that controls when the path will be mirrored for the red alliance
-  //           // This will flip the path being followed to the red side of the field.
-  //           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-  //           auto alliance = DriverStation::GetAlliance();
-  //           if (alliance) {
-  //               return alliance.value() == DriverStation::Alliance::kBlue;
-  //           }
-  //           return false;
-  //       },
-  //       this // Reference to this subsystem to set requirements
-  //   );
+    // Configure the AutoBuilder last
+    AutoBuilder::configureHolonomic(
+        [this](){ return getPose(); }, // Robot pose supplier
+        [this](frc::Pose2d pose){ resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
+        [this](){ return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        [this](frc::ChassisSpeeds speeds){ DriveRobotRelative(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+            kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
+            0.4191_m, // Drive base radius in meters. Distance from robot center to furthest module.
+            ReplanningConfig() // Default path replanning config. See the API for the options here
+        ),
+        []() {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            auto alliance = DriverStation::GetAlliance();
+            if (alliance) {
+                return alliance.value() == DriverStation::Alliance::kRed;
+            }
+            return false;
+        },
+        this // Reference to this subsystem to set requirements
+    );
 }
 
 void DriveTrain::DriveInit() {
@@ -245,7 +246,6 @@ void DriveTrain::resetPose(Pose2d pose) {
 }
 
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds() {
-  Robot* r = Robot::GetRobot();
   return m_Kinematics.ToChassisSpeeds(m_ModuleStates);
 }
 

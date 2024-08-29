@@ -27,8 +27,10 @@
 #include <commands/Shoot.h>
 #include <commands/Intake.h>
 #include <frc/geometry/Pose2d.h>
+#include <frc2/command/Command.h>
 //#include "./subsystems/Intake.h"
 
+#include <pathplanner/lib/commands/PathPlannerAuto.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <memory>
 
@@ -71,6 +73,8 @@ class Robot : public frc::TimedRobot {
 
   pathplanner::PathPlannerTrajectory getTrajectory(std::string traj);
   frc::Pose2d TransformPose(frc::Pose2d SelectedPose);
+  frc2::CommandPtr getAutonomousCommand();
+  // frc2::Command* getAutonomousCommand();
   void MotorInversionCheck();
   // void MotorInversionCorrection(ctre::phoenix6::hardware::TalonFX motor, int ID, bool invert);
 
@@ -154,5 +158,4 @@ class Robot : public frc::TimedRobot {
   std::string m_AutoPath;
 
   //MotionMagicTest m_MMT;
-
 };
