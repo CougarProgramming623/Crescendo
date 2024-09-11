@@ -145,13 +145,13 @@ void Robot::AutoButtons() {
   }));
 
   m_Print3.WhileTrue(new frc2::InstantCommand([&] {
-    // DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
-    // DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
-    // DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
-    // DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
-    // DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
-    DebugOutF("digital input 1: " + std::to_string(m_DustpanLaser.Get()));
-    DebugOutF("digital input 2: " + std::to_string(m_UnderBotLaser.Get()));
+    DebugOutF("BL Voltage: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerSensorVoltage()));
+    DebugOutF("BR Voltage: " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
+    DebugOutF("FL Voltage: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
+    DebugOutF("FR Voltage: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
+    DebugOutF("Max Sensor Voltage: " + std::to_string(frc::RobotController::GetVoltage5V()));
+    // DebugOutF("digital input 1: " + std::to_string(m_DustpanLaser.Get()));
+    // DebugOutF("digital input 2: " + std::to_string(m_UnderBotLaser.Get()));
   }));
 
   m_FlashLEDs.ToggleOnTrue(new frc2::InstantCommand([&] {
@@ -269,6 +269,11 @@ void Robot::DisabledInit() {
 
 void Robot::DisabledPeriodic() {}
 
+frc2::CommandPtr Robot::getAutonomousCommand() {
+  DebugOutF("getting auto command");
+  return PathPlannerAuto("Straight").ToPtr(); 
+}
+
 /**
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
@@ -367,11 +372,6 @@ void Robot::TeleopInit() {
   GetDriveTrain().m_BackRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
-}
-
-frc2::CommandPtr Robot::getAutonomousCommand() {
-  DebugOutF("getting auto command");
-  return PathPlannerAuto("path").ToPtr(); 
 }
 
 // frc2::Command* Robot::getAutonomousCommand() {
