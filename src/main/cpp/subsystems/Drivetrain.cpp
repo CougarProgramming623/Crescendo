@@ -62,7 +62,7 @@ DriveTrain::DriveTrain()
         [this](){ return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](frc::ChassisSpeeds speeds){ DriveRobotRelative(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            PIDConstants(5.0, 2.0, 0.0), // Translation PID constants
             PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
             kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
             0.4191_m, // Drive base radius in meters. Distance from robot center to furthest module.
@@ -209,15 +209,15 @@ void DriveTrain::Periodic(){
   // DebugOutF("ySD " + std::to_string(getStandardDeviation(m_VisionPosYArray)));
   // DebugOutF("tSD " + std::to_string(getStandardDeviation(m_VisionPosTArray)));
 
-  // DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetEstimatedPosition().X().value()));
-  // DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetEstimatedPosition().Y().value()));
-  // DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetEstimatedPosition().Rotation().Degrees().value()));
+  // DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetPose().X().value()));
+  // DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetPose().Y().value()));
+  // DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetPose().Rotation().Degrees().value()));
 
   // DebugOutF("visionX: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().X().value()));
   // DebugOutF("visionY: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Y().value()));
   // DebugOutF("visionTheta: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Rotation().Degrees().value()));
 
-  // m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetEstimatedPosition());
+  // m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetPose());
   // if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumberArray("botpose_wpiblue", std::span<double>()).size() != 0) {
   //   if(m_VisionCounter == 25) {
   //     if(std::abs(m_VisionRelative.X().value()) < 1 && std::abs(m_VisionRelative.Y().value()) < 1 && std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) {
@@ -238,7 +238,7 @@ void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds) {
 }
 
 Pose2d DriveTrain::getPose() {
-  return m_Odometry.GetEstimatedPosition();
+  return m_Odometry.GetPose();
 }
 
 void DriveTrain::resetPose(Pose2d pose) {

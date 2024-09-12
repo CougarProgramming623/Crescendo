@@ -26,7 +26,7 @@ void TrajectoryCommand::Execute() {
     DebugOutF("Execute");
     Robot* r = Robot::GetRobot();
     frc::Timer timer = r->GetDriveTrain().GetTimer();
-    frc::ChassisSpeeds speeds = r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetEstimatedPosition(), m_Trajectory.sample(timer.Get()).getTargetHolonomicPose(), m_Trajectory.sample(timer.Get()).velocity, m_Trajectory.sample(timer.Get()).getTargetHolonomicPose().Rotation().Degrees());
+    frc::ChassisSpeeds speeds = r->GetDriveTrain().GetHolonomicController().Calculate(r->GetDriveTrain().GetOdometry()->GetPose(), m_Trajectory.sample(timer.Get()).getTargetHolonomicPose(), m_Trajectory.sample(timer.Get()).velocity, m_Trajectory.sample(timer.Get()).getTargetHolonomicPose().Rotation().Degrees());
     DebugOutF("end heading: " + std::to_string(m_Trajectory.getStates().at(m_Trajectory.getStates().size() - 1).heading.Degrees().value()));
     DebugOutF("current angle: " + std::to_string(r->GetAngle()));
     DebugOutF("target heading: " + std::to_string(m_Trajectory.sample(timer.Get()).getTargetHolonomicPose().Rotation().Degrees().value()));

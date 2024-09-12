@@ -71,7 +71,7 @@ class DriveTrain : public frc2::SubsystemBase {
   bool m_DriveToPoseFlag = false;
 
   inline frc::SwerveDriveKinematics<4> GetKinematics() { return m_Kinematics; }
-  inline frc::SwerveDrivePoseEstimator<4>* GetOdometry(){ return & m_Odometry; }
+  inline frc::SwerveDriveOdometry<4>* GetOdometry(){ return & m_Odometry; }
   inline frc::HolonomicDriveController GetHolonomicController(){ return m_HolonomicController; }
   inline hardware::TalonFX& GetClimbMotor() {return m_Climb;}
   inline frc::Timer& GetTimer() {return m_Timer;}
@@ -175,7 +175,7 @@ class DriveTrain : public frc2::SubsystemBase {
   bool m_IsBalancing;
 
   frc::SwerveDriveKinematics<4> m_Kinematics;
-  frc::SwerveDrivePoseEstimator<4> m_Odometry;
+  frc::SwerveDriveOdometry<4> m_Odometry;
   
   frc::Rotation2d m_Rotation;             
   frc::ChassisSpeeds m_ChassisSpeeds;

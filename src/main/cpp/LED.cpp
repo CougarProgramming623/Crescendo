@@ -9,20 +9,20 @@
 LED::LED() {}
 
 void LED::Init(){
-    DebugOutF("LED Init");
-    m_AddressableLED.SetLength(numLEDsTotal);
-    m_AddressableLED.Start();
-    m_AddressableLED.SetData(m_LEDBuffer);
-    m_AddressableLED.SetBitTiming(260_ns, 960_ns, 760_ns, 580_ns);
-    m_AddressableLED.SetSyncTime(17_ms);
-    m_IsTele = false;
+    // DebugOutF("LED Init");
+    // m_AddressableLED.SetLength(numLEDsTotal);
+    // m_AddressableLED.Start();
+    // m_AddressableLED.SetData(m_LEDBuffer);
+    // m_AddressableLED.SetBitTiming(260_ns, 960_ns, 760_ns, 580_ns);
+    // m_AddressableLED.SetSyncTime(17_ms);
+    // m_IsTele = false;
     //LockOnStatus = Robot::GetRobot()->GetDriveTrain().LockOnStatus;
     // SponsorBoardAllianceColor();
 }
 
 void LED::SetData() {
     // m_AddressableLED.SetData(m_LEDLeft);
-    m_AddressableLED.SetData(m_LEDBuffer);
+    // m_AddressableLED.SetData(m_LEDBuffer);
     // m_AddressableLED.SetData(m_LEDRight);
 }
 
@@ -38,25 +38,25 @@ void LED::SponsorBoardAllianceColor() {
     //     frc::DriverStation::GetAlliance() != frc::DriverStation::Alliance::kBlue) {
     //     m_AllianceColor = frc::Color::kWhite;
     // }
-    if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed){
-        m_AllianceColor = frc::Color::kRed;
-    } else if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue){
-        m_AllianceColor = frc::Color::kBlue;
-    } else {
-        m_AllianceColor = frc::Color::kWhite;
-    }
-    SponsorBoardSolid(m_AllianceColor);
+    // if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed){
+    //     m_AllianceColor = frc::Color::kRed;
+    // } else if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue){
+    //     m_AllianceColor = frc::Color::kBlue;
+    // } else {
+    //     m_AllianceColor = frc::Color::kWhite;
+    // }
+    // SponsorBoardSolid(m_AllianceColor);
 }
 
 void LED::SponsorBoardSolid(frc::Color color){
-    for(int i = 0; i < numLEDsTotal; i++) {
-        m_LEDBuffer[i].SetLED(color);
-    }
-    if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
-        for (int i = numLEDsLeftEnd; i < numLEDsFrontEnd; i++) {
-            m_LEDBuffer[i].SetLED(yellow);
-        }
-    }
+    // for(int i = 0; i < numLEDsTotal; i++) {
+    //     m_LEDBuffer[i].SetLED(color);
+    // }
+    // if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
+    //     for (int i = numLEDsLeftEnd; i < numLEDsFrontEnd; i++) {
+    //         m_LEDBuffer[i].SetLED(yellow);
+    //     }
+    // }
 }
 
 void LED::LaserSensors() {
@@ -172,27 +172,27 @@ void LED::LaserSensors() {
     //     }
     // }
 
-    if (Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
-        for (int i = 0; i <= numLEDsTotal; i++) {
-            m_LEDBuffer[i].SetLED(orangeRed);
-        }
-    } else if (Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
-        for (int i = 0; i <= numLEDsTotal; i++) {
-            m_LEDBuffer[i].SetLED(darkViolet);
-        }
-    } 
+    // if (Robot::GetRobot()->m_DustpanLaser.Get() == 0) {
+    //     for (int i = 0; i <= numLEDsTotal; i++) {
+    //         m_LEDBuffer[i].SetLED(orangeRed);
+    //     }
+    // } else if (Robot::GetRobot()->m_UnderBotLaser.Get() == 0) {
+    //     for (int i = 0; i <= numLEDsTotal; i++) {
+    //         m_LEDBuffer[i].SetLED(darkViolet);
+    //     }
+    // } 
     
-    if (Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
-        for (int i = numLEDsLeftEnd; i < numLEDsFrontEnd; i++) {
-            m_LEDBuffer[i].SetLED(yellow);
-        }
-    }
+    // if (Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
+    //     for (int i = numLEDsLeftEnd; i < numLEDsFrontEnd; i++) {
+    //         m_LEDBuffer[i].SetLED(yellow);
+    //     }
+    // }
     
-    if (abs(Robot::GetRobot()->GetArm().GetShooterMotor1().GetVelocity().GetValueAsDouble()) > (Robot::GetRobot()->GetArm().m_FlywheelPower * 75) && Robot::GetRobot()->GetDriveTrain().LockOnStatus == true) {
-        for (int i = 0; i <= numLEDsTotal; i++) {
-             m_LEDBuffer[i].SetLED(darkGreen);
-        }
-    }
+    // if (abs(Robot::GetRobot()->GetArm().GetShooterMotor1().GetVelocity().GetValueAsDouble()) > (Robot::GetRobot()->GetArm().m_FlywheelPower * 75) && Robot::GetRobot()->GetDriveTrain().LockOnStatus == true) {
+    //     for (int i = 0; i <= numLEDsTotal; i++) {
+    //          m_LEDBuffer[i].SetLED(darkGreen);
+    //     }
+    // }
 
 // dustpan orange
 // under bot purple
@@ -203,18 +203,18 @@ void LED::LaserSensors() {
 }
 
 void LED::PickupFlashing() {
-    DebugOutF("flash counter: " + std::to_string(m_FlashCounter));
-    if(m_FlashCounter == 5) {
-        for(int i = 0; i <= numLEDsTotal; i++) {
-            m_LEDBuffer[i].SetLED(white);
-        }
-    } else if(m_FlashCounter == 10) {
-        for(int i = 0; i <= numLEDsTotal; i++) {
-            m_LEDBuffer[i].SetRGB(0,0,0);
-        }
-        m_FlashCounter = 0;
-    }
-    m_FlashCounter++;
+    // DebugOutF("flash counter: " + std::to_string(m_FlashCounter));
+    // if(m_FlashCounter == 5) {
+    //     for(int i = 0; i <= numLEDsTotal; i++) {
+    //         m_LEDBuffer[i].SetLED(white);
+    //     }
+    // } else if(m_FlashCounter == 10) {
+    //     for(int i = 0; i <= numLEDsTotal; i++) {
+    //         m_LEDBuffer[i].SetRGB(0,0,0);
+    //     }
+    //     m_FlashCounter = 0;
+    // }
+    // m_FlashCounter++;
 }
 
 // void LED::VisionCanSee() {
