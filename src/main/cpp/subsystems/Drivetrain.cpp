@@ -272,7 +272,7 @@ void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds)
 
 Pose2d DriveTrain::getPose()
 {
-  return m_Odometry.GetPose();
+  return Pose2d(m_Odometry.GetPose().Translation(), m_Odometry.GetPose().Rotation().Degrees() * -1);
 }
 
 void DriveTrain::resetPose(Pose2d pose)
