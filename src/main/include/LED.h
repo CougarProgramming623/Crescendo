@@ -19,6 +19,7 @@ class LED {
         void LaserSensors();
         void VisionCanSee();
         void PickupFlashing();
+        void SponsorBoardRGB();
 
         bool m_IsTele;
         int numLEDsTotal = 181;
@@ -52,4 +53,5 @@ class LED {
         frc::Color darkViolet = frc::Color(74, 0, 105);
 
         bool LockOnStatus;
+        int m_IterationTracker;
 };
