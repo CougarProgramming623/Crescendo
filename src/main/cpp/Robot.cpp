@@ -75,6 +75,12 @@ void Robot::RobotInit() {
 
   NamedCommands::registerCommand("Flywheel", std::move(Flywheel().ToPtr()));
   NamedCommands::registerCommand("Shoot", std::move(Shoot().ToPtr()));
+  // NamedCommands::registerCommand("DustpanDown", std::move(DustpanDown().ToPtr()));
+  // NamedCommands::registerCommand("DustpanUp", std::move(DustpanUp().ToPtr()));
+  // NamedCommands::registerCommand("LockOn", std::move(LockOn().ToPtr()));
+  // NamedCommands::registerCommand("ConstantPivot", std::move(ConstantPivot().ToPtr()));
+  // NamedCommands::registerCommand("Feeder", std::move(Feeder().ToPtr()));
+  // NamedCommands::registerCommand("ReadyArm", std::move(ReadyArm().ToPtr()));
   
   AutoButtons();
   m_LED.Init();
@@ -300,9 +306,9 @@ void Robot::AutonomousInit() {
     PathPlannerAuto("Straight").getStartingPoseFromAutoFile("Straight")
   );
 
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
-  }
+  // if (m_autonomousCommand) {
+  //   m_autonomousCommand->Schedule();
+  // }
 
   // if(m_AutoPath == "rightRed" || m_AutoPath == "leftBlue") {
   //   m_AutoPath = "na";
@@ -319,9 +325,30 @@ void Robot::AutonomousInit() {
   //   startingPose
   // );
 
-  // // if (m_autonomousCommand) {
-  // //   m_autonomousCommand->Schedule();
-  // // }
+  // if (m_autonomousCommand) {
+  //   m_autonomousCommand->Schedule();
+  // }
+
+  frc2::CommandScheduler::GetInstance().Schedule(
+    new frc2::SequentialCommandGroup(
+      frc2::ParallelDeadlineGroup(
+        frc2::WaitCommand(2.0_s),
+        ConstantPivot(),
+        // LockOn(),
+        Flywheel(),
+        frc2::SequentialCommandGroup(
+          frc2::WaitCommand(1.0_s),
+          Shoot()
+        )
+      ),
+      frc2::InstantCommand([&] {
+        // GetArm().GetShooterMotor1().Set(0);
+        // GetArm().GetShooterMotor2().Set(0);
+        GetArm().GetDustpanLaunchServo().Set(1);
+      })
+      // TrajectoryCommand(getTrajectory(m_AutoPath))
+    )
+  );
 
   
   // frc2::CommandScheduler::GetInstance().Schedule(
