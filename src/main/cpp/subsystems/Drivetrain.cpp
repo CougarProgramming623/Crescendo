@@ -75,7 +75,7 @@ DriveTrain::DriveTrain()
       { DriveRobotRelative(speeds); },     // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       HolonomicPathFollowerConfig(         // HolonomicPathFollowerConfig, this should likely live in your Constants class
           PIDConstants(5.0, 1.0, 4.0),     // Translation PID constants
-          PIDConstants(10.0, 1.0, 0.0),     // Rotation PID constants
+          PIDConstants(5.0, 1.0, 0.0),     // Rotation PID constants
           kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
           0.4191_m,                        // Drive base radius in meters. Distance from robot center to furthest module.
           ReplanningConfig()               // Default path replanning config. See the API for the options here
@@ -241,9 +241,9 @@ void DriveTrain::Periodic()
   // DebugOutF("ySD " + std::to_string(getStandardDeviation(m_VisionPosYArray)));
   // DebugOutF("tSD " + std::to_string(getStandardDeviation(m_VisionPosTArray)));
 
-  // DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetPose().X().value()));
-  // DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetPose().Y().value()));
-  // DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetPose().Rotation().Degrees().value()));
+  DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetPose().X().value()));
+  DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetPose().Y().value()));
+  DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetPose().Rotation().Degrees().value()));
 
   // DebugOutF("visionX: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().X().value()));
   // DebugOutF("visionY: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Y().value()));

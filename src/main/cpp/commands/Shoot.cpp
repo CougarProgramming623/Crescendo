@@ -15,6 +15,7 @@ void Shoot::Execute() {
     // }
 
     r->GetArm().GetDustpanLaunchServo().Set(0.75);
+    r->GetArm().GetDustpanLaunchServo().Set(1);
 }
 
 void Shoot::End(bool interrupted) {

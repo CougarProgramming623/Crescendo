@@ -13,6 +13,6 @@ void DustpanDown::Execute() {
 
 void DustpanDown::End(bool interrupted) {}
 
-bool DustpanUp::IsFinished(){
+bool DustpanDown::IsFinished(){
   return r->GetArm().GetDustpanPivotServo().Get() == (1.0 - (35.0/270.0));
 }

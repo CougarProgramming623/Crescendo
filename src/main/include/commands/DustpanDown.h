@@ -11,6 +11,7 @@ class DustpanDown : public frc2::CommandHelper<frc2::Command, DustpanDown> {
   void Initialize() override;
   void Execute() override;
   void End(bool interrupted) override;
+  bool IsFinished() override;	
   int id;
   double dis;
 };

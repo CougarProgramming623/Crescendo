@@ -306,9 +306,9 @@ void Robot::AutonomousInit() {
     PathPlannerAuto("Straight").getStartingPoseFromAutoFile("Straight")
   );
 
-  // if (m_autonomousCommand) {
-  //   m_autonomousCommand->Schedule();
-  // }
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Schedule();
+  }
 
   // if(m_AutoPath == "rightRed" || m_AutoPath == "leftBlue") {
   //   m_AutoPath = "na";
@@ -329,7 +329,8 @@ void Robot::AutonomousInit() {
   //   m_autonomousCommand->Schedule();
   // }
 
-  frc2::CommandScheduler::GetInstance().Schedule(
+  /****** working auto code (2024 districts)
+    frc2::CommandScheduler::GetInstance().Schedule(
     new frc2::SequentialCommandGroup(
       frc2::ParallelDeadlineGroup(
         frc2::WaitCommand(2.0_s),
@@ -342,13 +343,15 @@ void Robot::AutonomousInit() {
         )
       ),
       frc2::InstantCommand([&] {
-        // GetArm().GetShooterMotor1().Set(0);
-        // GetArm().GetShooterMotor2().Set(0);
+        GetArm().GetShooterMotor1().Set(0);
+        GetArm().GetShooterMotor2().Set(0);
         GetArm().GetDustpanLaunchServo().Set(1);
       })
       // TrajectoryCommand(getTrajectory(m_AutoPath))
     )
   );
+  */
+  
 
   
   // frc2::CommandScheduler::GetInstance().Schedule(
@@ -374,10 +377,12 @@ void Robot::AutonomousInit() {
 }
 
 void Robot::AutonomousPeriodic() {
-
-  DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().X().value()));
-  DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().Y().value()));
-  DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().Rotation().Degrees().value()));
+  // DebugOutF("BL Velocity/steer: " + std::to_string(GetDriveTrain().m_BackLeftModule.GetDriveVelocity()) + ", " + std::to_string(GetDriveTrain().m_BackLeftModule.GetSteerAngle()));
+  // DebugOutF("BR Velocity/steer: " + std::to_string(GetDriveTrain().m_BackRightModule.GetDriveVelocity()) + ", " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerAngle()));
+  // DebugOutF("FL Velocity/steer: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetDriveVelocity()) + ", " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerAngle()));
+  // DebugOutF("FR Velocity/steer: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetDriveVelocity()) + ", " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerAngle()));
+  
+  // DebugOutF("///");
 }
 
 void Robot::TeleopInit() {
