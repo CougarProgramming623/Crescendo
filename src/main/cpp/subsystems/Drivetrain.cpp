@@ -16,12 +16,16 @@
 #include <frc/geometry/Pose2d.h>
 #include "./commands/Flywheel.h"
 #include "./commands/ConstantPivot.h"
+#include <pathplanner/lib/config/RobotConfig.h>
+#include <pathplanner/lib/controllers/PPHolonomicDriveController.h>
+#include <frc/kinematics/ChassisSpeeds.h>
+
 
 using namespace pathplanner;
 
 using namespace ctre::phoenix6;
 
-// Constructor
+// constructor
 DriveTrain::DriveTrain()
     : m_FrontLeftLocation(units::meter_t(DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t(-DRIVETRAIN_WHEELBASE_METERS / 2.0)),
       m_FrontRightLocation(units::meter_t(DRIVETRAIN_TRACKWIDTH_METERS / 2.0), units::meter_t(DRIVETRAIN_WHEELBASE_METERS / 2.0)),
@@ -39,7 +43,6 @@ DriveTrain::DriveTrain()
       m_xController(0.75, 0.5, 0.15),
       m_yController(0.75, 0.5, 0.15),
       m_ThetaController(5.0, 4.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1 / 2) * 3.14_rad_per_s / 1_s}),
-      // m_ThetaController(20.0, 0.0, 0.0, frc::TrapezoidProfile<units::radian>::Constraints{3.14_rad_per_s, (1/2) * 3.14_rad_per_s / 1_s}),
       m_HolonomicController(m_xController, m_yController, m_ThetaController),
       m_Climb(CLIMB_MOTOR),
       m_Lock180Button([&]
@@ -63,42 +66,35 @@ DriveTrain::DriveTrain()
       m_Timer(),
       m_EventMap()
 {
-  // Configure the AutoBuilder last
-  AutoBuilder::configureHolonomic(
-      [this]()
-      { return getPose(); }, // Robot pose supplier
-      [this](frc::Pose2d pose)
-      { resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
-      [this]()
-      { return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-      [this](frc::ChassisSpeeds speeds)
-      { DriveRobotRelative(speeds); },     // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-      HolonomicPathFollowerConfig(         // HolonomicPathFollowerConfig, this should likely live in your Constants class
-          PIDConstants(5.0, 1.0, 4.0),     // Translation PID constants
-          PIDConstants(5.0, 1.0, 0.0),     // Rotation PID constants
-          kMAX_VELOCITY_METERS_PER_SECOND, // Max module speed, in m/s
-          0.4191_m,                        // Drive base radius in meters. Distance from robot center to furthest module.
-          ReplanningConfig()               // Default path replanning config. See the API for the options here
-          ),
-      []()
-      {
+    RobotConfig config = RobotConfig::fromGUISettings();
+
+    // Configure the AutoBuilder as the last part of the constructor body
+    AutoBuilder::configure(
+      [this](){ return this->getPose(); }, // Robot pose supplier
+      [this](frc::Pose2d pose){ this->resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
+      [this](){ return this->getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      [this](ChassisSpeeds robotRelativeSpeeds){ this->DriveRobotRelative(robotRelativeSpeeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.Also optionally outputs individual module feedforwards
+      std::make_shared<PPHolonomicDriveController>( // PPHolonomicController is the built in path following controller for holonomic drive trains
+        PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+        PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+      ),
+      config, // The robot configuration
+      []() {
         // Boolean supplier that controls when the path will be mirrored for the red alliance
         // This will flip the path being followed to the red side of the field.
         // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
         auto alliance = DriverStation::GetAlliance();
-        if (alliance)
-        {
-          return alliance.value() == DriverStation::Alliance::kRed;
+        if (alliance) {
+            return alliance.value() == DriverStation::Alliance::kRed;
         }
         return false;
       },
       this // Reference to this subsystem to set requirements
-  );
+    );
 }
 
-void DriveTrain::DriveInit()
-{
+void DriveTrain::DriveInit() {
   m_Rotation = frc::Rotation2d(units::radian_t(Robot::GetRobot()->GetAngle()));
   m_Climb.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
@@ -115,47 +111,38 @@ void DriveTrain::DriveInit()
 
   m_StrafeRight.WhileTrue(new Strafe(0));
 
-  m_JoystickFlywheel.OnTrue(new frc2::InstantCommand([&]
-                                                     { Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(0.75); }))
-      .OnFalse(new frc2::InstantCommand([&]
-                                        { Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1); }));
+  m_JoystickFlywheel.OnTrue(new frc2::InstantCommand([&] { 
+    Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(0.75); 
+  })).OnFalse(new frc2::InstantCommand([&]{ 
+    Robot::GetRobot()->GetArm().GetDustpanLaunchServo().Set(1); 
+  }));
 
-  m_NavXResetButton.OnTrue(
-      new frc2::InstantCommand([&]
-                               {
-                                 DebugOutF("NavX Zero");
-                                 Robot::GetRobot()->m_AngleOffset = 0;
-                                 Robot::GetRobot()->zeroGyroscope();
-                                 // Robot::GetRobot()->GetDriveTrain().GetOdometry()->ResetPosition()
-                               }));
+  m_NavXResetButton.OnTrue(new frc2::InstantCommand([&]{
+    DebugOutF("NavX Zero");
+    Robot::GetRobot()->m_AngleOffset = 0;
+    Robot::GetRobot()->zeroGyroscope();
+    // Robot::GetRobot()->GetDriveTrain().GetOdometry()->ResetPosition()
+  }));
 
   // m_Odometry.SetVisionMeasurementStdDevs(wpi::array<double, 3U> {0.25, 0.25, .561799});
 
-  m_ClimbRobotUp.OnTrue(new frc2::InstantCommand([&]
-                                                 {
-                                                   DebugOutF("climbing up on");
-                                                   m_Climb.Set(1);
-                                                   // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0.5));
-                                                 }))
-      .OnFalse(new frc2::InstantCommand([&]
-                                        {
-                                          DebugOutF("climbing up off");
-                                          m_Climb.Set(0);
-                                          // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-                                        }));
-
-  m_ClimbRobotDown.OnTrue(new frc2::InstantCommand([&]
-                                                   {
-                                                     DebugOutF("climbing down on");
-                                                     m_Climb.Set(-1);
-                                                     // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(-0.5));
-                                                   }))
-      .OnFalse(new frc2::InstantCommand([&]
-                                        {
-                                          DebugOutF("climbing down off");
-                                          m_Climb.Set(0);
-                                          // m_Climb.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-                                        }));
+  //run the climb motor to bring the robot upwards (off the ground)
+  m_ClimbRobotUp.OnTrue(new frc2::InstantCommand([&]{
+    DebugOutF("climbing up on");
+    m_Climb.Set(1);
+  })).OnFalse(new frc2::InstantCommand([&]{
+    DebugOutF("climbing up off");
+    m_Climb.Set(0);
+  }));
+  
+  //run the climb motor to move downwards (to the ground)
+  m_ClimbRobotDown.OnTrue(new frc2::InstantCommand([&]{
+    DebugOutF("climbing down on");
+    m_Climb.Set(-1);
+  })).OnFalse(new frc2::InstantCommand([&]{
+    DebugOutF("climbing down off");
+    m_Climb.Set(0);
+  }));
 }
 
 /*
@@ -164,66 +151,32 @@ Passes module states to motors and updates odometry
 */
 void DriveTrain::Periodic()
 {
-
-  // m_StrafeLeft.WhileTrue(new BotStrafe(1));
-  // m_StrafeRight.WhileTrue(new BotStrafe(2));
-  // m_StrafeLeft.WhileFalse(new BotStrafe(0));
-  // m_StrafeRight.WhileFalse(new BotStrafe(0));
-  // m_StrafeLeft.OnTrue(new BotStrafe(1)).OnFalse(new BotStrafe(0));
-  // m_StrafeRight.OnTrue(new BotStrafe(2)).OnFalse(new BotStrafe(0));
-
-  // if (driveState = 1) {
-  //   //DebugOutF("Drive state = 1");
-  //   // Robot::GetRobot()->GetDriveTrain().m_FrontRightModule.Set(8.0, -90.0);
-  //   // Robot::GetRobot()->GetDriveTrain().m_FrontLeftModule.Set(8.0, -90.0);
-  //   // Robot::GetRobot()->GetDriveTrain().m_BackRightModule.Set(8.0, -90.0);
-  //   // Robot::GetRobot()->GetDriveTrain().m_BackLeftModule.Set(8.0, -90.0);
-  // } else if (driveState = 2) {
-  //   //DebugOutF("Drive state = 2");
-  //   // Robot::GetRobot()->GetDriveTrain().m_FrontRightModule.Set(8.0, 90.0);
-  //   // Robot::GetRobot()->GetDriveTrain().m_FrontLeftModule.Set(8.0, 90.0);
-  //   // Robot::GetRobot()->GetDriveTrain().m_BackRightModule.Set(8.0, 90.0);
-  //   // Robot::GetRobot()->GetDriveTrain().m_BackLeftModule.Set(8.0, 90.0);
-  // } else {
-  // DebugOutF("Drive state = 0");
-  if ((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE) == 0 && ((double)m_ModuleStates[0].angle.Radians() == 0))
-  {
+  if ((m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE) == 0 && ((double)m_ModuleStates[0].angle.Radians() == 0)) {
     m_FrontLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
     m_FrontLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-  }
-  else
-  {
-    m_FrontLeftModule.Set(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE * -1, (double)m_ModuleStates[0].angle.Radians());
+  } else {
+    m_FrontLeftModule.SetVoltage(m_ModuleStates[0].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE * -1, (double)m_ModuleStates[0].angle.Radians());
   }
 
-  if ((m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double)m_ModuleStates[1].angle.Radians() == 0))
-  {
+  if ((m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double)m_ModuleStates[1].angle.Radians() == 0)) {
     m_FrontRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
     m_FrontRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-  }
-  else
-  {
-    m_FrontRightModule.Set(m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double)m_ModuleStates[1].angle.Radians() * -1.0);
+  } else {
+    m_FrontRightModule.SetVoltage(m_ModuleStates[1].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double)m_ModuleStates[1].angle.Radians() * -1.0);
   }
 
-  if ((m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double)m_ModuleStates[2].angle.Radians() == 0))
-  {
+  if ((m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double)m_ModuleStates[2].angle.Radians() == 0)) {
     m_BackLeftModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
     m_BackLeftModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-  }
-  else
-  {
-    m_BackLeftModule.Set(m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double)m_ModuleStates[2].angle.Radians() * -1.0);
+  } else {
+    m_BackLeftModule.SetVoltage(m_ModuleStates[2].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE, (double)m_ModuleStates[2].angle.Radians() * -1.0);
   }
 
-  if ((m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double)m_ModuleStates[3].angle.Radians() == 0))
-  {
+  if ((m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE == 0) && ((double)m_ModuleStates[3].angle.Radians() == 0)) {
     m_BackRightModule.m_SteerController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
     m_BackRightModule.m_DriveController.motor.SetControl(Robot::GetRobot()->m_DutyCycleOutRequest.WithOutput(0));
-  }
-  else
-  {
-    m_BackRightModule.Set(m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE * -1, (double)m_ModuleStates[3].angle.Radians());
+  } else {
+    m_BackRightModule.SetVoltage(m_ModuleStates[3].speed / kMAX_VELOCITY_METERS_PER_SECOND * kMAX_VOLTAGE * -1, (double)m_ModuleStates[3].angle.Radians());
   }
 
   m_Rotation = frc::Rotation2d(units::angle::degree_t(Robot::GetRobot()->GetAngle()));
@@ -232,35 +185,24 @@ void DriveTrain::Periodic()
 
   m_Odometry.Update(m_Rotation, m_ModulePositions);
 
-  // m_VisionPos = Robot::GetRobot()->GetVision().GetFieldPose();
-  // m_VisionPosXArray.push_back(m_VisionPos.X().value());
-  // m_VisionPosYArray.push_back(m_VisionPos.Y().value());
-  // m_VisionPosTArray.push_back(m_VisionPos.Rotation().Degrees().value());
-
-  // DebugOutF("xSD " + std::to_string(getStandardDeviation(m_VisionPosXArray)));
-  // DebugOutF("ySD " + std::to_string(getStandardDeviation(m_VisionPosYArray)));
-  // DebugOutF("tSD " + std::to_string(getStandardDeviation(m_VisionPosTArray)));
-
   DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetPose().X().value()));
   DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetPose().Y().value()));
   DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetPose().Rotation().Degrees().value()));
 
-  // DebugOutF("visionX: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().X().value()));
-  // DebugOutF("visionY: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Y().value()));
-  // DebugOutF("visionTheta: " + std::to_string(Robot::GetRobot()->GetVision().GetFieldPose().Rotation().Degrees().value()));
-
-  // m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetPose());
-  // if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumberArray("botpose_wpiblue", std::span<double>()).size() != 0) {
-  //   if(m_VisionCounter == 25) {
-  //     if(std::abs(m_VisionRelative.X().value()) < 1 && std::abs(m_VisionRelative.Y().value()) < 1 && std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) {
-  //       m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetFieldPose().Translation(), m_Rotation), m_Timer.GetFPGATimestamp() - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
-  //       DebugOutF("Vision Update");
-  //       m_VisionCounter = 0;
-  //     } else {
-  //       m_VisionCounter++;
-  //     }
-  //   }
-  // }
+  /***********ODOMETRY UPDATING WITH VISION POSITION (2023)****************
+   m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetPose());
+  if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumberArray("botpose_wpiblue", std::span<double>()).size() != 0) {
+    if(m_VisionCounter == 25) {
+      if(std::abs(m_VisionRelative.X().value()) < 1 && std::abs(m_VisionRelative.Y().value()) < 1 && std::abs(-fmod(360 - m_VisionRelative.Rotation().Degrees().value(), 360)) < 30) {
+        m_Odometry.AddVisionMeasurement(frc::Pose2d(Robot::GetRobot()->GetVision().GetFieldPose().Translation(), m_Rotation), m_Timer.GetFPGATimestamp() - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("tl")).GetDouble(0))/1000.0) - units::second_t((COB_GET_ENTRY(GET_VISION.FrontBack("cl")).GetDouble(0))/1000.0));
+        DebugOutF("Vision Update");
+        m_VisionCounter = 0;
+      } else {
+        m_VisionCounter++;
+      }
+    }
+  }
+  */
 }
 // Converts chassis speed object and updates module states
 void DriveTrain::BaseDrive(frc::ChassisSpeeds chassisSpeeds)
@@ -297,10 +239,10 @@ void DriveTrain::SetStates(wpi::array<frc::SwerveModuleState, 4> states)
 {
   frc::SwerveDriveKinematics<4>::DesaturateWheelSpeeds(&states, kMAX_VELOCITY_METERS_PER_SECOND);
 
-  m_FrontLeftModule.Set(states[0].speed.value() * -1, states[0].angle.Radians().value());
-  m_FrontRightModule.Set(states[1].speed.value(), states[1].angle.Radians().value() * -1);
-  m_BackLeftModule.Set(states[2].speed.value(), states[2].angle.Radians().value() * -1);
-  m_BackRightModule.Set(states[3].speed.value() * -1, states[3].angle.Radians().value());
+  m_FrontLeftModule.SetVelocity(states[0].speed.value() * -1, states[0].angle.Radians().value());
+  m_FrontRightModule.SetVelocity(states[1].speed.value(), states[1].angle.Radians().value() * -1);
+  m_BackLeftModule.SetVelocity(states[2].speed.value(), states[2].angle.Radians().value() * -1);
+  m_BackRightModule.SetVelocity(states[3].speed.value() * -1, states[3].angle.Radians().value());
 }
 
 // Sets the drive motors to brake mode

@@ -18,7 +18,8 @@ class SwerveModule {
 
         frc::SwerveModulePosition GetPosition();
 
-        void Set(double driveVoltage, double steerAngle);
+        void SetVoltage(double driveVoltage, double steerAngle);
+        void SetVelocity(double targetVelocity, double steerAngle);
         void BrakeMode(bool on);
 
         int dID;

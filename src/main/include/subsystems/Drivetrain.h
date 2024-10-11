@@ -43,12 +43,11 @@
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <frc2/command/button/Trigger.h>
-#include <pathplanner/lib/commands/FollowPathWithEvents.h>
+#include <pathplanner/lib/commands/FollowPathCommand.h>
 #include <frc2/command/PrintCommand.h>
 #include <frc2/command/Command.h>
 #include <unordered_map>
 #include <pathplanner/lib/auto/AutoBuilder.h>
-#include <pathplanner/lib/util/ReplanningConfig.h>
 
 #include <frc/drive/DifferentialDrive.h>
 
@@ -94,7 +93,6 @@ class DriveTrain : public frc2::SubsystemBase {
 
   frc2::FunctionalCommand AutoBalanceCommand();
   double getStandardDeviation(std::vector<double> arr);
-  void AutoBalanceFunction();
 
 
   //how fast the robot should be able to drive

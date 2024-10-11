@@ -22,6 +22,11 @@ double DriveController::GetStateVelocity(){
     return motor.GetVelocity().GetValueAsDouble() * DRIVE_ENCODER_VELOCITY_CONSTANT;
 }
 
+//set drive velocity
+void DriveController::SetVelocity(double target){
+    motor.SetControl(Robot::GetRobot()->m_VelocityTargetRequest.WithVelocity(units::angular_velocity::turns_per_second_t(target)));
+} 
+
 //set the drive motors to brake mode
 void DriveController::BrakeMode(bool on){
     if(on)

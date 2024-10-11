@@ -47,7 +47,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition() {
 }
 
 //Set the module to drive at a voltage at an angle in radians
-void SwerveModule::Set(double driveVoltage, double steerAngle) {
+void SwerveModule::SetVoltage(double driveVoltage, double steerAngle) {
     steerAngle  = fmod(steerAngle, 2.0 * M_PI);
     if(steerAngle < 0.0){
         steerAngle += (2.0 * M_PI);
@@ -80,4 +80,40 @@ void SwerveModule::Set(double driveVoltage, double steerAngle) {
 
     m_SteerController.SetReferenceAngle(steerAngle);
     m_DriveController.SetReferenceVoltage(driveVoltage);
+}
+
+//Set the module to target a certain velocity at an angle in radians
+void SwerveModule::SetVelocity(double targetVelocity, double steerAngle) {
+    steerAngle  = fmod(steerAngle, 2.0 * M_PI);
+    if(steerAngle < 0.0){
+        steerAngle += (2.0 * M_PI);
+    }
+
+    // DebugOutF("steer angle of the robot in radians: " + std::to_string(GetSteerAngle()));
+    double difference = steerAngle - GetSteerAngle();
+    // DebugOutF("steer difference between desired and current: " + std::to_string(difference));
+
+    if(difference >= M_PI) {
+        steerAngle -= (2.0 * M_PI);
+    }
+    else if(difference < -M_PI) {
+        steerAngle += (2.0 * M_PI);
+    }
+
+    difference = steerAngle - GetSteerAngle(); //recalc difference
+
+    if(difference > M_PI / 2.0 || difference < (-M_PI) / 2.0) {
+        steerAngle += M_PI;
+        targetVelocity *= -1.0;
+    }
+
+    steerAngle = fmod(steerAngle, (2.0 * M_PI));
+    if(steerAngle < 0.0) {
+        steerAngle += (2.0 * M_PI);
+    }
+
+    // DebugOutF("steer angle at point 2 in radians: " + std::to_string(steerAngle));
+
+    m_SteerController.SetReferenceAngle(steerAngle);
+    m_DriveController.SetVelocity(targetVelocity);
 }

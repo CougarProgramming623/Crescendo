@@ -23,7 +23,7 @@
 #include <commands/AutoTest.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc2/command/PrintCommand.h>
-#include "commands/TrajectoryCommand.h"
+// #include "commands/TrajectoryCommand.h"
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <frc2/command/Command.h>
 
@@ -191,13 +191,13 @@ void Robot::AutoButtons() {
 // }
 
 pathplanner::PathPlannerTrajectory Robot::getTrajectory(std::string traj) {
-  // Load the path you want to follow using its name in the GUI
-  auto path = PathPlannerPath::fromPathFile(traj);
-  // if(frc::DriverStation::GetAlliance() == DriverStation::Alliance::kRed) {
-    // path = path->flipPath();
-  // }
-  startingPose = path.get()->getPreviewStartingHolonomicPose();
-  return path.get()->getTrajectory(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s), path.get()->getPreviewStartingHolonomicPose().Rotation());
+  // // Load the path you want to follow using its name in the GUI
+  // auto path = PathPlannerPath::fromPathFile(traj);
+  // // if(frc::DriverStation::GetAlliance() == DriverStation::Alliance::kRed) {
+  //   // path = path->flipPath();
+  // // }
+  // startingPose = path.get()->getStartingDifferentialPose();
+  // return path.get()->getTrajectory(frc::ChassisSpeeds(0_mps, 0_mps, 0_rad_per_s), path.get()->getPreviewStartingHolonomicPose().Rotation());
 }
 
 // /**
@@ -303,7 +303,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().GetOdometry()->ResetPosition(
     GetDriveTrain().GetOdometry()->GetPose().Rotation(), 
     GetDriveTrain().GetModulePositions(),
-    PathPlannerAuto("Straight").getStartingPoseFromAutoFile("Straight")
+    PathPlannerAuto("Straight").getStartingPose()
   );
 
   if (m_autonomousCommand) {

@@ -14,8 +14,9 @@ class DriveController {
         DriveController(int ID);
 
         void SetReferenceVoltage(double voltage);
-        void GetReferenceVoltage(double voltage);
+        double GetReferenceVoltage(double voltage);
 
+        void SetVelocity(double target);
         double GetStateVelocity();
 
         void BrakeMode(bool on);
