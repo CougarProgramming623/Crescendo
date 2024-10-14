@@ -239,7 +239,7 @@ void DriveTrain::SetStates(wpi::array<frc::SwerveModuleState, 4> states)
 {
   frc::SwerveDriveKinematics<4>::DesaturateWheelSpeeds(&states, kMAX_VELOCITY_METERS_PER_SECOND);
 
-  m_FrontLeftModule.SetVelocity(states[0].speed.value() * -1, states[0].angle.Radians().value());
+  m_FrontLeftModule.SetVelocity(states[0].speed.value() * -1, states[0].angle.Radians().value()); 
   m_FrontRightModule.SetVelocity(states[1].speed.value(), states[1].angle.Radians().value() * -1);
   m_BackLeftModule.SetVelocity(states[2].speed.value(), states[2].angle.Radians().value() * -1);
   m_BackRightModule.SetVelocity(states[3].speed.value() * -1, states[3].angle.Radians().value());
