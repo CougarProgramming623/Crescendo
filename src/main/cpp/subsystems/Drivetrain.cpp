@@ -20,7 +20,6 @@
 #include <pathplanner/lib/controllers/PPHolonomicDriveController.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 
-
 using namespace pathplanner;
 
 using namespace ctre::phoenix6;
@@ -185,9 +184,9 @@ void DriveTrain::Periodic()
 
   m_Odometry.Update(m_Rotation, m_ModulePositions);
 
-  DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetPose().X().value()));
-  DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetPose().Y().value()));
-  DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetPose().Rotation().Degrees().value()));
+  // DebugOutF("OdoX: " + std::to_string(GetOdometry()->GetPose().X().value()));
+  // DebugOutF("OdoY: " + std::to_string(GetOdometry()->GetPose().Y().value()));
+  // DebugOutF("OdoZ: " + std::to_string(GetOdometry()->GetPose().Rotation().Degrees().value()));
 
   /***********ODOMETRY UPDATING WITH VISION POSITION (2023)****************
    m_VisionRelative = Robot::GetRobot()->GetVision().GetFieldPose().RelativeTo(m_Odometry.GetPose());

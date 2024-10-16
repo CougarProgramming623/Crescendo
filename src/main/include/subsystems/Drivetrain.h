@@ -96,7 +96,7 @@ class DriveTrain : public frc2::SubsystemBase {
 
 
   //how fast the robot should be able to drive
-  const units::meters_per_second_t kMAX_VELOCITY_METERS_PER_SECOND = units::meters_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI);
+  const units::meters_per_second_t kMAX_VELOCITY_METERS_PER_SECOND = units::meters_per_second_t(6380.0 / 60.0 * DRIVE_REDUCTION * WHEEL_DIAMETER * M_PI); //4.952 m/s
 
   std::array<frc::SwerveModulePosition, 4> m_ModulePositions;
 
