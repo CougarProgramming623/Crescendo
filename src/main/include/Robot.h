@@ -28,6 +28,10 @@
 #include <commands/Intake.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc2/command/Command.h>
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <pathplanner/lib/util/PathPlannerLogging.h>
+
 //#include "./subsystems/Intake.h"
 
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
@@ -157,6 +161,8 @@ class Robot : public frc::TimedRobot {
   
 
   std::string m_AutoPath;
+
+  frc::Field2d m_field;
 
   //MotionMagicTest m_MMT;
 };

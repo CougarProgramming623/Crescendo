@@ -5,6 +5,8 @@
 #include "Robot.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/smartdashboard/Field2d.h>
+#include <pathplanner/lib/util/PathPlannerLogging.h>
 #include <frc2/command/CommandScheduler.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/geometry/Pose2d.h>
@@ -285,6 +287,16 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
+
+
+    // frc::SmartDashboard::PutData("Field", &m_field);
+
+    //   m_field.SetRobotPose(GetDriveTrain().GetOdometry()->GetPose());
+
+    // PathPlannerLogging::setLogActivePathCallback([this](std::vector<frc::Pose2d> poses) -> {
+    //   m_field.GetObject("Straight").setPoses(poses);
+    // });
+  
   // m_AutoFlag = true;
   DebugOutF("Auto init");
 
@@ -402,6 +414,7 @@ void Robot::TeleopInit() {
 //   return frc2::CommandPtr(std::make_unique<frc2::Command>(*autoChooser.GetSelected()));
 //   s_Instance = this;
 // }
+
 
 /**
  * This function is called periodically during operator control.  
