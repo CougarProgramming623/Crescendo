@@ -10,6 +10,13 @@ DriveController::DriveController(int ID) :
     motor(ID)
 {
     motor.SetNeutralMode(signals::NeutralModeValue::Brake);
+    configs::CurrentLimitsConfigs limitConfigs{};
+
+    limitConfigs.StatorCurrentLimit = 60;
+    limitConfigs.StatorCurrentLimitEnable = true;
+
+    motor.GetConfigurator().Apply(limitConfigs); 
+    
 }
 
 //Set drive voltage

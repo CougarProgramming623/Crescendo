@@ -53,7 +53,7 @@ void LED::SponsorBoardSolid(frc::Color color){
         m_LEDBuffer[i].SetLED(color);
     }
     if(Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
-        for (int i = numLEDsLeftEnd; i < numLEDsFrontEnd; i++) {
+        for (int i = 0/*numLEDsLeftEnd*/; i < numLEDsFrontEnd; i++) {
             m_LEDBuffer[i].SetLED(yellow);
         }
     }
@@ -183,7 +183,7 @@ void LED::LaserSensors() {
     } 
     
     if (Robot::GetRobot()->GetVision().GetLimeLight()->GetNumber("tv", 0) == 1) {
-        for (int i = numLEDsLeftEnd; i < numLEDsFrontEnd; i++) {
+        for (int i = 0/*numLEDsLeftEnd*/; i < numLEDsFrontEnd; i++) {
             m_LEDBuffer[i].SetLED(yellow);
         }
     }

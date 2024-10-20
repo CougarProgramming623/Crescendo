@@ -93,7 +93,7 @@ void Robot::RobotInit() {
     } else {
       m_AutoPath += "Red";
     }
-  } else if(m_Print2.Get()) {
+  } else if(m_Print3.Get()) {
     m_AutoPath += "right";
     m_AngleOffset = 120;
     if(DriverStation::GetAlliance() == DriverStation::Alliance::kBlue) {
@@ -275,10 +275,10 @@ void Robot::DisabledInit() {
 
 void Robot::DisabledPeriodic() {}
 
-frc2::CommandPtr Robot::getAutonomousCommand() {
-  DebugOutF("getting auto command");
-  return PathPlannerAuto("Straight").ToPtr(); 
-}
+// frc2::CommandPtr Robot::getAutonomousCommand() {
+//   DebugOutF("getting auto command");
+//   return PathPlannerAuto("Straight").ToPtr(); 
+// }
 
 /**
  * This autonomous runs the autonomous command selected by your {@link
@@ -291,6 +291,7 @@ void Robot::AutonomousInit() {
   frc2::CommandScheduler::GetInstance().CancelAll();
   GetNavX().ZeroYaw();
   GetNavX().Reset();
+  //angle offset setting
   // GetNavX().SetAngleAdjustment(m_AngleOffset);
   GetDriveTrain().BrakeMode(true);
   GetDriveTrain().m_BackLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
@@ -298,6 +299,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
+  /************ pathplanner auto testing
   m_autonomousCommand = getAutonomousCommand();
 
   GetDriveTrain().GetOdometry()->ResetPosition(
@@ -309,12 +311,8 @@ void Robot::AutonomousInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }
-
-  // if(m_AutoPath == "rightRed" || m_AutoPath == "leftBlue") {
-  //   m_AutoPath = "na";
-  // }
-
-  // m_autonomousCommand = TrajectoryCommand(getTrajectory(m_AutoPath)).ToPtr();
+  **************/
+  
 
   // does this whole thing make any difference??
   // DebugOutF("before rotation: " + std::to_string(startingPose.Rotation().Degrees().value()));
@@ -325,11 +323,8 @@ void Robot::AutonomousInit() {
   //   startingPose
   // );
 
-  // if (m_autonomousCommand) {
-  //   m_autonomousCommand->Schedule();
-  // }
 
-  /****** working auto code (2024 districts)
+  // working auto code (2024 districts)
     frc2::CommandScheduler::GetInstance().Schedule(
     new frc2::SequentialCommandGroup(
       frc2::ParallelDeadlineGroup(
@@ -350,30 +345,6 @@ void Robot::AutonomousInit() {
       // TrajectoryCommand(getTrajectory(m_AutoPath))
     )
   );
-  */
-  
-
-  
-  // frc2::CommandScheduler::GetInstance().Schedule(
-  //   new frc2::SequentialCommandGroup(
-  //     frc2::ParallelDeadlineGroup(
-  //       frc2::WaitCommand(2.0_s),
-  //       ConstantPivot(),
-  //       //LockOn(),
-  //       Flywheel(),
-  //       frc2::SequentialCommandGroup(
-  //         frc2::WaitCommand(1.0_s),
-  //         Shoot()
-  //       )
-  //     ),
-  //     frc2::InstantCommand([&] {
-  //       GetArm().GetShooterMotor1().Set(0);
-  //       GetArm().GetShooterMotor2().Set(0);
-  //       GetArm().GetDustpanLaunchServo().Set(1);
-  //     }),
-  //     TrajectoryCommand(getTrajectory(m_AutoPath))
-  //   )
-  // );
 }
 
 void Robot::AutonomousPeriodic() {

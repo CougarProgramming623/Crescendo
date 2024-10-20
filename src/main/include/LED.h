@@ -22,17 +22,17 @@ class LED {
         void SponsorBoardRGB();
 
         bool m_IsTele;
-        int numLEDsTotal = 181;
-        int numLEDsLeftR1 = 19;
-        int numLEDsLeftR2 = 38;
-        int numLEDsLeftEnd = 57;
-        int numLEDsFrontR1 = 79;
-        int numLEDsFrontR2 = 102;
-        int numLEDsFrontEnd = 124;
-        int numLEDsRightR1 = 143;
-        int numLEDsRightR2 = 162;
-        int numLEDsRightEnd = numLEDsTotal; //181
-        std::array <frc::AddressableLED::LEDData, 181> m_LEDBuffer;
+        int numLEDsTotal = 67;//181;
+        // int numLEDsLeftR1 = 19;
+        // int numLEDsLeftR2 = 38;
+        // int numLEDsLeftEnd = 57;
+        int numLEDsFrontR1 = 22;//79;
+        int numLEDsFrontR2 = 45;//102;
+        int numLEDsFrontEnd = 67;//124;
+        // int numLEDsRightR1 = 143;
+        // int numLEDsRightR2 = 162;
+        // int numLEDsRightEnd = numLEDsTotal; //181
+        std::array <frc::AddressableLED::LEDData, 67> m_LEDBuffer; //181
     private:
 
         frc::AddressableLED m_AddressableLED{2};
