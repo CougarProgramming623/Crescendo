@@ -275,10 +275,11 @@ void Robot::DisabledInit() {
 
 void Robot::DisabledPeriodic() {}
 
-// frc2::CommandPtr Robot::getAutonomousCommand() {
-//   DebugOutF("getting auto command");
-//   return PathPlannerAuto("Straight").ToPtr(); 
-// }
+//auto path pulling
+frc2::CommandPtr Robot::getAutonomousCommand() {
+  DebugOutF("getting auto command");
+  return PathPlannerAuto("Straight").ToPtr(); 
+}
 
 /**
  * This autonomous runs the autonomous command selected by your {@link
@@ -299,7 +300,7 @@ void Robot::AutonomousInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 
-  /************ pathplanner auto testing
+  //pathplanner auto testing
   m_autonomousCommand = getAutonomousCommand();
 
   GetDriveTrain().GetOdometry()->ResetPosition(
@@ -311,7 +312,6 @@ void Robot::AutonomousInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }
-  **************/
   
 
   // does this whole thing make any difference??
@@ -325,26 +325,26 @@ void Robot::AutonomousInit() {
 
 
   // working auto code (2024 districts)
-    frc2::CommandScheduler::GetInstance().Schedule(
-    new frc2::SequentialCommandGroup(
-      frc2::ParallelDeadlineGroup(
-        frc2::WaitCommand(2.0_s),
-        ConstantPivot(),
-        // LockOn(),
-        Flywheel(),
-        frc2::SequentialCommandGroup(
-          frc2::WaitCommand(1.0_s),
-          Shoot()
-        )
-      ),
-      frc2::InstantCommand([&] {
-        GetArm().GetShooterMotor1().Set(0);
-        GetArm().GetShooterMotor2().Set(0);
-        GetArm().GetDustpanLaunchServo().Set(1);
-      })
-      // TrajectoryCommand(getTrajectory(m_AutoPath))
-    )
-  );
+  //   frc2::CommandScheduler::GetInstance().Schedule(
+  //   new frc2::SequentialCommandGroup(
+  //     frc2::ParallelDeadlineGroup(
+  //       frc2::WaitCommand(2.0_s),
+  //       ConstantPivot(),
+  //       // LockOn(),
+  //       Flywheel(),
+  //       frc2::SequentialCommandGroup(
+  //         frc2::WaitCommand(1.0_s),
+  //         Shoot()
+  //       )
+  //     ),
+  //     frc2::InstantCommand([&] {
+  //       GetArm().GetShooterMotor1().Set(0);
+  //       GetArm().GetShooterMotor2().Set(0);
+  //       GetArm().GetDustpanLaunchServo().Set(1);
+  //     })
+  //     // TrajectoryCommand(getTrajectory(m_AutoPath))
+  //   )
+  // );
 }
 
 void Robot::AutonomousPeriodic() {
@@ -391,17 +391,6 @@ void Robot::TeleopInit() {
   GetDriveTrain().m_FrontLeftModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
   GetDriveTrain().m_FrontRightModule.m_SteerController.motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 }
-
-// frc2::Command* Robot::getAutonomousCommand() {
-//   // Returns a frc2::Command* that is freed at program termination
-//   return autoChooser.GetSelected();
-// }
-
-// frc2::CommandPtr Robot::getAutonomousCommand() {
-//   // Returns a copy that is freed after reference is lost
-//   return frc2::CommandPtr(std::make_unique<frc2::Command>(*autoChooser.GetSelected()));
-//   s_Instance = this;
-// }
 
 /**
  * This function is called periodically during operator control.  
