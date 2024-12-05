@@ -115,5 +115,5 @@ void SwerveModule::SetVelocity(double targetVelocity, double steerAngle) {
     // DebugOutF("steer angle at point 2 in radians: " + std::to_string(steerAngle));
 
     m_SteerController.SetReferenceAngle(steerAngle);
-    m_DriveController.SetVelocity(targetVelocity);
+    m_DriveController.SetVelocity(units::angular_velocity::turns_per_second_t(targetVelocity));
 }

@@ -30,7 +30,7 @@ double DriveController::GetStateVelocity(){
 }
 
 //set drive velocity
-void DriveController::SetVelocity(double target){
+void DriveController::SetVelocity(units::angular_velocity::turns_per_second_t(target)){
     motor.SetControl(Robot::GetRobot()->m_VelocityTargetRequest.WithVelocity(units::angular_velocity::turns_per_second_t(target)));
 } 
 

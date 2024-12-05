@@ -74,7 +74,7 @@ DriveTrain::DriveTrain()
       [this](){ return this->getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       [this](ChassisSpeeds robotRelativeSpeeds){ this->DriveRobotRelative(robotRelativeSpeeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.Also optionally outputs individual module feedforwards
       std::make_shared<PPHolonomicDriveController>( // PPHolonomicController is the built in path following controller for holonomic drive trains
-        PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+        PIDConstants(2.0, 0.0, 1.0), // Translation PID constants
         PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
       ),
       config, // The robot configuration
@@ -223,6 +223,13 @@ void DriveTrain::resetPose(Pose2d pose)
 
 ChassisSpeeds DriveTrain::getRobotRelativeSpeeds()
 {
+  // DebugOutF("vx: " + std::to_string(m_ChassisSpeeds.vx.value()));
+  // DebugOutF("vy: " + std::to_string(m_ChassisSpeeds.vy.value()));
+  // DebugOutF("omega: " + std::to_string(m_ChassisSpeeds.omega.value()));
+  // return m_ChassisSpeeds;
+  DebugOutF("vx: " + std::to_string(m_Kinematics.ToChassisSpeeds(m_ModuleStates).vx.value()));
+  DebugOutF("vy: " + std::to_string(m_Kinematics.ToChassisSpeeds(m_ModuleStates).vy.value()));
+  DebugOutF("omega: " + std::to_string(m_Kinematics.ToChassisSpeeds(m_ModuleStates).omega.value()));
   return m_Kinematics.ToChassisSpeeds(m_ModuleStates);
 }
 
@@ -231,6 +238,7 @@ void DriveTrain::DriveRobotRelative(frc::ChassisSpeeds robotRelativeSpeeds)
   frc::ChassisSpeeds speeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 0.02_s);
 
   auto swerveModuleStates = m_Kinematics.ToSwerveModuleStates(speeds);
+  m_ModuleStates = swerveModuleStates;
   SetStates(swerveModuleStates);
 }
 

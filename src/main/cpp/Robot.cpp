@@ -352,9 +352,9 @@ void Robot::AutonomousPeriodic() {
   // DebugOutF("BR Velocity/steer: " + std::to_string(GetDriveTrain().m_BackRightModule.GetDriveVelocity()) + ", " + std::to_string(GetDriveTrain().m_BackRightModule.GetSteerAngle()));
   // DebugOutF("FL Velocity/steer: " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetDriveVelocity()) + ", " + std::to_string(GetDriveTrain().m_FrontLeftModule.GetSteerAngle()));
   // DebugOutF("FR Velocity/steer: " + std::to_string(GetDriveTrain().m_FrontRightModule.GetDriveVelocity()) + ", " + std::to_string(GetDriveTrain().m_FrontRightModule.GetSteerAngle()));
-  DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().X().value()));
-  DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().Y().value()));
-  DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().Rotation().Degrees().value()));
+  // DebugOutF("actual odometry position: \nx: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().X().value()));
+  // DebugOutF("y: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().Y().value()));
+  // DebugOutF("rotation: " + std::to_string(GetDriveTrain().GetOdometry()->GetPose().Rotation().Degrees().value()));
 
   
   // DebugOutF("///");

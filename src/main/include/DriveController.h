@@ -16,7 +16,7 @@ class DriveController {
         void SetReferenceVoltage(double voltage);
         double GetReferenceVoltage(double voltage);
 
-        void SetVelocity(double target);
+        void SetVelocity(units::angular_velocity::turns_per_second_t(target));
         double GetStateVelocity();
 
         void BrakeMode(bool on);
