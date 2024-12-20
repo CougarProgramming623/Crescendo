@@ -13,12 +13,15 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -30,9 +33,12 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final Joystick joystick = new Joystick(1);
+  Trigger navxReset = new Trigger(() -> joystick.getRawButton(3));
+
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve/neo"));
+                                                                                "swerve/falcon"));
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
   // controls are front-left positive
@@ -57,11 +63,20 @@ public class RobotContainer
   // controls are front-left positive
   // left stick controls translation
   // right stick controls the desired angle NOT angular rotation
-  Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-      () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-      () -> driverXbox.getRightX(),
-      () -> driverXbox.getRightY());
+  // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+  //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+  //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+  //     () -> );
+
+  // Applies deadbands and inverts controls because joysticks
+  // are back-right positive while robot
+  // controls are front-left positive
+  // left stick controls translation
+  // right stick controls the desired angle NOT angular rotation
+  Command driveFieldOriented623 = drivebase.driveCommand(
+      () -> MathUtil.applyDeadband(joystick.getRawAxis(1), OperatorConstants.X_DEADBAND),
+      () -> MathUtil.applyDeadband(joystick.getRawAxis(0), OperatorConstants.Y_DEADBAND),
+      () -> MathUtil.applyDeadband(joystick.getRawAxis(2), OperatorConstants.Z_DEADBAND));
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -103,35 +118,39 @@ public class RobotContainer
   // FIX 
   private void configureBindings()
   {
-    if (Robot.isSimulation())
-    {
-      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-    }
-    if (DriverStation.isTest())
-    {
-      driverXbox.b().whileTrue(drivebase.sysIdDriveMotorCommand());
-      driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-      driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.back().whileTrue(drivebase.centerModulesCommand());
-      driverXbox.leftBumper().onTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
-      drivebase.setDefaultCommand(
-          !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
-    } else
-    {
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.b().whileTrue(
-          drivebase.driveToPose(
-              new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-                              );
-      driverXbox.start().whileTrue(Commands.none());
-      driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(Commands.none());
-      drivebase.setDefaultCommand(
-          !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
-    }
+    drivebase.setDefaultCommand(driveFieldOriented623);
+    navxReset.onTrue(new InstantCommand(
+      () -> drivebase.zeroGyro())
+    );
+    // if (Robot.isSimulation())
+    // {
+    //   driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+    // }
+    // if (DriverStation.isTest())
+    // {
+    //   driverXbox.b().whileTrue(drivebase.sysIdDriveMotorCommand());
+    //   driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+    //   driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
+    //   driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    //   driverXbox.back().whileTrue(drivebase.centerModulesCommand());
+    //   driverXbox.leftBumper().onTrue(Commands.none());
+    //   driverXbox.rightBumper().onTrue(Commands.none());
+    //   drivebase.setDefaultCommand(
+    //       !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
+    // } else
+    // {
+    //   driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    //   driverXbox.b().whileTrue(
+    //       drivebase.driveToPose(
+    //           new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
+    //                           );
+    //   driverXbox.start().whileTrue(Commands.none());
+    //   driverXbox.back().whileTrue(Commands.none());
+    //   driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+    //   driverXbox.rightBumper().onTrue(Commands.none());
+    //   drivebase.setDefaultCommand(
+    //       !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
+    // }
   }
 
   /**
