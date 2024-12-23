@@ -47,6 +47,14 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+
+    // DebugOutF("BL Voltage: " + toString((m_robotContainer.getDriveBase()).m_BackLeftModule.GetSteerSensorVoltage()));
+    // DebugOutF("BR Voltage: " + toString(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
+    // DebugOutF("FL Voltage: " + toString(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
+    // DebugOutF("FR Voltage: " + toString(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
+    // DebugOutF("Max Sensor Voltage: " + toString(frc::RobotController::GetVoltage5V()));
+
+
   }
 
   /**

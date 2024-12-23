@@ -32,7 +32,7 @@ public class RobotContainer
 {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final CommandXboxController driverXbox = new CommandXboxController(0);
   final Joystick joystick = new Joystick(1);
   Trigger navxReset = new Trigger(() -> joystick.getRawButton(3));
 
@@ -46,17 +46,17 @@ public class RobotContainer
   // right stick controls the rotational velocity 
   // buttons are quick rotation positions to different ways to face
   // WARNING: default buttons are on the same buttons as the ones defined in configureBindings
-  AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                                                                               OperatorConstants.LEFT_Y_DEADBAND),
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
-                                                                                               OperatorConstants.LEFT_X_DEADBAND),
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
-                                                                                               OperatorConstants.RIGHT_X_DEADBAND),
-                                                                 driverXbox.getHID()::getYButtonPressed,
-                                                                 driverXbox.getHID()::getAButtonPressed,
-                                                                 driverXbox.getHID()::getXButtonPressed,
-                                                                 driverXbox.getHID()::getBButtonPressed);
+AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
+                                                                () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                                                                              OperatorConstants.LEFT_Y_DEADBAND),
+                                                                () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                                                                              OperatorConstants.LEFT_X_DEADBAND),
+                                                                () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
+                                                                                              OperatorConstants.RIGHT_X_DEADBAND),
+                                                                driverXbox.getHID()::getYButtonPressed,
+                                                                driverXbox.getHID()::getAButtonPressed,
+                                                                driverXbox.getHID()::getXButtonPressed,
+                                                                driverXbox.getHID()::getBButtonPressed);
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -119,9 +119,12 @@ public class RobotContainer
   private void configureBindings()
   {
     drivebase.setDefaultCommand(driveFieldOriented623);
-    navxReset.onTrue(new InstantCommand(
-      () -> drivebase.zeroGyro())
-    );
+    // navxReset.onTrue(new InstantCommand(
+    //   () -> drivebase.zeroGyro())
+    // );
+
+    navxReset.onTrue(Commands.runOnce(drivebase::zeroGyro));
+
     // if (Robot.isSimulation())
     // {
     //   driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
@@ -151,6 +154,10 @@ public class RobotContainer
     //   drivebase.setDefaultCommand(
     //       !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
     // }
+  }
+
+  public SwerveSubsystem getDriveBase() {
+    return drivebase;
   }
 
   /**
