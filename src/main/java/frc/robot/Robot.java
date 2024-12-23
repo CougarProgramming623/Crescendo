@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import swervelib.SwerveModule;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
@@ -44,17 +46,22 @@ public class Robot extends TimedRobot
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+
+    for (SwerveModule module : m_robotContainer.getDriveBase().getSwerveDriveConfiguration().modules) {
+      System.out.println(module.getAbsolutePosition());
+    }
+    
+    // m_robotContainer.getDriveBase().getSwerveDriveConfiguration().
+    // m_robotContainer.getDriveBase().getSwerveDriveConfiguration().modules[0].getAbsolutePosition();
+
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
-    // DebugOutF("BL Voltage: " + toString((m_robotContainer.getDriveBase()).m_BackLeftModule.GetSteerSensorVoltage()));
-    // DebugOutF("BR Voltage: " + toString(GetDriveTrain().m_BackRightModule.GetSteerSensorVoltage()));
-    // DebugOutF("FL Voltage: " + toString(GetDriveTrain().m_FrontLeftModule.GetSteerSensorVoltage()));
-    // DebugOutF("FR Voltage: " + toString(GetDriveTrain().m_FrontRightModule.GetSteerSensorVoltage()));
-    // DebugOutF("Max Sensor Voltage: " + toString(frc::RobotController::GetVoltage5V()));
-
-
+    System.out.println(("FL Voltage: " + m_robotContainer.getDriveBase().getSwerveDriveConfiguration().modules[0].getAbsolutePosition()));
+    System.out.println(("FR Voltage: " + m_robotContainer.getDriveBase().getSwerveDriveConfiguration().modules[1].getAbsolutePosition()));
+    System.out.println(("BL Voltage: " + m_robotContainer.getDriveBase().getSwerveDriveConfiguration().modules[2].getAbsolutePosition()));
+    System.out.println(("BR Voltage: " + m_robotContainer.getDriveBase().getSwerveDriveConfiguration().modules[3].getAbsolutePosition()));
   }
 
   /**
