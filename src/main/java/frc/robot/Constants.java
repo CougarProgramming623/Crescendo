@@ -207,7 +207,7 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double X_DEADBAND  = 0.1;
     public static final double Y_DEADBAND  = 0.1;
-    public static final double Z_DEADBAND = 0.1;
+    public static final double Z_DEADBAND = 0.05;
     public static final double TURN_CONSTANT    = 6;
   }
 }

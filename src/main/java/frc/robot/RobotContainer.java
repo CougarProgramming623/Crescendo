@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -22,6 +23,9 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
 import edu.wpi.first.wpilibj.Joystick;
+
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -35,6 +39,11 @@ public class RobotContainer
   final CommandXboxController driverXbox = new CommandXboxController(0);
   final Joystick joystick = new Joystick(1);
   Trigger navxReset = new Trigger(() -> joystick.getRawButton(3));
+
+  Trigger middleLeft = new Trigger(() -> joystick.getRawButton(6));
+  Trigger middleRight = new Trigger(() -> joystick.getRawButton(4));
+  Trigger topLeft = new Trigger(() -> joystick.getRawButton(1));
+  Trigger topRight = new Trigger(() -> joystick.getRawButton(2));
 
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
@@ -154,6 +163,31 @@ AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
     //   drivebase.setDefaultCommand(
     //       !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
     // }
+
+    
+    //SYSID STUFF
+    // middleLeft
+    //     .whileTrue(drivebase.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // middleRight
+    //     .whileTrue(drivebase.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // topLeft
+    //     .whileTrue(drivebase.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // topRight
+    //     .whileTrue(drivebase.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    
+    //  joystick
+    //     .middleLeft()
+    //     .whileTrue(m_shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // joystick
+    //     .middleRight()
+    //     .whileTrue(m_shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // joystick
+    //     .topLeft()
+    //     .whileTrue(m_shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // m_driverController
+    //     .topRight()
+    //     .whileTrue(m_shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
   }
 
   public SwerveSubsystem getDriveBase() {

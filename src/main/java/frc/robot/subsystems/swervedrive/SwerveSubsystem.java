@@ -29,12 +29,17 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.MutDistance;
+import edu.wpi.first.units.measure.MutLinearVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import java.io.File;
@@ -56,6 +61,14 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
+import edu.wpi.first.units.measure.MutDistance;
+import edu.wpi.first.units.measure.MutLinearVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
+
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 public class SwerveSubsystem extends SubsystemBase
 {
 
@@ -76,6 +89,55 @@ public class SwerveSubsystem extends SubsystemBase
    *
    * @param directory Directory of swerve drive config files.
    */
+
+
+   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+  // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+  private final MutDistance m_distance = Meters.mutable(0);
+  // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+  private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
+
+  // private final SysIdRoutine m_sysIdRoutine =
+  //     new SysIdRoutine(
+  //         // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+  //         new SysIdRoutine.Config(),
+  //         new SysIdRoutine.Mechanism(
+  //             // Tell SysId how to plumb the driving voltage to the motors.
+  //             voltage -> {
+  //               swerveDrive.swerveDriveConfiguration.modules[0].getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
+  //               swerveDrive.swerveDriveConfiguration.modules[1].getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
+  //               swerveDrive.swerveDriveConfiguration.modules[2].getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
+  //               swerveDrive.swerveDriveConfiguration.modules[3].getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
+  //             },
+  //             // Tell SysId how to record a frame of data for each motor on the mechanism being
+  //             // characterized.
+  //             log -> {
+  //               // Record a frame for the left motors.  Since these share an encoder, we consider
+  //               // the entire group to be one motor.
+  //               log.motor("module 0")
+  //                   .voltage(
+  //                       m_appliedVoltage.mut_replace(
+  //                           swerveDrive.swerveDriveConfiguration.modules[0].getDriveMotor().getVoltage() * RobotController.getBatteryVoltage(), Volts))
+  //                   .linearPosition(m_distance.mut_replace(m_leftEncoder.getDistance(), Meters))
+  //                   .linearVelocity(
+  //                       m_velocity.mut_replace(swerve));
+  //               // Record a frame for the right motors.  Since these share an encoder, we consider
+  //               // the entire group to be one motor.
+  //               log.motor("drive-right")
+  //                   .voltage(
+  //                       m_appliedVoltage.mut_replace(
+  //                           m_rightMotor.get() * RobotController.getBatteryVoltage(), Volts))
+  //                   .linearPosition(m_distance.mut_replace(m_rightEncoder.getDistance(), Meters))
+  //                   .linearVelocity(
+  //                       m_velocity.mut_replace(m_rightEncoder.getRate(), MetersPerSecond));
+  //             },
+  //             // Tell SysId to make generated commands require this subsystem, suffix test state in
+  //             // WPILog with this subsystem's name ("drive")
+  //             this));
+
+
+
   public SwerveSubsystem(File directory)
   {
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
@@ -192,7 +254,7 @@ public class SwerveSubsystem extends SubsystemBase
               // PPHolonomicController is the built in path following controller for holonomic drive trains
               new PIDConstants(5.0, 0.0, 0.0),
               // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0)
+              new PIDConstants(1, 0.0, 0.0)
               // Rotation PID constants
           ),
           config,
@@ -374,28 +436,32 @@ public class SwerveSubsystem extends SubsystemBase
    *
    * @return SysId Drive Command
    */
-  public Command sysIdDriveMotorCommand()
-  {
-    return SwerveDriveTest.generateSysIdCommand(
-        SwerveDriveTest.setDriveSysIdRoutine(
-            new Config(),
-            this, swerveDrive, 12),
-        3.0, 5.0, 3.0);
-  }
+  // public Command sysIdDriveMotorCommand()
+  // {
+  //   return SwerveDriveTest.generateSysIdCommand(
+  //       SwerveDriveTest.setDriveSysIdRoutine(
+  //           new Config(),
+  //           this, swerveDrive, 12),
+  //       3.0, 5.0, 3.0);
+  // }
 
   /**
    * Command to characterize the robot angle motors using SysId
    *
    * @return SysId Angle Command
    */
-  public Command sysIdAngleMotorCommand()
-  {
-    return SwerveDriveTest.generateSysIdCommand(
-        SwerveDriveTest.setAngleSysIdRoutine(
-            new Config(),
-            this, swerveDrive),
-        3.0, 5.0, 3.0);
-  }
+  // public Command sysIdAngleMotorCommand()
+  // {
+  //   return SwerveDriveTest.generateSysIdCommand(
+  //       SwerveDriveTest.setAngleSysIdRoutine(
+  //           new Config(),
+  //           this, swerveDrive),
+  //       3.0, 5.0, 3.0);
+  // }
+
+  // public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+  //   return m_sysIdRoutine.quasistatic(direction);
+  // }
 
   /**
    * Returns a Command that centers the modules of the SwerveDrive subsystem.
@@ -542,6 +608,17 @@ public class SwerveSubsystem extends SubsystemBase
     return swerveDrive.getPose();
   }
 
+   /**
+   * Gets the current pose (position and rotation) of the robot, as reported by odometry.
+   *
+   * @return The robot's pose
+   */
+  public Pose2d getPoseAuto()
+  {
+    // return swerveDrive.getPose().rotateBy(new Rotation2d(180.0));
+    return swerveDrive.getPose().times(-1);
+  }
+
   /**
    * Set chassis speeds with closed-loop velocity control.
    *
@@ -679,6 +756,16 @@ public class SwerveSubsystem extends SubsystemBase
   public ChassisSpeeds getRobotVelocity()
   {
     return swerveDrive.getRobotVelocity();
+  }
+
+    /**
+   * Gets the current velocity (x, y and omega) of the robot, with the omega flipped
+   *
+   * @return A {@link ChassisSpeeds} object of the current velocity
+   */
+  public ChassisSpeeds getRobotVelocityAuto()
+  {
+    return new ChassisSpeeds(swerveDrive.getRobotVelocity().vxMetersPerSecond * -1, swerveDrive.getRobotVelocity().vyMetersPerSecond * -1, swerveDrive.getRobotVelocity().omegaRadiansPerSecond * -1);
   }
 
   /**
