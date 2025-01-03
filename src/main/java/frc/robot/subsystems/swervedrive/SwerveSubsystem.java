@@ -230,11 +230,11 @@ public class SwerveSubsystem extends SubsystemBase
       final boolean enableFeedforward = true;
       // Configure AutoBuilder last
       AutoBuilder.configure(
-          this::getPose,
+          this::getPoseAuto,
           // Robot pose supplier
           this::resetOdometry,
           // Method to reset odometry (will be called if your auto has a starting pose)
-          this::getRobotVelocity,
+          this::getRobotVelocityAuto,
           // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
           (speedsRobotRelative, moduleFeedForwards) -> {
             if (enableFeedforward)
@@ -242,10 +242,8 @@ public class SwerveSubsystem extends SubsystemBase
               swerveDrive.drive(
                   speedsRobotRelative,
                   swerveDrive.kinematics.toSwerveModuleStates(speedsRobotRelative),
-                  moduleFeedForwards.linearForces()
-                               );
-            } else
-            {
+                  moduleFeedForwards.linearForces());
+            } else {
               swerveDrive.setChassisSpeeds(speedsRobotRelative);
             }
           },
@@ -254,7 +252,7 @@ public class SwerveSubsystem extends SubsystemBase
               // PPHolonomicController is the built in path following controller for holonomic drive trains
               new PIDConstants(5.0, 0.0, 0.0),
               // Translation PID constants
-              new PIDConstants(1, 0.0, 0.0)
+              new PIDConstants(1.0, 0.0, 0.0)
               // Rotation PID constants
           ),
           config,
@@ -616,7 +614,7 @@ public class SwerveSubsystem extends SubsystemBase
   public Pose2d getPoseAuto()
   {
     // return swerveDrive.getPose().rotateBy(new Rotation2d(180.0));
-    return swerveDrive.getPose().times(-1);
+    return new Pose2d(swerveDrive.getPose().getTranslation(), swerveDrive.getPose().getRotation().times(-1));
   }
 
   /**
@@ -669,7 +667,7 @@ public class SwerveSubsystem extends SubsystemBase
     {
       zeroGyro();
       //Set the pose 180 degrees
-      resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(180)));
+      resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(0)));
     } else
     {
       zeroGyro();
@@ -765,7 +763,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public ChassisSpeeds getRobotVelocityAuto()
   {
-    return new ChassisSpeeds(swerveDrive.getRobotVelocity().vxMetersPerSecond * -1, swerveDrive.getRobotVelocity().vyMetersPerSecond * -1, swerveDrive.getRobotVelocity().omegaRadiansPerSecond * -1);
+    return new ChassisSpeeds(swerveDrive.getRobotVelocity().vxMetersPerSecond, swerveDrive.getRobotVelocity().vyMetersPerSecond, swerveDrive.getRobotVelocity().omegaRadiansPerSecond * -1);
   }
 
   /**
