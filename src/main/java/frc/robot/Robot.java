@@ -4,12 +4,19 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import swervelib.SwerveModule;
+
+import swervelib.SwerveDriveTest;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -24,7 +31,51 @@ public class Robot extends TimedRobot
 
   private RobotContainer m_robotContainer;
 
+  private SwerveSubsystem m_SwerveSubsystem;
+
   private Timer disabledTimer;
+
+
+
+  // public final SysIdRoutine l_sysIdRoutine =
+  //   new SysIdRoutine(
+  //       new SysIdRoutine.Config(
+  //         null,        // Use default ramp rate (1 V/s)
+  //         Volts.of(4), // Reduce dynamic step voltage to 4 to prevent brownout
+  //         null,        // Use default timeout (10 s)
+  //                       // Log state with Phoenix SignalLogger class
+  //         (state) -> SignalLogger.writeString("state", state.toString())
+  //       ),
+  //       new SysIdRoutine.Mechanism(
+  //         (volts) -> {bl_motor.setControl(bl_voltReq.withOutput(volts.in(Volts)));
+  //                     br_motor.setControl(br_voltReq.withOutput(volts.in(Volts)));},
+          
+  //         null,
+  //         this
+  //       )
+  //   );
+
+  //   public final SysIdRoutine r_sysIdRoutine =
+  //   new SysIdRoutine(
+  //       new SysIdRoutine.Config(
+  //         null,        // Use default ramp rate (1 V/s)
+  //         Volts.of(4), // Reduce dynamic step voltage to 4 to prevent brownout
+  //         null,        // Use default timeout (10 s)
+  //                       // Log state with Phoenix SignalLogger class
+  //         (state) -> SignalLogger.writeString("state", state.toString())
+  //       ),
+  //       new SysIdRoutine.Mechanism(
+  //         (volts) -> {fl_motor.setControl(bl_voltReq.withOutput(volts.in(Volts)));
+  //                     fr_motor.setControl(br_voltReq.withOutput(volts.in(Volts)));},
+          
+  //         null,
+  //         this
+  //       )
+  //   );
+
+
+
+
 
   public Robot()
   {
@@ -151,6 +202,10 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
+
+    m_robotContainer.getLeftSysID().onTrue(SwerveDriveTest.generateSysIdCommand(m_SwerveSubsystem.getSysIdRoutineLeft(), 2.0, 2.0, 2.0));
+
+
   }
 
   @Override

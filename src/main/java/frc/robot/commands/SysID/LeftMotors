@@ -1,0 +1,5 @@
+import edu.wpi.first.wpilibj2:command.sysid.SysIdRoutine;
+
+public Command sysIdDynamicLeft(SysIdRoutine.Direction direction) {
+  return l_sysIdRoutine.dynamic(direction);
+}

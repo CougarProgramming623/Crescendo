@@ -39,6 +39,16 @@ public class RobotContainer
   final CommandXboxController driverXbox = new CommandXboxController(0);
   final Joystick joystick = new Joystick(1);
   Trigger navxReset = new Trigger(() -> joystick.getRawButton(3));
+  Trigger leftsysID = new Trigger(() -> joystick.getRawButton(6));
+  Trigger rightsysID = new Trigger(() -> joystick.getRawButton(4));
+
+  public Trigger getLeftSysID () {
+    return leftsysID;
+  };
+
+  public Trigger getRightSysID () {
+    return rightsysID;
+  };
 
   Trigger middleLeft = new Trigger(() -> joystick.getRawButton(6));
   Trigger middleRight = new Trigger(() -> joystick.getRawButton(4));

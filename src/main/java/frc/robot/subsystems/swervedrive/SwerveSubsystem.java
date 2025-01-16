@@ -6,6 +6,8 @@ package frc.robot.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.Meter;
 
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -32,6 +34,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
@@ -55,11 +58,15 @@ import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
 import swervelib.math.SwerveMath;
+import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
+import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
+import swervelib.SwerveModule;
+import edu.wpi.first.wpilibj.Encoder;
 
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
@@ -68,6 +75,8 @@ import edu.wpi.first.units.measure.MutVoltage;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.controls.VoltageOut;
 
 public class SwerveSubsystem extends SubsystemBase
 {
@@ -98,43 +107,104 @@ public class SwerveSubsystem extends SubsystemBase
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
   private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
 
-  // private final SysIdRoutine m_sysIdRoutine =
-  //     new SysIdRoutine(
-  //         // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-  //         new SysIdRoutine.Config(),
-  //         new SysIdRoutine.Mechanism(
-  //             // Tell SysId how to plumb the driving voltage to the motors.
-  //             voltage -> {
-  //               swerveDrive.swerveDriveConfiguration.modules[0].getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
-  //               swerveDrive.swerveDriveConfiguration.modules[1].getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
-  //               swerveDrive.swerveDriveConfiguration.modules[2].getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
-  //               swerveDrive.swerveDriveConfiguration.modules[3].getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
-  //             },
-  //             // Tell SysId how to record a frame of data for each motor on the mechanism being
-  //             // characterized.
-  //             log -> {
-  //               // Record a frame for the left motors.  Since these share an encoder, we consider
-  //               // the entire group to be one motor.
-  //               log.motor("module 0")
-  //                   .voltage(
-  //                       m_appliedVoltage.mut_replace(
-  //                           swerveDrive.swerveDriveConfiguration.modules[0].getDriveMotor().getVoltage() * RobotController.getBatteryVoltage(), Volts))
-  //                   .linearPosition(m_distance.mut_replace(m_leftEncoder.getDistance(), Meters))
-  //                   .linearVelocity(
-  //                       m_velocity.mut_replace(swerve));
-  //               // Record a frame for the right motors.  Since these share an encoder, we consider
-  //               // the entire group to be one motor.
-  //               log.motor("drive-right")
-  //                   .voltage(
-  //                       m_appliedVoltage.mut_replace(
-  //                           m_rightMotor.get() * RobotController.getBatteryVoltage(), Volts))
-  //                   .linearPosition(m_distance.mut_replace(m_rightEncoder.getDistance(), Meters))
-  //                   .linearVelocity(
-  //                       m_velocity.mut_replace(m_rightEncoder.getRate(), MetersPerSecond));
-  //             },
-  //             // Tell SysId to make generated commands require this subsystem, suffix test state in
-  //             // WPILog with this subsystem's name ("drive")
-  //             this));
+  //Motors
+  /*private SwerveModuleConfiguration fr = swerveDrive.swerveDriveConfiguration.getSwerveModule(swerveDrive.swerveDriveConfiguration.modules, true, false);
+  private SwerveModuleConfiguration fl = SwerveMath.getSwerveModule(swerveDrive.swerveDriveConfiguration.modules, true, true);
+  private SwerveModuleConfiguration br = SwerveMath.getSwerveModule(swerveDrive.swerveDriveConfiguration.modules, false, false);
+  private SwerveModuleConfiguration bl = SwerveMath.getSwerveModule(swerveDrive.swerveDriveConfiguration.modules, false, true);*/
+
+  /*private SwerveModule bl = swerveDrive.swerveDriveConfiguration.modules[0];
+  private SwerveModule br = swerveDrive.swerveDriveConfiguration.modules[1];
+  private SwerveModule fl = swerveDrive.swerveDriveConfiguration.modules[2];
+  private SwerveModule fr = swerveDrive.swerveDriveConfiguration.modules[3];*/
+
+
+  private final TalonFX bl_motor = new TalonFX(0);
+  private final TalonFX br_motor = new TalonFX(1);
+  private final TalonFX fl_motor = new TalonFX(2);
+  private final TalonFX fr_motor = new TalonFX(3);
+  private final VoltageOut bl_voltReq = new VoltageOut(0.0);
+  private final VoltageOut br_voltReq = new VoltageOut(0.0);
+  private final VoltageOut fl_voltReq = new VoltageOut(0.0);
+  private final VoltageOut fr_voltReq = new VoltageOut(0.0);
+
+  public final SysIdRoutine l_sysIdRoutine =
+    new SysIdRoutine(
+        new SysIdRoutine.Config(
+          null,        // Use default ramp rate (1 V/s)
+          Volts.of(4), // Reduce dynamic step voltage to 4 to prevent brownout
+          null,        // Use default timeout (10 s)
+                        // Log state with Phoenix SignalLogger class
+          (state) -> SignalLogger.writeString("state", state.toString())
+        ),
+        new SysIdRoutine.Mechanism(
+          (volts) -> {bl_motor.setControl(bl_voltReq.withOutput(volts.in(Volts)));
+                      br_motor.setControl(br_voltReq.withOutput(volts.in(Volts)));},
+          
+          null,
+          this
+        )
+    );
+
+    public final SysIdRoutine r_sysIdRoutine =
+    new SysIdRoutine(
+        new SysIdRoutine.Config(
+          null,        // Use default ramp rate (1 V/s)
+          Volts.of(4), // Reduce dynamic step voltage to 4 to prevent brownout
+          null,        // Use default timeout (10 s)
+                        // Log state with Phoenix SignalLogger class
+          (state) -> SignalLogger.writeString("state", state.toString())
+        ),
+        new SysIdRoutine.Mechanism(
+          (volts) -> {fl_motor.setControl(bl_voltReq.withOutput(volts.in(Volts)));
+                      fr_motor.setControl(br_voltReq.withOutput(volts.in(Volts)));},
+          
+          null,
+          this
+        )
+    );
+
+
+    public SysIdRoutine getSysIdRoutineLeft() {
+      return l_sysIdRoutine;
+    }
+
+
+          /*// Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+          new SysIdRoutine.Config(),
+          new SysIdRoutine.Mechanism(
+              // Tell SysId how to plumb the driving voltage to the motors.
+              voltage -> {
+                bl.getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
+                br.getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
+                fl.getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
+                fr.getDriveMotor().setVoltage(voltage.baseUnitMagnitude());
+              },
+              // Tell SysId how to record a frame of data for each motor on the mechanism being
+              // characterized.
+              log -> {
+                // Record a frame for the left motors.  Since these share an encoder, we consider
+                // the entire group to be one motor.
+                log.motor("drive-left")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            swerveDrive.swerveDriveConfiguration.modules[0].getDriveMotor().getVoltage() * RobotController.getBatteryVoltage(), Volts))
+                    .linearPosition(m_distance.mut_replace(bl.getDriveMotor().getPosition(), Meters))
+                    .linearVelocity(
+                        m_velocity.mut_replace(swerveDrive));
+                // Record a frame for the right motors.  Since these share an encoder, we consider
+                // the entire group to be one motor.
+                log.motor("drive-right")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            m_rightMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                    .linearPosition(m_distance.mut_replace(m_rightEncoder.getDistance(), Meters))
+                    .linearVelocity(
+                        m_velocity.mut_replace(m_rightEncoder.getRate(), MetersPerSecond));
+              },
+              // Tell SysId to make generated commands require this subsystem, suffix test state in
+              // WPILog with this subsystem's name ("drive")
+              this));*/
 
 
 
