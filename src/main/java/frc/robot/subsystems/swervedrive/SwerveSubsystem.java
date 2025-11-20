@@ -128,6 +128,7 @@ public class SwerveSubsystem extends SubsystemBase
   private final VoltageOut fl_voltReq = new VoltageOut(0.0);
   private final VoltageOut fr_voltReq = new VoltageOut(0.0);
 
+  /*SYSID STUFF UNCOMMENT 
   public final SysIdRoutine l_sysIdRoutine =
     new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -168,6 +169,7 @@ public class SwerveSubsystem extends SubsystemBase
     public SysIdRoutine getSysIdRoutineLeft() {
       return l_sysIdRoutine;
     }
+    */
 
 
           /*// Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.

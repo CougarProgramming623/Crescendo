@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import java.io.File;
+
 import com.ctre.phoenix6.SignalLogger;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -91,11 +94,13 @@ public class Robot extends TimedRobot
    * This function is run when the robot is first started up and should be used for any initialization code.
    */
   @Override
-  public void robotInit()
+  public void robotInit() 
   {
+    m_SwerveSubsystem = m_robotContainer.getDriveBase();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    // m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/falcon"));
 
 
     for (SwerveModule module : m_robotContainer.getDriveBase().getSwerveDriveConfiguration().modules) {
@@ -203,7 +208,7 @@ public class Robot extends TimedRobot
   public void teleopPeriodic()
   {
 
-    m_robotContainer.getLeftSysID().onTrue(SwerveDriveTest.generateSysIdCommand(m_SwerveSubsystem.getSysIdRoutineLeft(), 2.0, 2.0, 2.0));
+    // m_robotContainer.getLeftSysID().onTrue(SwerveDriveTest.generateSysIdCommand(m_SwerveSubsystem.getSysIdRoutineLeft(), 2.0, 2.0, 2.0));
 
 
   }
